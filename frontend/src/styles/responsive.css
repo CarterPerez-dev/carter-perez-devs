@@ -1,0 +1,554 @@
+/* responsive.css - Media queries and responsive design styles */
+
+/* ==================== BREAKPOINTS ==================== */
+/* 
+  --mobile-sm: 320px   (Small mobile devices)
+  --mobile: 480px      (Mobile devices)
+  --tablet-sm: 600px   (Small tablets)
+  --tablet: 768px      (Tablets)
+  --laptop-sm: 960px   (Small laptops)
+  --laptop: 1024px     (Laptops)
+  --desktop-sm: 1280px (Small desktops)
+  --desktop: 1440px    (Desktops)
+  --desktop-lg: 1920px (Large desktops)
+*/
+
+/* ==================== UTILITY CLASSES ==================== */
+
+/* Hide on specific screen sizes */
+.hide-on-mobile {
+  display: initial !important;
+}
+
+.show-on-mobile {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .show-on-mobile {
+    display: initial !important;
+  }
+}
+
+.hide-on-tablet {
+  display: initial !important;
+}
+
+.show-on-tablet {
+  display: none !important;
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .hide-on-tablet {
+    display: none !important;
+  }
+  
+  .show-on-tablet {
+    display: initial !important;
+  }
+}
+
+.hide-on-desktop {
+  display: initial !important;
+}
+
+.show-on-desktop {
+  display: none !important;
+}
+
+@media (min-width: 1025px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+  
+  .show-on-desktop {
+    display: initial !important;
+  }
+}
+
+/* ==================== CONTAINER RESPONSIVENESS ==================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (max-width: 1280px) {
+  .container {
+    max-width: var(--container-md);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: var(--container-sm);
+    padding: 0 var(--space-sm);
+  }
+}
+
+/* ==================== TYPOGRAPHY RESPONSIVENESS ==================== */
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  h4 {
+    font-size: 1.3rem;
+  }
+  
+  h5, h6 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+  }
+  
+  h4, h5, h6 {
+    font-size: 1.2rem;
+  }
+  
+  p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3, h4, h5, h6 {
+    font-size: 1.2rem;
+  }
+  
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==================== CYBER BUTTON RESPONSIVENESS ==================== */
+
+@media (max-width: 768px) {
+  .cyber-button {
+    padding: var(--space-xs) var(--space-sm);
+    min-width: 130px;
+    font-size: 0.9rem;
+  }
+  
+  .cyber-button--large {
+    padding: var(--space-sm) var(--space-md);
+    min-width: 160px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cyber-button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* ==================== CYBER CARD RESPONSIVENESS ==================== */
+
+@media (max-width: 768px) {
+  .cyber-card {
+    padding: var(--space-md);
+  }
+  
+  .cyber-card::after {
+    width: 25%;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cyber-card {
+    padding: var(--space-sm);
+  }
+  
+  .cyber-card::after {
+    width: 20%;
+    height: 15px;
+  }
+}
+
+/* ==================== GRID RESPONSIVENESS ==================== */
+
+@media (max-width: 1024px) {
+  .cyber-grid--3col,
+  .cyber-grid--4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .cyber-grid,
+  .cyber-grid--2col,
+  .cyber-grid--3col,
+  .cyber-grid--4col {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
+
+/* ==================== FORM ELEMENTS RESPONSIVENESS ==================== */
+
+@media (max-width: 768px) {
+  .cyber-input {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.9rem;
+  }
+  
+  .cyber-label {
+    font-size: 0.8rem;
+  }
+  
+  .cyber-textarea {
+    min-height: 100px;
+  }
+}
+
+/* ==================== SECTION SPACING RESPONSIVENESS ==================== */
+
+@media (max-width: 1024px) {
+  .section {
+    padding: var(--space-xl) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-lg) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--space-md) 0;
+  }
+}
+
+/* ==================== NAVIGATION RESPONSIVENESS ==================== */
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+  }
+  
+  .nav-menu {
+    width: 200px;
+  }
+  
+  .menu-link {
+    padding: 0.6rem 1.2rem;
+  }
+  
+  .menu-title {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --header-height: 50px;
+  }
+  
+  .nav-menu {
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ==================== FOOTER RESPONSIVENESS ==================== */
+
+@media (max-width: 768px) {
+  :root {
+    --footer-height: 50px;
+  }
+  
+  .footer-container {
+    padding: 0 var(--space-sm);
+  }
+  
+  .system-stats {
+    display: none;
+  }
+  
+  .footer-links {
+    font-size: 0.7rem;
+  }
+  
+  .copyright {
+    font-size: 0.6rem;
+  }
+  
+  .time-value,
+  .date-value {
+    font-size: 0.7rem;
+  }
+  
+  .social-link {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --footer-height: auto;
+  }
+  
+  .footer-container {
+    flex-direction: column;
+    padding: var(--space-xs) var(--space-sm);
+  }
+  
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    width: 100%;
+    justify-content: center;
+    margin: var(--space-xs) 0;
+  }
+  
+  .footer-right {
+    align-items: center;
+  }
+  
+  .time-display {
+    text-align: center;
+  }
+  
+  .digital-footer {
+    position: relative;
+  }
+}
+
+/* ==================== PERFORMANCE OPTIMIZATIONS ==================== */
+
+/* Reduce animation complexity on mobile devices */
+@media (max-width: 768px) {
+  .hologram::before,
+  .holographic-text::after,
+  .data-panel::after,
+  .cyber-button::before {
+    animation-duration: 4s;
+  }
+  
+  .float,
+  .pulse,
+  .rotate {
+    animation-duration: 5s;
+  }
+  
+  .neon-pulse {
+    animation-duration: 3s;
+  }
+}
+
+/* Disable some animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==================== TOUCH DEVICE OPTIMIZATIONS ==================== */
+
+/* Increase tap target sizes for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .menu-link,
+  .footer-link,
+  .social-link,
+  .cyber-button {
+    padding: var(--space-sm) var(--space-md);
+  }
+  
+  .cyber-checkbox-label::before {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .cyber-checkbox-label {
+    padding-left: 36px;
+  }
+  
+  /* Remove hover effects that don't work well on touch devices */
+  .cyber-button:hover,
+  .menu-link:hover,
+  .footer-link:hover,
+  .social-link:hover,
+  .cyber-card:hover {
+    transform: none;
+  }
+  
+  /* Custom cursor not needed on touch devices */
+  .cyber-cursor,
+  .cyber-cursor-dot {
+    display: none;
+  }
+  
+  body {
+    cursor: auto;
+  }
+  
+  a, button, input, select, textarea, [role="button"] {
+    cursor: auto;
+  }
+}
+
+/* ==================== PRINT STYLES ==================== */
+
+@media print {
+  /* Reset background colors for print */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Hide elements not necessary for print */
+  .holographic-nav,
+  .digital-footer,
+  .ambient-background,
+  .cyber-button,
+  video,
+  audio,
+  .terminal-section {
+    display: none !important;
+  }
+  
+  /* Reset text colors for print */
+  h1, h2, h3, h4, h5, h6, p, li, a {
+    color: black !important;
+    text-shadow: none !important;
+  }
+  
+  /* Ensure links show their URL */
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    font-weight: normal;
+  }
+  
+  /* Simplify cards and panels */
+  .cyber-card,
+  .data-panel,
+  .holographic {
+    border: 1px solid #ccc !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  /* Ensure proper page breaks */
+  h1, h2, h3, 
+  .section {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  .main-content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+/* ==================== HIGH CONTRAST MODE ==================== */
+
+@media (prefers-contrast: high) {
+  :root {
+    --accent-cyan: #00ffff;
+    --accent-magenta: #ff00ff;
+    --accent-blue: #0000ff;
+    --text-primary: #ffffff;
+    --text-secondary: #dddddd;
+    --bg-primary: #000000;
+    --bg-secondary: #111111;
+  }
+  
+  .holographic::before,
+  .cyber-card::after,
+  .cyber-button::before,
+  .neon-border,
+  .neon-text {
+    opacity: 1 !important;
+  }
+  
+  .cyber-button,
+  .cyber-card,
+  .data-panel,
+  .holographic {
+    border-width: 2px !important;
+  }
+}
+
+/* ==================== DEVICE-SPECIFIC FIXES ==================== */
+
+/* Fix for notched devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .holographic-nav {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .nav-menu {
+    padding-top: calc(env(safe-area-inset-top) + var(--header-height));
+  }
+  
+  .digital-footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Fix for legacy browsers */
+@supports not (display: flex) {
+  .hero-content,
+  .footer-container,
+  .nav-container {
+    display: block;
+  }
+  
+  .hero-left,
+  .hero-right,
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}

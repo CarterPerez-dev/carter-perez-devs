@@ -1,0 +1,428 @@
+/* Base.css - Core styling for the cyberpunk portfolio */
+
+:root {
+  /* Color palette - dark theme (default) */
+  --bg-primary: #050505;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #101010;
+  --bg-overlay: rgba(10, 10, 10, 0.85);
+  
+  /* Accent colors */
+  --accent-cyan: #00fff5;
+  --accent-blue: #4d4dff;
+  --accent-magenta: #ff3d3d;
+  --accent-green: #00ff9f;
+  --accent-purple: #d22aff;
+  
+  /* Functional colors */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-glow: rgba(0, 255, 245, 0.5);
+  
+  /* Button colors */
+  --button-bg: rgba(0, 255, 245, 0.1);
+  --button-hover: rgba(0, 255, 245, 0.2);
+  --button-active: rgba(0, 255, 245, 0.3);
+  
+  /* Terminal colors */
+  --terminal-bg: rgba(5, 5, 5, 0.95);
+  --terminal-text: #33ff33;
+  --terminal-cursor: #33ff33;
+  
+  /* Typography */
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  
+  /* Spacing */
+  --space-xs: 0.25rem;  /* 4px */
+  --space-sm: 0.5rem;   /* 8px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-xxl: 3rem;    /* 48px */
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-neon: 0 0 10px var(--accent-cyan), 0 0 20px rgba(0, 255, 245, 0.5);
+  
+  /* Z-index layers */
+  --z-background: -10;
+  --z-default: 1;
+  --z-overlay: 10;
+  --z-dropdown: 20;
+  --z-modal: 30;
+  --z-tooltip: 40;
+  --z-top: 50;
+  
+  /* Transitions */
+  --transition-fast: 0.2s;
+  --transition-normal: 0.3s;
+  --transition-slow: 0.5s;
+  
+  /* Borders */
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 16px;
+  
+  /* Sizes */
+  --header-height: 80px;
+  --footer-height: 60px;
+  --sidebar-width: 260px;
+  
+  /* Container max widths */
+  --container-sm: 640px;
+  --container-md: 960px;
+  --container-lg: 1280px;
+}
+
+/* Light theme overrides */
+.light-theme {
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #e0e0e0;
+  --bg-tertiary: #d0d0d0;
+  --bg-overlay: rgba(230, 230, 230, 0.85);
+  
+  --text-primary: rgba(10, 10, 10, 0.95);
+  --text-secondary: rgba(10, 10, 10, 0.7);
+  --text-tertiary: rgba(10, 10, 10, 0.5);
+  
+  --border-primary: rgba(10, 10, 10, 0.1);
+  --border-glow: rgba(0, 167, 215, 0.5);
+  
+  --button-bg: rgba(0, 167, 215, 0.1);
+  --button-hover: rgba(0, 167, 215, 0.2);
+  --button-active: rgba(0, 167, 215, 0.3);
+  
+  --terminal-bg: rgba(240, 240, 240, 0.95);
+  --terminal-text: #006600;
+  --terminal-cursor: #006600;
+  
+  --shadow-neon: 0 0 10px var(--accent-blue), 0 0 20px rgba(77, 77, 255, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  font-size: 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
+
+/* Override default cursor with custom cyberpunk cursor */
+body {
+  cursor: none;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: var(--border-radius-md);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: var(--header-height);
+  padding-bottom: var(--footer-height);
+  width: 100%;
+}
+
+/* Custom cyberpunk cursor */
+.cyber-cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--accent-cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: var(--z-top);
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, border 0.2s;
+}
+
+.cyber-cursor.expand {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--accent-magenta);
+  mix-blend-mode: exclusion;
+}
+
+.cyber-cursor-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background-color: var(--accent-cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: calc(var(--z-top) + 1);
+  transform: translate(-50%, -50%);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+p {
+  margin-bottom: var(--space-md);
+  font-size: 1rem;
+}
+
+a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  position: relative;
+  cursor: none;
+}
+
+a:hover {
+  color: var(--accent-blue);
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--accent-cyan);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform var(--transition-normal);
+}
+
+a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Utility classes */
+.container {
+  width: 100%;
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.container-sm {
+  max-width: var(--container-sm);
+}
+
+.container-md {
+  max-width: var(--container-md);
+}
+
+.section {
+  padding: var(--space-xxl) 0;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.neon-text {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 5px var(--accent-cyan), 0 0 10px var(--accent-cyan);
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Boot sequence styling */
+#boot-sequence {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s;
+}
+
+.boot-content {
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.boot-logo {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto var(--space-xl);
+  border: 2px solid var(--accent-cyan);
+  position: relative;
+  transform: rotate(45deg);
+}
+
+.boot-logo::before,
+.boot-logo::after {
+  content: '';
+  position: absolute;
+  background-color: var(--accent-magenta);
+}
+
+.boot-logo::before {
+  width: 60%;
+  height: 2px;
+  top: 50%;
+  left: 20%;
+  transform: translateY(-50%);
+}
+
+.boot-logo::after {
+  width: 2px;
+  height: 60%;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.boot-progress {
+  width: 100%;
+  height: 4px;
+  background-color: #222;
+  margin-bottom: var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.boot-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+  width: 0%;
+  transition: width 0.2s;
+}
+
+.boot-text {
+  font-family: var(--font-mono);
+  color: var(--accent-cyan);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 1px;
+  font-size: 1rem;
+}
+
+.boot-version {
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+}
+
+.glitch-text {
+  animation: glitch 0.5s linear;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}

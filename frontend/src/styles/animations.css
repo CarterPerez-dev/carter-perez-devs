@@ -1,0 +1,556 @@
+/* animations.css - Collection of animation keyframes and animation utilities */
+
+/* ------ BASIC TRANSITIONS ------ */
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOut 0.5s forwards;
+}
+
+.slide-in-right {
+  transform: translateX(100%);
+  animation: slideInRight 0.5s forwards;
+}
+
+.slide-in-left {
+  transform: translateX(-100%);
+  animation: slideInLeft 0.5s forwards;
+}
+
+.slide-in-up {
+  transform: translateY(100%);
+  animation: slideInUp 0.5s forwards;
+}
+
+.slide-in-down {
+  transform: translateY(-100%);
+  animation: slideInDown 0.5s forwards;
+}
+
+/* ------ CYBER EFFECTS ------ */
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text[data-text]::before,
+.glitch-text[data-text]::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text[data-text]::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--accent-magenta);
+  animation: glitch-text-1 2s infinite linear alternate-reverse;
+}
+
+.glitch-text[data-text]::after {
+  left: -2px;
+  text-shadow: 2px 0 var(--accent-cyan);
+  animation: glitch-text-2 3s infinite linear alternate-reverse;
+}
+
+.digital-noise {
+  position: relative;
+}
+
+.digital-noise::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  animation: digital-noise 0.5s steps(1) infinite;
+}
+
+.scan-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(0, 255, 245, 0.5);
+  box-shadow: 0 0 10px 2px var(--accent-cyan);
+  animation: scan-line 2s linear infinite;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.data-flow {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 20px,
+    rgba(0, 255, 245, 0.05) 20px,
+    rgba(0, 255, 245, 0.05) 40px
+  );
+  animation: data-flow 1s linear infinite;
+  pointer-events: none;
+}
+
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.pixelate-in {
+  animation: pixelate-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.pixelate-out {
+  animation: pixelate-out 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.crt-flicker {
+  animation: crt-flicker 2s linear infinite;
+}
+
+.matrix-rain {
+  overflow: hidden;
+  position: relative;
+}
+
+.matrix-rain::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(0deg, transparent 0%, var(--accent-cyan) 75%, transparent 100%);
+  opacity: 0.05;
+  transform: rotate(45deg);
+  animation: matrix-rain 3s linear infinite;
+  pointer-events: none;
+}
+
+.cyber-blink {
+  animation: cyber-blink 1s steps(2) infinite;
+}
+
+.glitch-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.glitch-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.glitch-image::before,
+.glitch-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  mix-blend-mode: hard-light;
+}
+
+.glitch-image::before {
+  left: 5px;
+  background-color: rgba(255, 0, 80, 0.1);
+  animation: glitch-image-1 2.5s infinite linear alternate-reverse;
+}
+
+.glitch-image::after {
+  left: -5px;
+  background-color: rgba(0, 255, 255, 0.1);
+  animation: glitch-image-2 3s infinite linear alternate-reverse;
+}
+
+.data-bits {
+  position: relative;
+}
+
+.data-bits::after {
+  content: attr(data-bits);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--accent-cyan);
+  opacity: 0.1;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 10px,
+    var(--accent-cyan) 10px,
+    var(--accent-cyan) 20px
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: data-bits 30s linear infinite;
+  pointer-events: none;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background-color: var(--accent-cyan);
+  animation: terminal-cursor 1s step-end infinite;
+}
+
+.laser-beam {
+  position: relative;
+}
+
+.laser-beam::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--accent-magenta);
+  transform: translateY(-50%);
+  animation: laser-beam 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.digital-circuitry {
+  position: relative;
+  overflow: hidden;
+}
+
+.digital-circuitry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(90deg, transparent 98%, var(--accent-cyan) 98%),
+    linear-gradient(0deg, transparent 98%, var(--accent-cyan) 98%);
+  background-size: 20px 20px;
+  opacity: 0.1;
+  animation: digital-circuitry 10s linear infinite;
+  pointer-events: none;
+}
+
+/* ------ 3D EFFECTS ------ */
+
+.hologram-effect {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.hologram-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(0, 255, 245, 0.05) 25%,
+    rgba(0, 255, 245, 0.1) 50%,
+    rgba(0, 255, 245, 0.05) 75%,
+    transparent 100%
+  );
+  animation: hologram-rotate 3s linear infinite;
+  pointer-events: none;
+}
+
+.cyber-rotate-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  animation: cyber-rotate-3d 15s linear infinite;
+}
+
+.floating-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  animation: floating-3d 4s ease-in-out infinite;
+}
+
+/* ------ PARTICLE EFFECTS ------ */
+
+.particle-burst {
+  position: relative;
+}
+
+.particle-burst::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: particle-burst 2s ease-out infinite;
+  pointer-events: none;
+}
+
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  top: 0;
+  left: 10%;
+  background-color: var(--accent-cyan);
+  opacity: 0.3;
+  animation: data-stream 2s linear infinite;
+  pointer-events: none;
+}
+
+.data-stream::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  top: 0;
+  left: 20%;
+  background-color: var(--accent-magenta);
+  opacity: 0.3;
+  animation: data-stream 3s linear infinite;
+  pointer-events: none;
+}
+
+/* ------ ANIMATION DELAY UTILITIES ------ */
+
+.delay-100 { animation-delay: 0.1s !important; }
+.delay-200 { animation-delay: 0.2s !important; }
+.delay-300 { animation-delay: 0.3s !important; }
+.delay-400 { animation-delay: 0.4s !important; }
+.delay-500 { animation-delay: 0.5s !important; }
+.delay-750 { animation-delay: 0.75s !important; }
+.delay-1000 { animation-delay: 1s !important; }
+.delay-1500 { animation-delay: 1.5s !important; }
+.delay-2000 { animation-delay: 2s !important; }
+
+/* ------ ANIMATION DURATION UTILITIES ------ */
+
+.duration-300 { animation-duration: 0.3s !important; }
+.duration-500 { animation-duration: 0.5s !important; }
+.duration-750 { animation-duration: 0.75s !important; }
+.duration-1000 { animation-duration: 1s !important; }
+.duration-1500 { animation-duration: 1.5s !important; }
+.duration-2000 { animation-duration: 2s !important; }
+.duration-3000 { animation-duration: 3s !important; }
+.duration-5000 { animation-duration: 5s !important; }
+
+/* ------ KEYFRAMES DEFINITIONS ------ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes glitch-text-1 {
+  0%, 100% { clip-path: inset(50% 0 30% 0); }
+  20% { clip-path: inset(10% 0 60% 0); }
+  40% { clip-path: inset(40% 0 40% 0); }
+  60% { clip-path: inset(80% 0 5% 0); }
+  80% { clip-path: inset(15% 0 80% 0); }
+}
+
+@keyframes glitch-text-2 {
+  0%, 100% { clip-path: inset(30% 0 60% 0); }
+  20% { clip-path: inset(60% 0 30% 0); }
+  40% { clip-path: inset(10% 0 70% 0); }
+  60% { clip-path: inset(70% 0 10% 0); }
+  80% { clip-path: inset(20% 0 50% 0); }
+}
+
+@keyframes digital-noise {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, 3%); }
+  20% { transform: translate(3%, -5%); }
+  30% { transform: translate(5%, 2%); }
+  40% { transform: translate(-3%, 5%); }
+  50% { transform: translate(2%, -2%); }
+  60% { transform: translate(-2%, 3%); }
+  70% { transform: translate(5%, -1%); }
+  80% { transform: translate(-4%, -4%); }
+  90% { transform: translate(1%, 5%); }
+}
+
+@keyframes scan-line {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
+@keyframes data-flow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-40px); }
+}
+
+@keyframes neon-pulse {
+  0%, 100% { text-shadow: 0 0 5px var(--accent-cyan), 0 0 10px var(--accent-cyan); }
+  50% { text-shadow: 0 0 10px var(--accent-cyan), 0 0 20px var(--accent-cyan), 0 0 30px var(--accent-cyan); }
+}
+
+@keyframes pixelate-in {
+  0% { filter: blur(15px) brightness(1.5); }
+  50% { filter: blur(5px) brightness(1.25); }
+  100% { filter: blur(0) brightness(1); }
+}
+
+@keyframes pixelate-out {
+  0% { filter: blur(0) brightness(1); }
+  50% { filter: blur(5px) brightness(1.25); }
+  100% { filter: blur(15px) brightness(1.5); }
+}
+
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  97%, 98% { opacity: 0.8; }
+  99% { opacity: 0.6; }
+}
+
+@keyframes matrix-rain {
+  0% { transform: translateY(-100%) rotate(45deg); }
+  100% { transform: translateY(100%) rotate(45deg); }
+}
+
+@keyframes cyber-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes glitch-image-1 {
+  0%, 100% { clip-path: inset(40% 0 60% 0); transform: translate(-2px, 2px); }
+  20% { clip-path: inset(30% 0 40% 0); transform: translate(1px, -1px); }
+  40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, 2px); }
+  60% { clip-path: inset(10% 0 50% 0); transform: translate(-1px, -2px); }
+  80% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+}
+
+@keyframes glitch-image-2 {
+  0%, 100% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
+  20% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 1px); }
+  40% { clip-path: inset(30% 0 70% 0); transform: translate(1px, 1px); }
+  60% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, -1px); }
+  80% { clip-path: inset(10% 0 40% 0); transform: translate(2px, 2px); }
+}
+
+@keyframes data-bits {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 1000px; }
+}
+
+@keyframes terminal-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes laser-beam {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes digital-circuitry {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+@keyframes hologram-rotate {
+  0% { transform: rotateY(0deg); opacity: 0.2; }
+  50% { opacity: 0.1; }
+  100% { transform: rotateY(360deg); opacity: 0.2; }
+}
+
+@keyframes cyber-rotate-3d {
+  0% { transform: rotateY(0deg) rotateX(10deg); }
+  100% { transform: rotateY(360deg) rotateX(10deg); }
+}
+
+@keyframes floating-3d {
+  0%, 100% { transform: translateY(0) rotateY(0deg); }
+  25% { transform: translateY(-10px) rotateY(2deg); }
+  50% { transform: translateY(0) rotateY(0deg); }
+  75% { transform: translateY(10px) rotateY(-2deg); }
+}
+
+@keyframes particle-burst {
+  0% { width: 0; height: 0; opacity: 0.7; }
+  100% { width: 100px; height: 100px; opacity: 0; }
+}
+
+@keyframes data-stream {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}

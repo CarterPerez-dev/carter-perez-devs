@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/images/meta-image.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Ultra-futuristic cyberpunk portfolio - A glimpse into the digital future" />
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Meta tags for social sharing -->
+    <meta property="og:title" content="Cyberpunk Portfolio" />
+    <meta property="og:description" content="Step into the future with this cutting-edge digital experience" />
+    <meta property="og:image" content="/images/meta-image.jpg" />
+    <meta property="og:url" content="https://carterperez-dev.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <title>Carter Perez Portfolio | Digital Frontier</title>
+  </head>
+  <body>
+    <!-- Initial loading overlay -->
+    <div id="boot-sequence">
+      <div class="boot-content">
+        <div class="boot-logo"></div>
+        <div class="boot-progress">
+          <div class="boot-progress-bar"></div>
+        </div>
+        <div class="boot-text">INITIALIZING NEURAL INTERFACE</div>
+        <div class="boot-version">v2.7.5</div>
+      </div>
+    </div>
+
+    <div id="root"></div>
+    
+    <!-- Ambient audio elements (muted by default) -->
+    <audio id="ambient-background" loop preload="metadata">
+      <source src="/assets/audio/ambient-cyber.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ui-sound-hover" preload="metadata">
+      <source src="/assets/audio/hover.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ui-sound-click" preload="metadata">
+      <source src="/assets/audio/click.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Boot sequence simulation -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const bootSequence = document.getElementById('boot-sequence');
+        const bootProgress = document.querySelector('.boot-progress-bar');
+        const bootText = document.querySelector('.boot-text');
+        
+        const bootMessages = [
+          'INITIALIZING NEURAL INTERFACE',
+          'CALIBRATING VISUAL CORTEX',
+          'LOADING EXPERIENCE MATRIX',
+          'ENABLING QUANTUM RENDERING',
+          'ESTABLISHING NEURAL UPLINK'
+        ];
+        
+        let msgIndex = 0;
+        let progress = 0;
+        
+        // Simulate boot progress
+        const bootInterval = setInterval(() => {
+          progress += Math.random() * 5 + 1;
+          
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(bootInterval);
+            
+            setTimeout(() => {
+              bootSequence.style.opacity = 0;
+              setTimeout(() => {
+                bootSequence.style.display = 'none';
+              }, 500);
+            }, 500);
+          }
+          
+          bootProgress.style.width = `${progress}%`;
+          
+          if (progress > (msgIndex + 1) * 20) {
+            msgIndex = Math.min(msgIndex + 1, bootMessages.length - 1);
+            bootText.innerHTML = bootMessages[msgIndex];
+            bootText.classList.add('glitch-text');
+            
+            setTimeout(() => {
+              bootText.classList.remove('glitch-text');
+            }, 500);
+          }
+        }, 150);
+      });
+    </script>
+  </body>
+</html>
