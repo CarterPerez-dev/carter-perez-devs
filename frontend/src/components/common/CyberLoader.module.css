@@ -1,0 +1,154 @@
+/* frontend/src/components/common/CyberLoader.module.css */
+/* Styles moved from CyberLoader.jsx <style jsx> block */
+
+.cyberLoaderContainer { /* Renamed from cyber-loader-container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-primary);
+  z-index: 100;
+}
+
+.fullscreen { /* Renamed from .cyber-loader-container.fullscreen */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cyberLoaderContent { /* Renamed from cyber-loader-content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  padding: 2rem;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 255, 245, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyberLoaderContent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 255, 245, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 245, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.cyberLoading { /* Renamed from cyber-loading */
+  /* Add styles for .cyber-loading if they existed, otherwise it might be handled by JS/other CSS */
+  /* Example: */
+  /* position: relative; */
+  /* width: 50px; */
+  /* height: 50px; */
+  /* margin-bottom: 1rem; */
+}
+
+.cyberLoading div {
+  /* Add styles for .cyber-loading div if they existed */
+  /* Example: */
+  /* position: absolute; */
+  /* width: 100%; */
+  /* height: 100%; */
+  /* border: 2px solid transparent; */
+  /* border-top-color: var(--accent-cyan); */
+  /* border-radius: 50%; */
+  /* animation: spin 1s linear infinite; */
+}
+
+/* @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } */
+
+
+.cyberLoaderText { /* Renamed from cyber-loader-text */
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--accent-cyan);
+  margin: 1.5rem 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.cyberLoaderProgressContainer { /* Renamed from cyber-loader-progress-container */
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.cyberLoaderProgressBar { /* Renamed from cyber-loader-progress-bar */
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.cyberLoaderProgressFill { /* Renamed from cyber-loader-progress-fill */
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.cyberLoaderProgressText { /* Renamed from cyber-loader-progress-text */
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.hexValue { /* Renamed from hex-value */
+  color: var(--accent-cyan);
+}
+
+.cyberLoaderStatus { /* Renamed from cyber-loader-status */
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.cyberLoaderStatusLight { /* Renamed from cyber-loader-status-light */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--accent-magenta);
+  margin-right: 0.5rem;
+}
+
+.active { /* Renamed from .cyber-loader-status-light.active */
+  animation: blink 1s infinite;
+}
+
+.cyberLoaderStatusText { /* Renamed from cyber-loader-status-text */
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-magenta);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Theme specific adjustments - Using :global() for theme class on body */
+:global(.light-theme) .cyberLoaderContent {
+  background-color: rgba(245, 245, 245, 0.9);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 20px rgba(77, 77, 255, 0.3);
+}
+
+:global(.light-theme) .cyberLoaderContent::before {
+  background-image:
+    linear-gradient(rgba(77, 77, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77, 77, 255, 0.1) 1px, transparent 1px);
+}

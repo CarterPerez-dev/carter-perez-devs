@@ -134,7 +134,7 @@ const DigitalFooter = () => {
           </div>
           
           <div className="copyright">
-            <span className="copyright-symbol">©</span> {new Date().getFullYear()} CYBERPUNK PORTFOLIO
+            <span className="copyright-symbol">©</span> {new Date().getFullYear()} Carter Perez Portfolio
           </div>
         </div>
         
@@ -214,6 +214,7 @@ const DigitalFooter = () => {
         .footer-right {
           display: flex;
           align-items: center;
+          height: 100%;
         }
         
         .footer-center {
@@ -224,6 +225,10 @@ const DigitalFooter = () => {
         .footer-right {
           flex-direction: column;
           align-items: flex-end;
+          justify-content: center;
+          min-width: 140px; /* Increased min-width */
+          width: auto; /* Allow natural width */
+          padding-right: 10px; /* Added padding */
         }
         
         .system-stats {
@@ -282,17 +287,30 @@ const DigitalFooter = () => {
         
         .time-display {
           text-align: right;
-          margin-bottom: 0.5rem;
+          margin-top: 0.8rem;
+          width: 100%;
+          padding: 0 5px; /* Added padding */
+          overflow: visible; /* Ensure no clipping */
         }
         
         .time-value {
           color: var(--accent-cyan);
           font-weight: 500;
+          font-size: 0.7rem; /* Adjusted font size */
+          white-space: nowrap; /* Prevent line breaks */
+          letter-spacing: -0.02em; /* Slightly reduce letter spacing */
+          padding-right: 5px; /* More padding */
+          display: block; /* Make sure it's block-level */
+          width: auto; /* Let it size naturally */
         }
         
         .date-value {
           color: var(--text-secondary);
-          font-size: 0.7rem;
+          font-size: 0.65rem;
+          white-space: nowrap; /* Prevent line breaks */
+          display: block; /* Make sure it's block-level */
+          width: auto; /* Let it size naturally */
+          margin-bottom: 1px;
         }
         
         .social-links {
@@ -304,13 +322,14 @@ const DigitalFooter = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 24px;
-          height: 24px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           background-color: rgba(0, 255, 245, 0.1);
           color: var(--accent-cyan);
           margin-left: 0.5rem;
           transition: all 0.3s ease;
+          margin-bottom: 5px;
         }
         
         .social-link:hover {
@@ -380,34 +399,61 @@ const DigitalFooter = () => {
           .system-stats {
             display: none;
           }
+          
+          .footer-right {
+            min-width: 120px;
+            padding-right: 0;
+          }
         }
         
         @media (max-width: 480px) {
-          .footer-container {
-            flex-direction: column;
-            justify-content: center;
+          .digital-footer {
+            position: fixed; /* Keep fixed positioning */
             height: auto;
-            padding: 0.5rem;
+            min-height: var(--footer-height);
           }
           
-          .footer-left,
-          .footer-center,
-          .footer-right {
-            width: 100%;
-            justify-content: center;
-            margin-bottom: 0.5rem;
+          .footer-container {
+            flex-wrap: wrap; /* Use flex-wrap instead of flex-direction */
+            justify-content: space-between; /* Keep horizontal layout */
+            padding: 8px 10px;
+            height: auto;
+          }
+          
+          .footer-left {
+            display: none; /* Hide stats on mobile */
+          }
+          
+          .footer-center {
+            flex: 1;
+            order: 1;
+            align-items: flex-start;
+            margin: 0;
           }
           
           .footer-right {
-            align-items: center;
+            flex: 0 0 auto;
+            order: 2;
+            align-items: flex-end;
+            margin: 0;
+            min-width: 110px;
           }
           
           .time-display {
-            text-align: center;
+            text-align: right;
+            margin-bottom: 0;
           }
           
-          .digital-footer {
-            height: auto;
+          .time-value {
+            font-size: 0.8rem; /* Even smaller on mobile */
+          }
+          
+          .date-value {
+            font-size: 0.65rem; /* Even smaller on mobile */
+          }
+          
+          .social-links {
+            display: none; /* Hide social links on very small screens */
           }
         }
       `}</style>

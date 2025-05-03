@@ -11,83 +11,94 @@ const ProjectsGrid = ({ fullPage = false }) => {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoveredProject, setHoveredProject] = useState(null);
-  const canvasRef = useRef(null);
   const projectsContainerRef = useRef(null);
   
-  // Project data
+  // Project data with your specified projects
   const projects = [
     {
       id: 1,
-      title: 'ProxyAuthRequired.com',
-      description: 'A centralized cybersecurity platform integrating AI-driven simulations and learning modules. Features include GRC Wizard for compliance questions, Log Analysis for real-time practice, and scenario-based exercises for incident response.',
-      image: '/assets/projects/project1.jpg',
-      categories: ['cybersecurity', 'ai', 'education'],
-      technologies: ['React', 'Python', 'Flask', 'MongoDB', 'Docker'],
-      link: 'https://github.com/username/proxyauthrequired',
+      title: 'CertGames.com',
+      description: 'A gamified platform for certification preparation. Follow structured roadmaps to learn, practice, and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.',
+      image: '/assets/projects/certgames.jpg',
+      categories: ['cybersecurity', 'education'],
+      technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
+      link: 'https://certgames.com',
       featured: true
     },
     {
       id: 2,
-      title: 'CertsGamified',
-      description: 'A gamified platform for certification preparation. Follow structured roadmaps to learn, practice, and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.',
-      image: '/assets/projects/project2.jpg',
-      categories: ['education', 'web'],
-      technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
-      link: 'https://github.com/username/certsgamified',
-      featured: true
+      title: 'Flask-Honeypot',
+      description: 'A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.',
+      image: '/assets/projects/honeypot.jpg',
+      categories: ['cybersecurity'],
+      technologies: ['Python', 'Flask', 'Docker', 'SQLite'],
+      link: 'https://github.com/username/flask-honeypot',
+      featured: false
     },
     {
       id: 3,
-      title: 'Cyber Labs',
-      description: 'Hands-on labs for penetration testing and system hardening, providing practical training environments for cybersecurity enthusiasts.',
-      image: '/assets/projects/project3.jpg',
-      categories: ['cybersecurity', 'education'],
-      technologies: ['Docker', 'Kali Linux', 'Python', 'Bash'],
-      link: 'https://github.com/username/cyberlabs',
+      title: 'Cyberpunk Portfolio',
+      description: 'A futuristic, cyberpunk-themed portfolio website with interactive elements and holographic UI. Features include 3D elements, glitch effects, and a custom terminal interface.',
+      image: '/assets/projects/portfolio.jpg',
+      categories: ['web dev'],
+      technologies: ['React', 'Three.js', 'CSS3', 'Framer Motion'],
+      link: 'https://github.com/username/cyberpunk-portfolio',
       featured: false
     },
     {
       id: 4,
-      title: 'AutoApplication',
-      description: 'An automated application bot for Indeed and LinkedIn, streamlining the job application process with web automation and scripting.',
-      image: '/assets/projects/project4.jpg',
-      categories: ['automation', 'web'],
-      technologies: ['Python', 'Selenium', 'BeautifulSoup'],
-      link: 'https://github.com/username/autoapplication',
+      title: 'AngelaCLI',
+      description: 'An AI-powered command line tool that assists with coding tasks. Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.',
+      image: '/assets/projects/angela-cli.jpg',
+      categories: ['ai'],
+      technologies: ['Python', 'OpenAI API', 'TensorFlow', 'Click'],
+      link: 'https://github.com/username/angela-cli',
       featured: false
     },
+    // Blog placeholders
     {
       id: 5,
-      title: 'Network Sentinel',
-      description: 'A real-time network monitoring and intrusion detection system with customizable alerts and visual traffic analysis.',
-      image: '/assets/projects/project5.jpg',
-      categories: ['cybersecurity', 'networking'],
-      technologies: ['Python', 'Flask', 'Socket.IO', 'D3.js'],
-      link: 'https://github.com/username/networksentinel',
-      featured: false
+      title: 'Understanding Zero Trust Architecture',
+      description: 'An in-depth exploration of Zero Trust security principles and implementation strategies for modern organizations. Learn how to implement "never trust, always verify" in your infrastructure.',
+      image: '/assets/blogs/zerotrust.jpg',
+      categories: ['blogs', 'cybersecurity'],
+      date: 'April 15, 2025',
+      link: '/blog/zero-trust',
+      featured: false,
+      isBlog: true
     },
     {
       id: 6,
-      title: 'Quantum Crypto Sim',
-      description: 'A quantum cryptography simulation tool that demonstrates key principles and protocols with interactive visualizations.',
-      image: '/assets/projects/project6.jpg',
-      categories: ['cryptography', 'education'],
-      technologies: ['React', 'Three.js', 'Web Workers', 'TypeScript'],
-      link: 'https://github.com/username/quantumcryptosim',
-      featured: false
+      title: 'The Future of Web Development in 2025',
+      description: 'Exploring emerging web technologies and development paradigms that will shape the industry in the coming year. From WebAssembly to Edge Computing and AI-assisted coding.',
+      image: '/assets/blogs/webdev2025.jpg',
+      categories: ['blogs', 'web dev'],
+      date: 'March 22, 2025',
+      link: '/blog/web-development-trends',
+      featured: false,
+      isBlog: true
+    },
+    {
+      id: 7,
+      title: 'Practical Applications of LLMs in Education',
+      description: 'How Large Language Models are transforming educational methodologies and creating new opportunities for personalized learning experiences. Case studies and implementation strategies.',
+      image: '/assets/blogs/ai-education.jpg',
+      categories: ['blogs', 'ai', 'education'],
+      date: 'February 8, 2025',
+      link: '/blog/llms-education',
+      featured: false,
+      isBlog: true
     }
   ];
   
-  // Category filters
+  // Category filters - updated as requested
   const categories = [
     { id: 'all', name: 'ALL' },
     { id: 'cybersecurity', name: 'CYBERSECURITY' },
-    { id: 'web', name: 'WEB DEV' },
+    { id: 'web dev', name: 'WEB DEV' },
     { id: 'ai', name: 'AI' },
     { id: 'education', name: 'EDUCATION' },
-    { id: 'automation', name: 'AUTOMATION' },
-    { id: 'networking', name: 'NETWORKING' },
-    { id: 'cryptography', name: 'CRYPTOGRAPHY' }
+    { id: 'blogs', name: 'BLOGS' }
   ];
   
   // Filter projects based on active filter
@@ -108,7 +119,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
     playSound('click');
   };
   
-  // Handle mouse movement for parallax effect
+  // Handle mouse movement for mild parallax effect (simplified to reduce glitchiness)
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!projectsContainerRef.current) return;
@@ -116,8 +127,8 @@ const ProjectsGrid = ({ fullPage = false }) => {
       const rect = projectsContainerRef.current.getBoundingClientRect();
       
       setMousePosition({
-        x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
-        y: ((e.clientY - rect.top) / rect.height - 0.5) * 2
+        x: ((e.clientX - rect.left) / rect.width - 0.5) * 0.5, // Reduced factor to minimize effect
+        y: ((e.clientY - rect.top) / rect.height - 0.5) * 0.5  // Reduced factor to minimize effect
       });
     };
     
@@ -133,140 +144,6 @@ const ProjectsGrid = ({ fullPage = false }) => {
       }
     };
   }, []);
-  
-  // Neural network visualization
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    
-    // Set canvas dimensions
-    const setCanvasDimensions = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    
-    window.addEventListener('resize', setCanvasDimensions);
-    setCanvasDimensions();
-    
-    // Neural network parameters
-    const nodes = [];
-    const connections = [];
-    
-    // Create nodes
-    const createNodes = () => {
-      const nodeCount = 20; // Adjust based on performance
-      
-      for (let i = 0; i < nodeCount; i++) {
-        nodes.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          radius: Math.random() * 3 + 2,
-          color: theme === 'dark' ? 
-            `rgba(${Math.random() > 0.7 ? '255, 61, 61' : '0, 255, 245'}, ${0.5 + Math.random() * 0.5})` : 
-            `rgba(${Math.random() > 0.7 ? '255, 61, 61' : '77, 77, 255'}, ${0.5 + Math.random() * 0.5})`
-        });
-      }
-    };
-    
-    // Update neural network
-    const updateNetwork = () => {
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Update nodes
-      nodes.forEach(node => {
-        // Apply light mouse influence
-        node.vx += mousePosition.x * 0.005;
-        node.vy += mousePosition.y * 0.005;
-        
-        // Update position
-        node.x += node.vx;
-        node.y += node.vy;
-        
-        // Apply slight friction
-        node.vx *= 0.99;
-        node.vy *= 0.99;
-        
-        // Keep within bounds
-        if (node.x < 0 || node.x > canvas.width) {
-          node.vx *= -1;
-        }
-        
-        if (node.y < 0 || node.y > canvas.height) {
-          node.vy *= -1;
-        }
-      });
-      
-      // Find connections between nodes
-      connections.length = 0;
-      
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          if (distance < 100) {
-            connections.push({
-              from: nodes[i],
-              to: nodes[j],
-              opacity: 1 - distance / 100
-            });
-          }
-        }
-      }
-      
-      // Draw connections
-      connections.forEach(connection => {
-        ctx.beginPath();
-        ctx.moveTo(connection.from.x, connection.from.y);
-        ctx.lineTo(connection.to.x, connection.to.y);
-        
-        const gradient = ctx.createLinearGradient(
-          connection.from.x, connection.from.y,
-          connection.to.x, connection.to.y
-        );
-        
-        gradient.addColorStop(0, connection.from.color);
-        gradient.addColorStop(1, connection.to.color);
-        
-        ctx.strokeStyle = gradient;
-        ctx.globalAlpha = connection.opacity * 0.7;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-      });
-      
-      // Draw nodes
-      nodes.forEach(node => {
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = node.color;
-        ctx.fill();
-      });
-    };
-    
-    // Initialize and start animation
-    createNodes();
-    
-    let animationId;
-    const animate = () => {
-      updateNetwork();
-      animationId = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    // Clean up
-    return () => {
-      window.removeEventListener('resize', setCanvasDimensions);
-      cancelAnimationFrame(animationId);
-    };
-  }, [theme, mousePosition]);
   
   // Animation variants
   const containerVariants = {
@@ -284,17 +161,13 @@ const ProjectsGrid = ({ fullPage = false }) => {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { type: 'spring', stiffness: 100 }
+      transition: { type: 'spring', stiffness: 50, damping: 10 } // More stable animation
     }
   };
   
   return (
     <section className={`projects-section ${fullPage ? 'full-page' : ''}`} id="projects">
-      <canvas 
-        ref={canvasRef} 
-        className="projects-background"
-        aria-hidden="true"
-      ></canvas>
+      <div className="projects-background"></div>
       
       <div className="container">
         {!fullPage && (
@@ -349,12 +222,12 @@ const ProjectsGrid = ({ fullPage = false }) => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {filteredProjects.map((project, index) => (
+          {filteredProjects.map((project) => (
             <motion.div 
               key={project.id}
               className={`project-card ${
                 hoveredProject === project.id ? 'hovered' : ''
-              } ${project.featured ? 'featured' : ''}`}
+              } ${project.featured ? 'featured' : ''} ${project.isBlog ? 'blog-card' : ''}`}
               variants={itemVariants}
               onMouseEnter={() => {
                 setHoveredProject(project.id);
@@ -363,9 +236,8 @@ const ProjectsGrid = ({ fullPage = false }) => {
               onMouseLeave={() => setHoveredProject(null)}
               style={{
                 transform: hoveredProject === project.id
-                  ? `perspective(1000px) rotateX(${mousePosition.y * -5}deg) rotateY(${mousePosition.x * 5}deg)`
-                  : 'perspective(1000px) rotateX(0) rotateY(0)',
-                transition: 'transform 0.5s ease-out'
+                  ? `translateY(-8px)`
+                  : 'translateY(0)'
               }}
             >
               <div className="project-image-container">
@@ -374,10 +246,15 @@ const ProjectsGrid = ({ fullPage = false }) => {
                   src={project.image || `/assets/projects/default.jpg`} 
                   alt={project.title} 
                   className="project-image"
+                  loading="lazy"
                 />
                 
                 {project.featured && (
                   <div className="featured-badge">FEATURED</div>
+                )}
+                
+                {project.isBlog && (
+                  <div className="blog-badge">BLOG</div>
                 )}
               </div>
               
@@ -392,15 +269,21 @@ const ProjectsGrid = ({ fullPage = false }) => {
                   ))}
                 </div>
                 
+                {project.isBlog && (
+                  <div className="blog-date">{project.date}</div>
+                )}
+                
                 <p className="project-description">{project.description}</p>
                 
-                <div className="project-technologies">
-                  {project.technologies.map((tech, idx) => (
-                    <span key={idx} className="project-technology">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+                {!project.isBlog && (
+                  <div className="project-technologies">
+                    {project.technologies.map((tech, idx) => (
+                      <span key={idx} className="project-technology">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 
                 <div className="project-links">
                   <a 
@@ -410,12 +293,10 @@ const ProjectsGrid = ({ fullPage = false }) => {
                     className="cyber-button cyber-button--small"
                     onClick={() => playSound('click')}
                   >
-                    VIEW PROJECT
+                    {project.isBlog ? 'READ POST' : 'VIEW PROJECT'}
                   </a>
                 </div>
               </div>
-              
-              <div className="project-card-decoration"></div>
             </motion.div>
           ))}
         </motion.div>
@@ -476,6 +357,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
           width: 100%;
           height: 100%;
           z-index: -1;
+          background-color: rgba(5, 5, 5, 0.3);
         }
         
         .section-title,
@@ -570,21 +452,29 @@ const ProjectsGrid = ({ fullPage = false }) => {
           border-radius: var(--border-radius-md);
           overflow: hidden;
           border: 1px solid var(--border-primary);
-          transition: all var(--transition-normal);
+          transition: all 0.3s ease;
           height: 100%;
           display: flex;
           flex-direction: column;
-          transform-style: preserve-3d;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         .project-card.hovered {
           border-color: var(--accent-cyan);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 255, 245, 0.2);
-          transform: perspective(1000px) scale(1.02);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 255, 245, 0.2);
         }
         
         .project-card.featured {
           grid-column: span 2;
+        }
+        
+        .project-card.blog-card {
+          border-color: var(--accent-magenta);
+        }
+        
+        .project-card.blog-card.hovered {
+          border-color: var(--accent-magenta);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 61, 61, 0.2);
         }
         
         .project-image-container {
@@ -597,7 +487,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform var(--transition-normal);
+          transition: transform 0.5s ease;
         }
         
         .project-card.hovered .project-image {
@@ -622,13 +512,28 @@ const ProjectsGrid = ({ fullPage = false }) => {
           position: absolute;
           top: var(--space-sm);
           right: var(--space-sm);
-          background-color: var(--accent-magenta);
-          color: var(--text-primary);
+          background-color: var(--accent-cyan);
+          color: var(--bg-primary);
           font-family: var(--font-mono);
           font-size: 0.7rem;
           padding: 4px 8px;
           border-radius: var(--border-radius-sm);
           z-index: 2;
+          font-weight: bold;
+        }
+        
+        .blog-badge {
+          position: absolute;
+          top: var(--space-sm);
+          right: var(--space-sm);
+          background-color: var(--accent-magenta);
+          color: var(--bg-primary);
+          font-family: var(--font-mono);
+          font-size: 0.7rem;
+          padding: 4px 8px;
+          border-radius: var(--border-radius-sm);
+          z-index: 2;
+          font-weight: bold;
         }
         
         .project-content {
@@ -642,6 +547,10 @@ const ProjectsGrid = ({ fullPage = false }) => {
           font-size: 1.5rem;
           margin-bottom: var(--space-sm);
           color: var(--accent-cyan);
+        }
+        
+        .blog-card .project-title {
+          color: var(--accent-magenta);
         }
         
         .project-categories {
@@ -658,6 +567,13 @@ const ProjectsGrid = ({ fullPage = false }) => {
           padding: 2px 6px;
           border-radius: var(--border-radius-sm);
           font-family: var(--font-mono);
+        }
+        
+        .blog-date {
+          font-size: 0.8rem;
+          color: var(--accent-magenta);
+          font-family: var(--font-mono);
+          margin-bottom: var(--space-sm);
         }
         
         .project-description {
@@ -684,28 +600,36 @@ const ProjectsGrid = ({ fullPage = false }) => {
           font-family: var(--font-mono);
         }
         
+        .blog-card .project-technology {
+          color: var(--accent-magenta);
+          border-color: var(--accent-magenta);
+        }
+        
         .project-links {
           display: flex;
           justify-content: flex-end;
         }
         
-        .project-card-decoration {
+        /* Better hover effect - replacing the corner element */
+        .project-card::before {
+          content: '';
           position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 50px;
-          height: 50px;
-          border-top: 1px solid var(--accent-cyan);
-          border-left: 1px solid var(--accent-cyan);
-          pointer-events: none;
-          opacity: 0.6;
-          transition: all var(--transition-normal);
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.5s ease;
         }
         
-        .project-card.hovered .project-card-decoration {
-          width: 70px;
-          height: 70px;
-          opacity: 1;
+        .project-card.hovered::before {
+          transform: scaleX(1);
+        }
+        
+        .project-card.blog-card::before {
+          background: linear-gradient(90deg, transparent, var(--accent-magenta), transparent);
         }
         
         .view-all-container {
@@ -760,11 +684,11 @@ const ProjectsGrid = ({ fullPage = false }) => {
         
         .light-theme .project-card.hovered {
           border-color: var(--accent-blue);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 15px rgba(77, 77, 255, 0.2);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1), 0 0 15px rgba(77, 77, 255, 0.2);
         }
         
-        .light-theme .project-card-decoration {
-          border-color: var(--accent-blue);
+        .light-theme .project-card::before {
+          background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
         }
         
         .light-theme .project-technology {
