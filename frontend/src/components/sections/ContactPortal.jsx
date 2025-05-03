@@ -441,7 +441,7 @@ const ContactPortal = () => {
                       GitHub
                     </a>
                     <a 
-                      href="https://www.linkedin.com/in/carter-perez-ProxyAuthRequired/" 
+                      href="https://www.linkedin.com/in/carterperez-dev/" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className={styles.socialLink}

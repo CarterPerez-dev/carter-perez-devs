@@ -43,11 +43,11 @@
 .techGalaxyContainer {
   position: relative;
   width: 100%;
-  height: 600px;
+  height: 650px;
   margin-bottom: var(--space-xl);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
-  background-color: rgba(10, 10, 10, 0.5);
+  background-color: rgba(0, 0,0, 0.1);
   border: 1px solid var(--border-primary);
 }
 
@@ -78,12 +78,12 @@
 
 .categoryButton {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   padding: var(--space-sm);
-  background-color: rgba(20, 20, 20, 0.6);
-  border: 1px solid var(--border-primary);
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 1px solid #000;
   border-radius: var(--border-radius-sm);
   color: var(--text-secondary);
   transition: all var(--transition-normal);
@@ -146,7 +146,6 @@
   right: var(--space-md);
   max-height: 300px;
   overflow-y: auto;
-  background-color: rgba(10, 10, 10, 0.8);
   border-radius: var(--border-radius-md);
   padding: var(--space-md);
   z-index: 5; /* Ensure it's above the canvas but below the skill details */
@@ -171,7 +170,7 @@
 }
 
 .skillItem {
-  background-color: rgba(20, 20, 20, 0.6);
+  background-color: rgba(20, 20, 20, 0.1);
   border-radius: var(--border-radius-sm);
   padding: var(--space-sm);
   transition: all var(--transition-normal);
