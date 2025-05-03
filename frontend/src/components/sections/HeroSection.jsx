@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAudio } from '../../contexts/AudioContext';
@@ -12,7 +12,6 @@ const HeroSection = () => {
   // Typewriter effect for subtitle
   const [subtitle, setSubtitle] = useState('');
   const fullSubtitle = 'CYBERSECURITY SPECIALIST | SYSTEM INTEGRATOR | FULL-STACK DEVELOPER';
-  const [profileImageLoaded, setProfileImageLoaded] = useState(false);
   
   // Holographic cube animation
   useEffect(() => {
@@ -30,9 +29,9 @@ const HeroSection = () => {
     window.addEventListener('resize', setCanvasDimensions);
     setCanvasDimensions();
     
-    // Cube parameters
+    // Cube parameters - increased size by 30%
     const cube = {
-      size: Math.min(canvas.width, canvas.height) * 0.2,
+      size: Math.min(canvas.width, canvas.height) * 0.26, // Increased from 0.2
       rotationX: 0,
       rotationY: 0,
       rotationZ: 0,
@@ -211,11 +210,11 @@ const HeroSection = () => {
     };
   }, []);
   
-  // Simulating image load with timeout
+  // Set loaded state after a delay
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setProfileImageLoaded(true);
-    }, 500);
+      setIsLoaded(true);
+    }, 800);
     
     return () => clearTimeout(timeoutId);
   }, []);
@@ -241,15 +240,6 @@ const HeroSection = () => {
       transition: { type: 'spring', stiffness: 100 }
     }
   };
-  
-  // Set loaded state after a delay
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIsLoaded(true);
-    }, 800);
-    
-    return () => clearTimeout(timeoutId);
-  }, []);
   
   return (
     <section className="hero-section">
@@ -315,38 +305,13 @@ const HeroSection = () => {
             transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`
           }}
         >
-          <div className="profile-container">
-            <div className={`profile-image-container ${profileImageLoaded ? 'loaded' : ''}`}>
-              <div className="profile-frame"></div>
-              <div className="profile-hologram">
-                <canvas 
-                  ref={canvasRef} 
-                  className="hologram-canvas"
-                  aria-hidden="true"
-                ></canvas>
-              </div>
-              <img 
-                src="/assets/profile.png" 
-                alt="Profile" 
-                className="profile-image"
-                onLoad={() => setProfileImageLoaded(true)}
-              />
-            </div>
-            
-            <div className="profile-data">
-              <div className="data-row">
-                <span className="data-label">STATUS</span>
-                <span className="data-value">ONLINE</span>
-              </div>
-              <div className="data-row">
-                <span className="data-label">CLASS</span>
-                <span className="data-value">CYBERSECURITY</span>
-              </div>
-              <div className="data-row">
-                <span className="data-label">LVL</span>
-                <span className="data-value">42</span>
-              </div>
-            </div>
+          <div className="hologram-container">
+            <div className="hologram-frame"></div>
+            <canvas 
+              ref={canvasRef} 
+              className="hologram-canvas"
+              aria-hidden="true"
+            ></canvas>
           </div>
         </motion.div>
       </motion.div>
@@ -471,117 +436,51 @@ const HeroSection = () => {
           position: relative;
         }
         
-        .profile-container {
-          width: 100%;
-          max-width: 400px;
-          height: 500px;
+        .hologram-container {
+          width: 350px;
+          height: 350px;
+          position: relative;
           display: flex;
-          flex-direction: column;
+          justify-content: center;
           align-items: center;
         }
         
-        .profile-image-container {
-          width: 300px;
-          height: 300px;
-          border-radius: 10px;
-          margin-bottom: var(--space-lg);
-          position: relative;
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.5s ease, transform 0.5s ease;
-          overflow: hidden;
-        }
-        
-        .profile-image-container.loaded {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        .profile-frame {
+        .hologram-frame {
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
           border: 2px solid var(--accent-cyan);
-          border-radius: 10px;
           box-shadow: 0 0 20px rgba(0, 255, 245, 0.3);
           z-index: 2;
           pointer-events: none;
         }
         
-        .profile-frame::before,
-        .profile-frame::after {
+        .hologram-frame::before,
+        .hologram-frame::after {
           content: '';
           position: absolute;
           background-color: var(--accent-cyan);
         }
         
-        .profile-frame::before {
+        .hologram-frame::before {
           top: 10px;
           right: 10px;
           width: 20px;
           height: 2px;
         }
         
-        .profile-frame::after {
+        .hologram-frame::after {
           top: 10px;
           right: 10px;
           width: 2px;
           height: 20px;
         }
         
-        .profile-hologram {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-          pointer-events: none;
-        }
-        
         .hologram-canvas {
           width: 100%;
           height: 100%;
-        }
-        
-        .profile-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          position: relative;
-          z-index: 0;
-          filter: contrast(1.1) saturate(0.8) brightness(0.9);
-        }
-        
-        .profile-data {
-          width: 80%;
-          background-color: rgba(10, 10, 10, 0.8);
-          border: 1px solid var(--accent-cyan);
-          border-radius: 5px;
-          padding: var(--space-md);
-          font-family: var(--font-mono);
-        }
-        
-        .data-row {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: var(--space-sm);
-        }
-        
-        .data-row:last-child {
-          margin-bottom: 0;
-        }
-        
-        .data-label {
-          color: var(--text-secondary);
-          font-size: 0.8rem;
-        }
-        
-        .data-value {
-          color: var(--accent-cyan);
-          font-weight: 500;
         }
         
         @keyframes blink {
@@ -618,9 +517,9 @@ const HeroSection = () => {
             font-size: 3.5rem;
           }
           
-          .profile-image-container {
-            width: 250px;
-            height: 250px;
+          .hologram-container {
+            width: 300px;
+            height: 300px;
           }
         }
         
@@ -662,9 +561,9 @@ const HeroSection = () => {
             width: 100%;
           }
           
-          .profile-image-container {
-            width: 200px;
-            height: 200px;
+          .hologram-container {
+            width: 250px;
+            height: 250px;
           }
         }
       `}</style>

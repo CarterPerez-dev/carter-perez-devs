@@ -23,88 +23,109 @@ const AmbientBackground = () => {
     window.addEventListener('resize', handleResize);
     handleResize();
     
-    // Colors based on theme
-    const primaryColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.5)' : 'rgba(77, 77, 255, 0.5)';
-    const secondaryColor = theme === 'dark' ? 'rgba(255, 61, 61, 0.5)' : 'rgba(255, 61, 61, 0.5)';
-    const bgColor = theme === 'dark' ? 'rgba(5, 5, 5, 0.7)' : 'rgba(245, 245, 245, 0.7)';
+    // Colors based on theme - making them more visible (less transparent)
+    const primaryColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.8)' : 'rgba(77, 77, 255, 0.8)';
+    const secondaryColor = theme === 'dark' ? 'rgba(255, 61, 61, 0.8)' : 'rgba(255, 61, 61, 0.8)';
+    const bgColor = theme === 'dark' ? 'rgba(5, 5, 5, 0.85)' : 'rgba(245, 245, 245, 0.85)';
+    const gridColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.2)' : 'rgba(77, 77, 255, 0.2)';
     
-    // Create grid nodes
-    const grid = [];
-    const gridSize = performanceLevel > 1 ? 30 : 50; // Larger grid cells for lower performance
-    const cols = Math.ceil(canvas.width / gridSize);
+    // Create grid lines
+    const gridLines = [];
+    const gridSize = performanceLevel > 1 ? 40 : 60; // Larger grid cells for lower performance
+    const cols = Math.ceil(canvas.width / gridSize) + 1; // Add one extra for smooth scrolling
     const rows = Math.ceil(canvas.height / gridSize);
     
-    for (let x = 0; x < cols; x++) {
-      for (let y = 0; y < rows; y++) {
-        const posX = x * gridSize;
-        const posY = y * gridSize;
-        
-        // Add some randomness to grid
-        const random = Math.random();
-        if (random > 0.7 || performanceLevel < 2) {
-          grid.push({
-            x: posX,
-            y: posY,
-            active: random > 0.9, // Some nodes start active
-            pulsePhase: Math.random() * Math.PI * 2,
-            pulseSpeed: 0.5 + Math.random() * 0.5
-          });
-        }
-      }
+    // Horizontal lines
+    for (let y = 0; y <= rows; y++) {
+      gridLines.push({
+        x1: 0,
+        y1: y * gridSize,
+        x2: canvas.width,
+        y2: y * gridSize,
+        offset: 0,
+        direction: 'horizontal'
+      });
     }
     
-    // Create moving particles
-    const particleCount = performanceLevel * 20; // Scale with performance level
+    // Vertical lines
+    for (let x = 0; x <= cols; x++) {
+      gridLines.push({
+        x1: x * gridSize,
+        y1: 0,
+        x2: x * gridSize,
+        y2: canvas.height,
+        offset: 0,
+        direction: 'vertical'
+      });
+    }
+    
+    // Create moving particles - increasing count
+    const particleCount = performanceLevel * 30; // Increased from 20
     const particles = [];
     
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 2 + 1,
-        color: Math.random() > 0.8 ? secondaryColor : primaryColor
+        size: Math.random() * 3 + 1.5, // Increased size
+        speedX: (Math.random() - 0.5) * 0.8, // Increased speed
+        speedY: (Math.random() - 0.5) * 0.4, // Increased speed
+        color: Math.random() > 0.8 ? secondaryColor : primaryColor,
+        pulseRate: 0.01 + Math.random() * 0.02,
+        pulseOffset: Math.random() * Math.PI * 2,
+        connections: []
       });
     }
     
-    // Variables for scan line effect
-    let scanLineY = -100;
-    let scanLineDirection = 1;
-    let scanLineActive = false;
+    // Animation parameters
+    const gridSpeed = 0.5; // Increased grid movement speed
+    let offset = 0;
     
     const render = () => {
       // Clear canvas with slight opacity for trail effect
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Draw grid (if performance level allows)
-      if (performanceLevel > 1) {
-        ctx.strokeStyle = theme === 'dark' ? 'rgba(30, 30, 30, 0.5)' : 'rgba(210, 210, 210, 0.5)';
-        ctx.lineWidth = 1;
-        
-        // Vertical lines
-        for (let x = 0; x < canvas.width; x += gridSize) {
-          ctx.beginPath();
-          ctx.moveTo(x, 0);
-          ctx.lineTo(x, canvas.height);
-          ctx.stroke();
-        }
-        
-        // Horizontal lines
-        for (let y = 0; y < canvas.height; y += gridSize) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(canvas.width, y);
-          ctx.stroke();
-        }
+      // Update grid offset
+      offset += gridSpeed;
+      if (offset >= gridSize) {
+        offset = 0;
       }
       
-      // Update and draw particles
+      // Draw grid lines - increased opacity
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      
+      for (const line of gridLines) {
+        ctx.beginPath();
+        
+        if (line.direction === 'horizontal') {
+          ctx.moveTo(line.x1, line.y1);
+          ctx.lineTo(line.x2, line.y2);
+        } else {
+          // Move vertical lines for scrolling effect
+          const x = line.x1 - offset;
+          ctx.moveTo(x, line.y1);
+          ctx.lineTo(x, line.y2);
+        }
+        
+        ctx.stroke();
+      }
+      
+      // Reset particle connections
+      particles.forEach(particle => {
+        particle.connections = [];
+      });
+      
+      // Update particles
       for (const particle of particles) {
         // Update position
-        particle.x += particle.vx;
-        particle.y += particle.vy;
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        
+        // Pulse effect
+        particle.pulseOffset += particle.pulseRate;
+        const pulseFactor = 0.7 + Math.sin(particle.pulseOffset) * 0.3;
         
         // Wrap around edges
         if (particle.x < 0) particle.x = canvas.width;
@@ -114,84 +135,46 @@ const AmbientBackground = () => {
         
         // Draw particle
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, particle.size * pulseFactor, 0, Math.PI * 2);
         ctx.fillStyle = particle.color;
         ctx.fill();
-      }
-      
-      // Calculate and draw connections between nearby particles (if performance level allows)
-      if (performanceLevel > 2) {
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
+        
+        // Add glow effect to particles
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+        const glowColor = particle.color.replace('0.8)', '0.2)');
+        ctx.fillStyle = glowColor;
+        ctx.fill();
+        
+        // Find connections to nearby particles
+        if (performanceLevel > 1) { // Reduced requirement so more devices show connections
+          for (const otherParticle of particles) {
+            if (particle === otherParticle) continue;
+            
+            const dx = particle.x - otherParticle.x;
+            const dy = particle.y - otherParticle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            if (distance < 100) {
-              ctx.beginPath();
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              
-              // Fade opacity based on distance
-              const opacity = 1 - distance / 100;
-              ctx.strokeStyle = `rgba(0, 255, 245, ${opacity * 0.2})`;
-              ctx.stroke();
+            if (distance < 120) { // Increased connection distance
+              // Avoid duplicate connections
+              if (!particle.connections.includes(otherParticle) && 
+                  !otherParticle.connections.includes(particle)) {
+                particle.connections.push(otherParticle);
+                
+                // Draw connection
+                ctx.beginPath();
+                ctx.moveTo(particle.x, particle.y);
+                ctx.lineTo(otherParticle.x, otherParticle.y);
+                
+                // Fade opacity based on distance, but higher base opacity
+                const opacity = 0.2 + (1 - distance / 120) * 0.4;
+                ctx.strokeStyle = theme === 'dark' 
+                  ? `rgba(0, 255, 245, ${opacity})` 
+                  : `rgba(77, 77, 255, ${opacity})`;
+                ctx.lineWidth = 1.5; // Thicker lines
+                ctx.stroke();
+              }
             }
-          }
-        }
-      }
-      
-      // Draw grid nodes
-      for (const node of grid) {
-        // Update pulse
-        node.pulsePhase += 0.01 * node.pulseSpeed;
-        if (node.pulsePhase > Math.PI * 2) node.pulsePhase -= Math.PI * 2;
-        
-        // Draw node
-        const pulse = 0.5 + Math.sin(node.pulsePhase) * 0.5;
-        const radius = node.active ? 2 + pulse : 1;
-        
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = node.active 
-          ? (theme === 'dark' ? `rgba(0, 255, 245, ${0.3 + pulse * 0.5})` : `rgba(77, 77, 255, ${0.3 + pulse * 0.5})`)
-          : (theme === 'dark' ? 'rgba(100, 100, 100, 0.3)' : 'rgba(150, 150, 150, 0.3)');
-        ctx.fill();
-      }
-      
-      // Draw scan line (if performance level allows)
-      if (performanceLevel > 3) {
-        // Randomly trigger scan line
-        if (!scanLineActive && Math.random() < 0.005) {
-          scanLineActive = true;
-          scanLineY = -100;
-          scanLineDirection = 1;
-        }
-        
-        if (scanLineActive) {
-          // Draw scan line
-          ctx.beginPath();
-          ctx.moveTo(0, scanLineY);
-          ctx.lineTo(canvas.width, scanLineY);
-          ctx.strokeStyle = theme === 'dark' ? 'rgba(0, 255, 245, 0.5)' : 'rgba(77, 77, 255, 0.5)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          
-          // Add glow effect
-          ctx.shadowColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.8)' : 'rgba(77, 77, 255, 0.8)';
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.moveTo(0, scanLineY);
-          ctx.lineTo(canvas.width, scanLineY);
-          ctx.stroke();
-          ctx.shadowBlur = 0;
-          
-          // Move scan line
-          scanLineY += 5 * scanLineDirection;
-          
-          // Deactivate when off screen
-          if (scanLineY > canvas.height + 100) {
-            scanLineActive = false;
           }
         }
       }

@@ -15,6 +15,7 @@
     "framer-motion": "^12.9.4",
     "gsap": "^3.13.0",
     "phosphor-react": "^1.4.1",
+    "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.3",
