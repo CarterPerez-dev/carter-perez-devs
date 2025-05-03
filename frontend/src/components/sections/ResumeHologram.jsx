@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAudio } from '../../contexts/AudioContext';
+import styles from './ResumeHologram.module.css';
 
 // Resume sections data
 const RESUME_SECTIONS = [
@@ -483,21 +484,21 @@ const ResumeHologram = () => {
   // Render experience list
   const renderExperienceList = (experiences) => {
     return experiences.map((exp, index) => (
-      <div key={index} className="experience-item">
-        <div className="experience-header">
-          <h3 className="experience-title">{exp.title}</h3>
-          <div className="experience-meta">
-            <span className="experience-company">{exp.company}</span>
-            <span className="experience-separator">|</span>
-            <span className="experience-location">{exp.location}</span>
-            <span className="experience-separator">|</span>
-            <span className="experience-duration">{exp.duration}</span>
+      <div key={index} className={styles.experienceItem}>
+        <div className={styles.experienceHeader}>
+          <h3 className={styles.experienceTitle}>{exp.title}</h3>
+          <div className={styles.experienceMeta}>
+            <span className={styles.experienceCompany}>{exp.company}</span>
+            <span className={styles.experienceSeparator}>|</span>
+            <span className={styles.experienceLocation}>{exp.location}</span>
+            <span className={styles.experienceSeparator}>|</span>
+            <span className={styles.experienceDuration}>{exp.duration}</span>
           </div>
         </div>
         
-        <ul className="experience-responsibilities">
+        <ul className={styles.experienceResponsibilities}>
           {exp.responsibilities.map((item, idx) => (
-            <li key={idx} className="experience-responsibility-item">{item}</li>
+            <li key={idx} className={styles.experienceResponsibilityItem}>{item}</li>
           ))}
         </ul>
       </div>
@@ -507,19 +508,19 @@ const ResumeHologram = () => {
   // Render education list
   const renderEducationList = (educations) => {
     return educations.map((edu, index) => (
-      <div key={index} className="education-item">
-        <div className="education-header">
-          <h3 className="education-degree">{edu.degree}</h3>
-          <div className="education-meta">
-            <span className="education-institution">{edu.institution}</span>
-            <span className="education-separator">|</span>
-            <span className="education-duration">{edu.duration}</span>
+      <div key={index} className={styles.educationItem}>
+        <div className={styles.educationHeader}>
+          <h3 className={styles.educationDegree}>{edu.degree}</h3>
+          <div className={styles.educationMeta}>
+            <span className={styles.educationInstitution}>{edu.institution}</span>
+            <span className={styles.educationSeparator}>|</span>
+            <span className={styles.educationDuration}>{edu.duration}</span>
           </div>
         </div>
         
-        <ul className="education-details">
+        <ul className={styles.educationDetails}>
           {edu.details.map((item, idx) => (
-            <li key={idx} className="education-detail-item">{item}</li>
+            <li key={idx} className={styles.educationDetailItem}>{item}</li>
           ))}
         </ul>
       </div>
@@ -529,11 +530,11 @@ const ResumeHologram = () => {
   // Render skills list
   const renderSkillsList = (skillsData) => {
     return skillsData.categories.map((category, index) => (
-      <div key={index} className="skills-category">
-        <h3 className="skills-category-name">{category.name}</h3>
-        <div className="skills-grid">
+      <div key={index} className={styles.skillsCategory}>
+        <h3 className={styles.skillsCategoryName}>{category.name}</h3>
+        <div className={styles.skillsGrid}>
           {category.skills.map((skill, idx) => (
-            <div key={idx} className="skill-item">{skill}</div>
+            <div key={idx} className={styles.skillItem}>{skill}</div>
           ))}
         </div>
       </div>
@@ -543,12 +544,12 @@ const ResumeHologram = () => {
   // Render certifications list
   const renderCertificationsList = (certifications) => {
     return certifications.map((cert, index) => (
-      <div key={index} className="certification-item">
-        <div className="certification-name">{cert.name}</div>
-        <div className="certification-meta">
-          <span className="certification-issuer">{cert.issuer}</span>
-          <span className="certification-separator">|</span>
-          <span className="certification-date">{cert.date}</span>
+      <div key={index} className={styles.certificationItem}>
+        <div className={styles.certificationName}>{cert.name}</div>
+        <div className={styles.certificationMeta}>
+          <span className={styles.certificationIssuer}>{cert.issuer}</span>
+          <span className={styles.certificationSeparator}>|</span>
+          <span className={styles.certificationDate}>{cert.date}</span>
         </div>
       </div>
     ));
@@ -557,25 +558,25 @@ const ResumeHologram = () => {
   // Render projects list
   const renderProjectsList = (projects) => {
     return projects.map((project, index) => (
-      <div key={index} className="project-item">
-        <div className="project-header">
-          <h3 className="project-name">{project.name}</h3>
+      <div key={index} className={styles.projectItem}>
+        <div className={styles.projectHeader}>
+          <h3 className={styles.projectName}>{project.name}</h3>
           <a 
             href={project.link} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="project-link"
+            className={styles.projectLink}
             onClick={() => playSound('click')}
           >
             View
           </a>
         </div>
         
-        <p className="project-description">{project.description}</p>
+        <p className={styles.projectDescription}>{project.description}</p>
         
-        <div className="project-technologies">
+        <div className={styles.projectTechnologies}>
           {project.technologies.map((tech, idx) => (
-            <span key={idx} className="project-technology">{tech}</span>
+            <span key={idx} className={styles.projectTechnology}>{tech}</span>
           ))}
         </div>
       </div>
@@ -585,13 +586,13 @@ const ResumeHologram = () => {
   // Render contact information
   const renderContactInfo = (contact) => {
     return (
-      <div className="contact-info">
-        <div className="contact-item">
-          <div className="contact-label">Email</div>
-          <div className="contact-value">
+      <div className={styles.contactInfo}>
+        <div className={styles.contactItem}>
+          <div className={styles.contactLabel}>Email</div>
+          <div className={styles.contactValue}>
             <a 
               href={`mailto:${contact.email}`} 
-              className="contact-link"
+              className={styles.contactLink}
               onClick={() => playSound('click')}
             >
               {contact.email}
@@ -599,12 +600,12 @@ const ResumeHologram = () => {
           </div>
         </div>
         
-        <div className="contact-item">
-          <div className="contact-label">Phone</div>
-          <div className="contact-value">
+        <div className={styles.contactItem}>
+          <div className={styles.contactLabel}>Phone</div>
+          <div className={styles.contactValue}>
             <a 
               href={`tel:${contact.phone}`} 
-              className="contact-link"
+              className={styles.contactLink}
               onClick={() => playSound('click')}
             >
               {contact.phone}
@@ -612,19 +613,19 @@ const ResumeHologram = () => {
           </div>
         </div>
         
-        <div className="contact-item">
-          <div className="contact-label">Location</div>
-          <div className="contact-value">{contact.location}</div>
+        <div className={styles.contactItem}>
+          <div className={styles.contactLabel}>Location</div>
+          <div className={styles.contactValue}>{contact.location}</div>
         </div>
         
-        <div className="contact-item">
-          <div className="contact-label">Profiles</div>
-          <div className="contact-social">
+        <div className={styles.contactItem}>
+          <div className={styles.contactLabel}>Profiles</div>
+          <div className={styles.contactSocial}>
             <a 
               href={contact.github} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="contact-social-link"
+              className={styles.contactSocialLink}
               onClick={() => playSound('click')}
             >
               GitHub
@@ -633,7 +634,7 @@ const ResumeHologram = () => {
               href={contact.linkedin} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="contact-social-link"
+              className={styles.contactSocialLink}
               onClick={() => playSound('click')}
             >
               LinkedIn
@@ -654,7 +655,7 @@ const ResumeHologram = () => {
     
     switch (section.id) {
       case 'profile':
-        return <p className="section-text">{section.content}</p>;
+        return <p className={styles.sectionText}>{section.content}</p>;
       case 'experience':
         return renderExperienceList(section.content);
       case 'education':
@@ -693,10 +694,10 @@ const ResumeHologram = () => {
   };
   
   return (
-    <section className="resume-section" id="resume">
+    <section className={styles.resumeSection} id="resume">
       <div className="container">
         <motion.h1 
-          className="page-title"
+          className={styles.pageTitle}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -705,33 +706,33 @@ const ResumeHologram = () => {
         </motion.h1>
         
         <motion.div 
-          className="resume-container"
+          className={styles.resumeContainer}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <canvas 
             ref={canvasRef} 
-            className="resume-canvas"
+            className={styles.resumeCanvas}
             aria-hidden="true"
           ></canvas>
           
-          <div className="resume-content">
-            <div className="resume-header">
+          <div className={styles.resumeContent}>
+            <div className={styles.resumeHeader}>
               <motion.div 
-                className="resume-identity"
+                className={styles.resumeIdentity}
                 variants={itemVariants}
               >
-                <h2 className="resume-name">Carter Rush Perez</h2>
-                <div className="resume-title">System Integration Technician & Cybersecurity Specialist</div>
+                <h2 className={styles.resumeName}>Carter Rush Perez</h2>
+                <div className={styles.resumeTitle}>System Integration Technician & Cybersecurity Specialist</div>
               </motion.div>
               
               <motion.div 
-                className="resume-actions"
+                className={styles.resumeActions}
                 variants={itemVariants}
               >
                 <button 
-                  className="download-button"
+                  className={styles.downloadButton}
                   onClick={() => {
                     setShowDownloadOptions(!showDownloadOptions);
                     playSound('click');
@@ -739,10 +740,10 @@ const ResumeHologram = () => {
                   disabled={isDownloading}
                 >
                   {isDownloading ? (
-                    <span className="download-progress">
-                      <span className="progress-text">DOWNLOADING</span>
+                    <span className={styles.downloadProgress}>
+                      <span className={styles.progressText}>DOWNLOADING</span>
                       <span 
-                        className="progress-bar" 
+                        className={styles.progressBar} 
                         style={{ width: `${downloadProgress}%` }}
                       ></span>
                     </span>
@@ -752,21 +753,21 @@ const ResumeHologram = () => {
                 </button>
                 
                 {showDownloadOptions && !isDownloading && (
-                  <div className="download-options">
+                  <div className={styles.downloadOptions}>
                     <button 
-                      className="download-option"
+                      className={styles.downloadOption}
                       onClick={() => handleDownload('PDF')}
                     >
                       PDF Format
                     </button>
                     <button 
-                      className="download-option"
+                      className={styles.downloadOption}
                       onClick={() => handleDownload('DOCX')}
                     >
                       DOCX Format
                     </button>
                     <button 
-                      className="download-option"
+                      className={styles.downloadOption}
                       onClick={() => handleDownload('TXT')}
                     >
                       TXT Format
@@ -776,42 +777,42 @@ const ResumeHologram = () => {
               </motion.div>
             </div>
             
-            <div className="resume-body">
+            <div className={styles.resumeBody}>
               <motion.div 
-                className="resume-nav"
+                className={styles.resumeNav}
                 variants={itemVariants}
               >
-                <div className="nav-title">SECTIONS</div>
+                <div className={styles.navTitle}>SECTIONS</div>
                 {RESUME_SECTIONS.map((section) => (
                   <button 
                     key={section.id}
-                    className={`nav-item ${activeSection === section.id ? 'active' : ''}`}
+                    className={`${styles.navItem} ${activeSection === section.id ? styles.active : ''}`}
                     onClick={() => {
                       setActiveSection(section.id);
                       playSound('click');
                     }}
                   >
-                    <span className="nav-icon">{section.icon}</span>
-                    <span className="nav-label">{section.title}</span>
+                    <span className={styles.navIcon}>{section.icon}</span>
+                    <span className={styles.navLabel}>{section.title}</span>
                   </button>
                 ))}
               </motion.div>
               
               <motion.div 
-                className="resume-section-content"
+                className={styles.resumeSectionContent}
                 variants={itemVariants}
                 id={`section-${activeSection}`}
               >
-                <div className="section-header">
-                  <h2 className="section-title">
-                    <span className="section-icon">
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>
+                    <span className={styles.sectionIcon}>
                       {RESUME_SECTIONS.find(s => s.id === activeSection)?.icon}
                     </span>
                     <span>{RESUME_SECTIONS.find(s => s.id === activeSection)?.title}</span>
                   </h2>
                 </div>
                 
-                <div className="section-body">
+                <div className={styles.sectionBody}>
                   {renderSectionContent()}
                 </div>
               </motion.div>
@@ -819,798 +820,6 @@ const ResumeHologram = () => {
           </div>
         </motion.div>
       </div>
-      
-      <style jsx>{`
-        .resume-section {
-          padding: var(--space-xxl) 0;
-          position: relative;
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-        }
-        
-        .page-title {
-          text-align: center;
-          margin-bottom: var(--space-xl);
-          color: var(--accent-cyan);
-          font-size: 3rem;
-          position: relative;
-        }
-        
-        .page-title::after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100px;
-          height: 3px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            var(--accent-cyan),
-            transparent
-          );
-        }
-        
-        .resume-container {
-          position: relative;
-          width: 100%;
-          min-height: 600px;
-          box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
-          border-radius: var(--border-radius-lg);
-          overflow: hidden;
-        }
-        
-        .resume-canvas {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 0;
-          pointer-events: none;
-        }
-        
-        .resume-content {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          min-height: 600px;
-        }
-        
-        .resume-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: var(--space-lg);
-          background-color: rgba(10, 10, 10, 0.75);
-          border-bottom: 1px solid var(--accent-cyan);
-          backdrop-filter: blur(5px);
-        }
-        
-        .resume-identity {
-          flex: 1;
-        }
-        
-        .resume-name {
-          font-size: 1.8rem;
-          color: var(--accent-cyan);
-          margin-bottom: var(--space-xs);
-        }
-        
-        .resume-title {
-          color: var(--text-secondary);
-          font-size: 1.1rem;
-        }
-        
-        .resume-actions {
-          position: relative;
-        }
-        
-        .download-button {
-          padding: var(--space-sm) var(--space-lg);
-          background-color: rgba(0, 255, 245, 0.1);
-          border: 1px solid var(--accent-cyan);
-          border-radius: var(--border-radius-sm);
-          color: var(--accent-cyan);
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-          transition: all var(--transition-normal);
-          cursor: none;
-          position: relative;
-          overflow: hidden;
-          min-width: 180px;
-        }
-        
-        .download-button::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(0, 255, 245, 0.2),
-            transparent
-          );
-          transition: left 0.5s ease;
-        }
-        
-        .download-button:hover {
-          background-color: rgba(0, 255, 245, 0.2);
-          transform: translateY(-2px);
-        }
-        
-        .download-button:hover::before {
-          left: 100%;
-        }
-        
-        .download-button:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-        
-        .download-progress {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          gap: var(--space-xs);
-        }
-        
-        .progress-text {
-          font-size: 0.8rem;
-        }
-        
-        .progress-bar {
-          height: 3px;
-          background-color: var(--accent-cyan);
-          width: 0%;
-          transition: width 0.2s ease-out;
-        }
-        
-        .download-options {
-          position: absolute;
-          top: 100%;
-          right: 0;
-          margin-top: var(--space-xs);
-          background-color: rgba(10, 10, 10, 0.9);
-          border: 1px solid var(--accent-cyan);
-          border-radius: var(--border-radius-sm);
-          padding: var(--space-xs);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-xs);
-          min-width: 150px;
-          z-index: var(--z-dropdown);
-          backdrop-filter: blur(5px);
-        }
-        
-        .download-option {
-          padding: var(--space-xs) var(--space-sm);
-          background-color: transparent;
-          border: none;
-          color: var(--text-primary);
-          text-align: left;
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-          transition: all var(--transition-fast);
-          cursor: none;
-        }
-        
-        .download-option:hover {
-          background-color: rgba(0, 255, 245, 0.1);
-          color: var(--accent-cyan);
-        }
-        
-        .resume-body {
-          display: flex;
-          flex: 1;
-        }
-        
-        .resume-nav {
-          width: 250px;
-          padding: var(--space-md);
-          background-color: rgba(10, 10, 10, 0.75);
-          border-right: 1px solid var(--accent-cyan);
-          display: flex;
-          flex-direction: column;
-          backdrop-filter: blur(5px);
-        }
-        
-        .nav-title {
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-          color: var(--text-secondary);
-          margin-bottom: var(--space-md);
-          padding-bottom: var(--space-sm);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .nav-item {
-          display: flex;
-          align-items: center;
-          gap: var(--space-sm);
-          padding: var(--space-sm);
-          border-radius: var(--border-radius-sm);
-          color: var(--text-secondary);
-          background-color: transparent;
-          border: none;
-          font-family: var(--font-body);
-          font-size: 1rem;
-          text-align: left;
-          transition: all var(--transition-normal);
-          margin-bottom: var(--space-xs);
-          cursor: none;
-        }
-        
-        .nav-item:hover {
-          background-color: rgba(255, 255, 255, 0.05);
-          color: var(--text-primary);
-        }
-        
-        .nav-item.active {
-          background-color: rgba(0, 255, 245, 0.1);
-          color: var(--accent-cyan);
-        }
-        
-        .nav-icon {
-          font-size: 1.2rem;
-          min-width: 20px;
-          text-align: center;
-        }
-        
-        .resume-section-content {
-          flex: 1;
-          padding: var(--space-lg);
-          background-color: rgba(10, 10, 10, 0.75);
-          overflow-y: auto;
-          backdrop-filter: blur(5px);
-        }
-        
-        .resume-section-content::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        .resume-section-content::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
-        
-        .resume-section-content::-webkit-scrollbar-thumb {
-          background: var(--accent-cyan);
-          border-radius: 3px;
-        }
-        
-        .section-header {
-          margin-bottom: var(--space-lg);
-          padding-bottom: var(--space-sm);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .section-title {
-          display: flex;
-          align-items: center;
-          font-size: 1.5rem;
-          color: var(--accent-cyan);
-          gap: var(--space-sm);
-        }
-        
-        .section-icon {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: rgba(0, 255, 245, 0.1);
-          border-radius: 50%;
-          font-size: 1.2rem;
-        }
-        
-        .section-text {
-          color: var(--text-secondary);
-          line-height: 1.6;
-          font-size: 1.1rem;
-        }
-        
-        /* Experience styling */
-        .experience-item {
-          margin-bottom: var(--space-lg);
-          padding-bottom: var(--space-md);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .experience-item:last-child {
-          border-bottom: none;
-          margin-bottom: 0;
-          padding-bottom: 0;
-        }
-        
-        .experience-header {
-          margin-bottom: var(--space-sm);
-        }
-        
-        .experience-title {
-          font-size: 1.2rem;
-          color: var(--text-primary);
-          margin-bottom: var(--space-xs);
-        }
-        
-        .experience-meta {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-xs);
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-        }
-        
-        .experience-company {
-          color: var(--accent-magenta);
-        }
-        
-        .experience-separator {
-          color: var(--text-tertiary);
-        }
-        
-        .experience-responsibilities {
-          list-style-type: none;
-          padding-left: var(--space-md);
-        }
-        
-        .experience-responsibility-item {
-          position: relative;
-          color: var(--text-secondary);
-          margin-bottom: var(--space-xs);
-        }
-        
-        .experience-responsibility-item::before {
-          content: '▹';
-          position: absolute;
-          left: calc(-1 * var(--space-md));
-          color: var(--accent-cyan);
-        }
-        
-        /* Education styling */
-        .education-item {
-          margin-bottom: var(--space-lg);
-          padding-bottom: var(--space-md);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .education-item:last-child {
-          border-bottom: none;
-          margin-bottom: 0;
-          padding-bottom: 0;
-        }
-        
-        .education-header {
-          margin-bottom: var(--space-sm);
-        }
-        
-        .education-degree {
-          font-size: 1.2rem;
-          color: var(--text-primary);
-          margin-bottom: var(--space-xs);
-        }
-        
-        .education-meta {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-xs);
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-        }
-        
-        .education-institution {
-          color: var(--accent-magenta);
-        }
-        
-        .education-separator {
-          color: var(--text-tertiary);
-        }
-        
-        .education-details {
-          list-style-type: none;
-          padding-left: var(--space-md);
-        }
-        
-        .education-detail-item {
-          position: relative;
-          color: var(--text-secondary);
-          margin-bottom: var(--space-xs);
-        }
-        
-        .education-detail-item::before {
-          content: '▹';
-          position: absolute;
-          left: calc(-1 * var(--space-md));
-          color: var(--accent-cyan);
-        }
-        
-        /* Skills styling */
-        .skills-category {
-          margin-bottom: var(--space-lg);
-        }
-        
-        .skills-category:last-child {
-          margin-bottom: 0;
-        }
-        
-        .skills-category-name {
-          font-size: 1.2rem;
-          color: var(--accent-magenta);
-          margin-bottom: var(--space-sm);
-          position: relative;
-          display: inline-block;
-        }
-        
-        .skills-category-name::after {
-          content: '';
-          position: absolute;
-          bottom: -3px;
-          left: 0;
-          width: 100%;
-          height: 1px;
-          background-color: var(--accent-magenta);
-          opacity: 0.5;
-        }
-        
-        .skills-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: var(--space-sm);
-        }
-        
-        .skill-item {
-          padding: var(--space-xs) var(--space-sm);
-          background-color: rgba(255, 255, 255, 0.05);
-          border-radius: var(--border-radius-sm);
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-        }
-        
-        /* Certifications styling */
-        .certification-item {
-          margin-bottom: var(--space-md);
-          padding: var(--space-sm);
-          border-left: 2px solid var(--accent-cyan);
-          background-color: rgba(255, 255, 255, 0.03);
-        }
-        
-        .certification-name {
-          font-size: 1.1rem;
-          color: var(--text-primary);
-          margin-bottom: var(--space-xs);
-        }
-        
-        .certification-meta {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-xs);
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-        }
-        
-        .certification-issuer {
-          color: var(--accent-magenta);
-        }
-        
-        .certification-separator {
-          color: var(--text-tertiary);
-        }
-        
-        /* Projects styling */
-        .project-item {
-          margin-bottom: var(--space-lg);
-          padding: var(--space-md);
-          border-radius: var(--border-radius-sm);
-          background-color: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .project-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: var(--space-sm);
-        }
-        
-        .project-name {
-          font-size: 1.2rem;
-          color: var(--text-primary);
-        }
-        
-        .project-link {
-          padding: 2px 10px;
-          background-color: rgba(0, 255, 245, 0.1);
-          border-radius: var(--border-radius-sm);
-          color: var(--accent-cyan);
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-          transition: all var(--transition-normal);
-        }
-        
-        .project-link:hover {
-          background-color: var(--accent-cyan);
-          color: var(--bg-primary);
-        }
-        
-        .project-description {
-          color: var(--text-secondary);
-          margin-bottom: var(--space-sm);
-          line-height: 1.5;
-        }
-        
-        .project-technologies {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-xs);
-        }
-        
-        .project-technology {
-          padding: 2px 8px;
-          background-color: rgba(255, 255, 255, 0.05);
-          border-radius: var(--border-radius-sm);
-          color: var(--accent-cyan);
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-        }
-        
-        /* Contact styling */
-        .contact-info {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-          gap: var(--space-lg);
-        }
-        
-        .contact-item {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-xs);
-        }
-        
-        .contact-label {
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-          color: var(--accent-magenta);
-        }
-        
-        .contact-value {
-          font-size: 1.1rem;
-          color: var(--text-primary);
-        }
-        
-        .contact-link {
-          color: var(--accent-cyan);
-          transition: all var(--transition-normal);
-        }
-        
-        .contact-link:hover {
-          text-decoration: underline;
-        }
-        
-        .contact-social {
-          display: flex;
-          gap: var(--space-md);
-        }
-        
-        .contact-social-link {
-          padding: var(--space-xs) var(--space-sm);
-          background-color: rgba(0, 255, 245, 0.1);
-          border-radius: var(--border-radius-sm);
-          color: var(--accent-cyan);
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-          transition: all var(--transition-normal);
-        }
-        
-        .contact-social-link:hover {
-          background-color: var(--accent-cyan);
-          color: var(--bg-primary);
-          text-decoration: none;
-        }
-        
-        /* Light theme styles */
-        .light-theme .resume-header,
-        .light-theme .resume-nav,
-        .light-theme .resume-section-content {
-          background-color: rgba(245, 245, 245, 0.75);
-        }
-        
-        .light-theme .resume-header {
-          border-color: var(--accent-blue);
-        }
-        
-        .light-theme .resume-nav {
-          border-color: var(--accent-blue);
-        }
-        
-        .light-theme .resume-name,
-        .light-theme .section-title {
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .nav-item.active {
-          background-color: rgba(77, 77, 255, 0.1);
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .section-icon {
-          background-color: rgba(77, 77, 255, 0.1);
-        }
-        
-        .light-theme .download-button {
-          background-color: rgba(77, 77, 255, 0.1);
-          border-color: var(--accent-blue);
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .download-button::before {
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(77, 77, 255, 0.2),
-            transparent
-          );
-        }
-        
-        .light-theme .download-button:hover {
-          background-color: rgba(77, 77, 255, 0.2);
-        }
-        
-        .light-theme .progress-bar {
-          background-color: var(--accent-blue);
-        }
-        
-        .light-theme .download-options {
-          background-color: rgba(245, 245, 245, 0.9);
-          border-color: var(--accent-blue);
-        }
-        
-        .light-theme .download-option:hover {
-          background-color: rgba(77, 77, 255, 0.1);
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .resume-section-content::-webkit-scrollbar-thumb {
-          background: var(--accent-blue);
-        }
-        
-        .light-theme .experience-responsibility-item::before,
-        .light-theme .education-detail-item::before {
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .skills-category-name,
-        .light-theme .experience-company,
-        .light-theme .education-institution,
-        .light-theme .certification-issuer,
-        .light-theme .contact-label {
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .skills-category-name::after {
-          background-color: var(--accent-blue);
-        }
-        
-        .light-theme .certification-item {
-          border-left-color: var(--accent-blue);
-        }
-        
-        .light-theme .project-link,
-        .light-theme .contact-link,
-        .light-theme .contact-social-link,
-        .light-theme .project-technology {
-          color: var(--accent-blue);
-          background-color: rgba(77, 77, 255, 0.1);
-        }
-        
-        .light-theme .project-link:hover,
-        .light-theme .contact-social-link:hover {
-          background-color: var(--accent-blue);
-          color: white;
-        }
-        
-        /* Media queries */
-        @media (max-width: 1024px) {
-          .resume-body {
-            flex-direction: column;
-          }
-          
-          .resume-nav {
-            width: 100%;
-            border-right: none;
-            border-bottom: 1px solid var(--accent-cyan);
-            padding: var(--space-sm);
-            flex-direction: row;
-            flex-wrap: wrap;
-            gap: var(--space-xs);
-          }
-          
-          .nav-title {
-            width: 100%;
-            margin-bottom: var(--space-xs);
-          }
-          
-          .nav-item {
-            margin-bottom: 0;
-            padding: var(--space-xs) var(--space-sm);
-          }
-          
-          .nav-label {
-            font-size: 0.9rem;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .page-title {
-            font-size: 2.5rem;
-          }
-          
-          .resume-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: var(--space-md);
-          }
-          
-          .resume-actions {
-            width: 100%;
-          }
-          
-          .download-button {
-            width: 100%;
-          }
-          
-          .resume-name {
-            font-size: 1.5rem;
-          }
-          
-          .resume-title {
-            font-size: 1rem;
-          }
-          
-          .section-title {
-            font-size: 1.3rem;
-          }
-          
-          .contact-info {
-            grid-template-columns: 1fr;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .page-title {
-            font-size: 2rem;
-          }
-          
-          .nav-icon {
-            font-size: 1rem;
-          }
-          
-          .nav-label {
-            display: none;
-          }
-          
-          .nav-item {
-            padding: var(--space-xs);
-            min-width: 40px;
-            justify-content: center;
-          }
-          
-          .resume-section-content {
-            padding: var(--space-md);
-          }
-          
-          .skills-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
     </section>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAudio } from '../../contexts/AudioContext';
+import styles from './AITerminal.module.css'; // Import the CSS module
 
 // Terminal commands
 const COMMANDS = {
@@ -364,23 +365,23 @@ or just to connect about cybersecurity and development topics.
 
 SYSTEM INTEGRATION TECHNICIAN II | Sealing Technologies
 2024 - Present | Annapolis, MD
-• Build and configure custom cybersecurity and defense systems
-• Perform quality assurance testing and system optimization
-• Collaborate with cross-functional teams for solution delivery
-• Maintain detailed documentation for all build processes
+- Build and configure custom cybersecurity and defense systems
+- Perform quality assurance testing and system optimization
+- Collaborate with cross-functional teams for solution delivery
+- Maintain detailed documentation for all build processes
 
 GENERAL MANAGER | Jimmy John's
 2022 - 2024 | Severna Park, MD
-• Managed daily operations and supervised staff
-• Ensured efficient workflows and high customer satisfaction
-• Maintained network and POS systems functionality
-• Implemented new inventory procedures to reduce waste
+- Managed daily operations and supervised staff
+- Ensured efficient workflows and high customer satisfaction
+- Maintained network and POS systems functionality
+- Implemented new inventory procedures to reduce waste
 
 GENERAL MANAGER | Jimmy John's
 2022 - 2022 | Annapolis, MD
-• Diagnosed Network & POS issues
-• Oversaw staff scheduling and training
-• Ensured compliance with company standards
+- Diagnosed Network & POS issues
+- Oversaw staff scheduling and training
+- Ensured compliance with company standards
 `;
     setHistory(prev => [...prev, { type: 'system', content: experienceMessage }]);
   };
@@ -391,21 +392,21 @@ GENERAL MANAGER | Jimmy John's
 
 MASTER'S DEGREE IN CYBERSECURITY
 University of Maryland Global Campus | 2024 - Present
-• Focus on advanced security protocols and threat intelligence
-• Maintaining a 3.9 GPA while working full-time
-• Participating in cybersecurity research initiatives
+- Focus on advanced security protocols and threat intelligence
+- Maintaining a 3.9 GPA while working full-time
+- Participating in cybersecurity research initiatives
 
 ASSOCIATE'S DEGREE IN CYBERSECURITY
 Anne Arundel Community College | 2022 - 2024
-• Graduated with honors (3.8 GPA)
-• Focused on network security and ethical hacking principles
-• Participated in capture-the-flag competitions
-• Assisted professors with lab setup for security courses
+- Graduated with honors (3.8 GPA)
+- Focused on network security and ethical hacking principles
+- Participated in capture-the-flag competitions
+- Assisted professors with lab setup for security courses
 
 SOUTH RIVER HIGH SCHOOL
 2018 - 2022
-• Focus on science and mathematics
-• Participated in STEM-related extracurriculars
+- Focus on science and mathematics
+- Participated in STEM-related extracurriculars
 `;
     setHistory(prev => [...prev, { type: 'system', content: educationMessage }]);
   };
@@ -415,24 +416,24 @@ SOUTH RIVER HIGH SCHOOL
 === CERTIFICATIONS ===
 
 COMPTIA CERTIFICATIONS:
-• CompTIA A+
-• CompTIA Network+
-• CompTIA Security+
-• CompTIA CySA+
-• CompTIA PenTest+
-• CompTIA CASP+
+- CompTIA A+
+- CompTIA Network+
+- CompTIA Security+
+- CompTIA CySA+
+- CompTIA PenTest+
+- CompTIA CASP+
 
 ADDITIONAL CERTIFICATIONS:
-• PCEP (Certified Entry-Level Python Programmer)
+- PCEP (Certified Entry-Level Python Programmer)
 
 All CompTIA certifications were achieved within a nine-month period,
 with an average of two weeks study time for each.
 
 STUDY METHODS:
-• Watching Professor Messer's tutorials
-• Using ChatGPT to enhance understanding
-• Employing the PQR method
-• Maintaining confidence throughout the process
+- Watching Professor Messer's tutorials
+- Using ChatGPT to enhance understanding
+- Employing the PQR method
+- Maintaining confidence throughout the process
 `;
     setHistory(prev => [...prev, { type: 'system', content: certificationsMessage }]);
   };
@@ -448,12 +449,12 @@ STUDY METHODS:
 === RESUME INFORMATION ===
 
 My resume includes detailed information about my:
-• Work experience
-• Educational background
-• Technical skills
-• Certifications
-• Projects
-• Contact details
+- Work experience
+- Educational background
+- Technical skills
+- Certifications
+- Projects
+- Contact details
 
 You can view or download my complete resume by:
 1. Clicking the "RESUME" link in the navigation menu
@@ -727,10 +728,10 @@ drwxr-xr-x  contact/
   }, [showMatrix]);
   
   return (
-    <section className="terminal-section" id="terminal">
+    <section className={styles.terminalSection} id="terminal">
       <div className="container">
         <motion.h1 
-          className="page-title"
+          className={styles.pageTitle}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -739,71 +740,71 @@ drwxr-xr-x  contact/
         </motion.h1>
         
         <motion.div 
-          className="terminal-container"
+          className={styles.terminalContainer}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="terminal-header">
-            <div className="terminal-title">system.terminal</div>
-            <div className="terminal-controls">
-              <div className="terminal-control terminal-minimize"></div>
-              <div className="terminal-control terminal-maximize"></div>
-              <div className="terminal-control terminal-close"></div>
+          <div className={styles.terminalHeader}>
+            <div className={styles.terminalTitle}>system.terminal</div>
+            <div className={styles.terminalControls}>
+              <div className={`${styles.terminalControl} ${styles.terminalMinimize}`}></div>
+              <div className={`${styles.terminalControl} ${styles.terminalMaximize}`}></div>
+              <div className={`${styles.terminalControl} ${styles.terminalClose}`}></div>
             </div>
           </div>
           
-          <div className="terminal-window" ref={historyRef}>
+          <div className={styles.terminalWindow} ref={historyRef}>
             {history.map((entry, index) => (
               <div 
                 key={index} 
-                className={`terminal-entry terminal-${entry.type}`}
+                className={`${styles.terminalEntry} ${styles[`terminal${entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}`]}`}
               >
                 {entry.type === 'user' ? (
                   <>
-                    <span className="terminal-prompt">
-                      <span className="prompt-user">user</span>
-                      <span className="prompt-at">@</span>
-                      <span className="prompt-host">neural-terminal</span>
-                      <span className="prompt-colon">:</span>
-                      <span className="prompt-path">~</span>
-                      <span className="prompt-dollar">$</span>
+                    <span className={styles.terminalPrompt}>
+                      <span className={styles.promptUser}>user</span>
+                      <span className={styles.promptAt}>@</span>
+                      <span className={styles.promptHost}>neural-terminal</span>
+                      <span className={styles.promptColon}>:</span>
+                      <span className={styles.promptPath}>~</span>
+                      <span className={styles.promptDollar}>$</span>
                     </span>
-                    <span className="terminal-command">{entry.content}</span>
+                    <span className={styles.terminalCommand}>{entry.content}</span>
                   </>
                 ) : entry.type === 'loading' ? (
-                  <div className="terminal-loading">
+                  <div className={styles.terminalLoading}>
                     <span>{entry.content}</span>
-                    <span className="loading-dots">...</span>
+                    <span className={styles.loadingDots}>...</span>
                   </div>
                 ) : (
-                  <pre className="terminal-output">{entry.content}</pre>
+                  <pre className={styles.terminalOutput}>{entry.content}</pre>
                 )}
               </div>
             ))}
             
             {isLoading && (
-              <div className="terminal-entry terminal-loading">
+              <div className={`${styles.terminalEntry} ${styles.terminalLoading}`}>
                 <span className="loading-text">Processing</span>
-                <span className="loading-dots">...</span>
+                <span className={styles.loadingDots}>...</span>
               </div>
             )}
           </div>
           
-          <form onSubmit={handleSubmit} className="terminal-input-form">
-            <span className="terminal-prompt">
-              <span className="prompt-user">user</span>
-              <span className="prompt-at">@</span>
-              <span className="prompt-host">neural-terminal</span>
-              <span className="prompt-colon">:</span>
-              <span className="prompt-path">~</span>
-              <span className="prompt-dollar">$</span>
+          <form onSubmit={handleSubmit} className={styles.terminalInputForm}>
+            <span className={styles.terminalPrompt}>
+              <span className={styles.promptUser}>user</span>
+              <span className={styles.promptAt}>@</span>
+              <span className={styles.promptHost}>neural-terminal</span>
+              <span className={styles.promptColon}>:</span>
+              <span className={styles.promptPath}>~</span>
+              <span className={styles.promptDollar}>$</span>
             </span>
             <input 
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="terminal-input"
+              className={styles.terminalInput}
               ref={inputRef}
               autoFocus
               disabled={isLoading || showMatrix}
@@ -811,14 +812,14 @@ drwxr-xr-x  contact/
           </form>
           
           {showHackProgress && (
-            <div className="hack-progress-container">
-              <div className="hack-progress-label">
+            <div className={styles.hackProgressContainer}>
+              <div className={styles.hackProgressLabel}>
                 <span>HACK PROGRESS:</span>
-                <span className="hack-progress-percent">{Math.floor(hackProgress)}%</span>
+                <span className={styles.hackProgressPercent}>{Math.floor(hackProgress)}%</span>
               </div>
-              <div className="hack-progress-bar">
+              <div className={styles.hackProgressBar}>
                 <div 
-                  className="hack-progress-fill"
+                  className={styles.hackProgressFill}
                   style={{ width: `${hackProgress}%` }}
                 ></div>
               </div>
@@ -827,11 +828,11 @@ drwxr-xr-x  contact/
         </motion.div>
         
         {showMatrix && (
-          <div className="matrix-overlay">
+          <div className={styles.matrixOverlay}>
             {matrixCharacters.map((char, index) => (
               <div 
                 key={index}
-                className="matrix-char"
+                className={styles.matrixChar}
                 style={{
                   left: `${char.x}px`,
                   top: `${char.y}px`
@@ -843,345 +844,6 @@ drwxr-xr-x  contact/
           </div>
         )}
       </div>
-      
-      <style jsx>{`
-        .terminal-section {
-          padding: var(--space-xxl) 0;
-          min-height: 100vh;
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        
-        .page-title {
-          text-align: center;
-          margin-bottom: var(--space-xl);
-          color: var(--accent-cyan);
-          font-size: 3rem;
-          position: relative;
-        }
-        
-        .page-title::after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100px;
-          height: 3px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            var(--accent-cyan),
-            transparent
-          );
-        }
-        
-        .terminal-container {
-          width: 100%;
-          height: 70vh;
-          max-height: 600px;
-          background-color: rgba(16, 16, 16, 0.95);
-          border: 1px solid var(--accent-cyan);
-          border-radius: var(--border-radius-md);
-          overflow: hidden;
-          box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 245, 0.3);
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .terminal-header {
-          height: 30px;
-          background-color: rgba(0, 0, 0, 0.8);
-          border-bottom: 1px solid var(--accent-cyan);
-          display: flex;
-          align-items: center;
-          padding: 0 var(--space-sm);
-        }
-        
-        .terminal-title {
-          flex: 1;
-          color: var(--accent-cyan);
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-          text-align: center;
-        }
-        
-        .terminal-controls {
-          display: flex;
-          gap: 6px;
-        }
-        
-        .terminal-control {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-        
-        .terminal-minimize {
-          background-color: #ffbd2e;
-        }
-        
-        .terminal-maximize {
-          background-color: #28c940;
-        }
-        
-        .terminal-close {
-          background-color: #ff5f56;
-        }
-        
-        .terminal-window {
-          flex: 1;
-          overflow-y: auto;
-          padding: var(--space-md);
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-          line-height: 1.4;
-          color: var(--text-primary);
-        }
-        
-        .terminal-window::-webkit-scrollbar {
-          width: 8px;
-        }
-        
-        .terminal-window::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.3);
-        }
-        
-        .terminal-window::-webkit-scrollbar-thumb {
-          background: var(--accent-cyan);
-          border-radius: 4px;
-        }
-        
-        .terminal-entry {
-          margin-bottom: var(--space-sm);
-          white-space: pre-wrap;
-          word-break: break-word;
-        }
-        
-        .terminal-prompt {
-          display: inline-block;
-          margin-right: var(--space-xs);
-        }
-        
-        .prompt-user {
-          color: var(--accent-green);
-        }
-        
-        .prompt-at {
-          color: var(--text-primary);
-        }
-        
-        .prompt-host {
-          color: var(--accent-magenta);
-        }
-        
-        .prompt-colon,
-        .prompt-dollar {
-          color: var(--text-primary);
-        }
-        
-        .prompt-path {
-          color: var(--accent-blue);
-        }
-        
-        .terminal-command {
-          color: var(--text-primary);
-        }
-        
-        .terminal-output {
-          color: var(--text-secondary);
-          margin: var(--space-xs) 0 0;
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-        }
-        
-        .terminal-system .terminal-output {
-          color: var(--text-secondary);
-        }
-        
-        .terminal-ai .terminal-output {
-          color: var(--accent-cyan);
-        }
-        
-        .terminal-error .terminal-output {
-          color: #ff5f56;
-        }
-        
-        .terminal-loading {
-          color: var(--accent-purple);
-          display: flex;
-          align-items: center;
-          gap: 5px;
-        }
-        
-        .loading-dots {
-          animation: loading-dots 1.5s infinite;
-        }
-        
-        .terminal-input-form {
-          display: flex;
-          align-items: center;
-          padding: var(--space-sm) var(--space-md);
-          background-color: rgba(0, 0, 0, 0.3);
-          border-top: 1px solid rgba(0, 255, 245, 0.2);
-        }
-        
-        .terminal-input {
-          flex: 1;
-          background-color: transparent;
-          border: none;
-          outline: none;
-          color: var(--text-primary);
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-          caret-color: var(--accent-cyan);
-        }
-        
-        .hack-progress-container {
-          padding: var(--space-sm) var(--space-md);
-          background-color: rgba(0, 0, 0, 0.5);
-          border-top: 1px solid rgba(255, 61, 61, 0.2);
-        }
-        
-        .hack-progress-label {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: var(--space-xs);
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-          color: var(--accent-magenta);
-        }
-        
-        .hack-progress-percent {
-          font-weight: bold;
-        }
-        
-        .hack-progress-bar {
-          height: 6px;
-          background-color: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
-          overflow: hidden;
-        }
-        
-        .hack-progress-fill {
-          height: 100%;
-          background-color: var(--accent-magenta);
-          border-radius: 3px;
-          transition: width 0.3s ease-out;
-        }
-        
-        .matrix-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.9);
-          z-index: 100;
-          overflow: hidden;
-        }
-        
-        .matrix-char {
-          position: absolute;
-          color: var(--accent-green);
-          font-family: var(--font-mono);
-          font-size: 1.2rem;
-          text-shadow: 0 0 5px var(--accent-green);
-        }
-        
-        /* Light theme styles */
-        .light-theme .terminal-container {
-          background-color: rgba(235, 235, 235, 0.95);
-          border-color: var(--accent-blue);
-          box-shadow: 0 0 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(77, 77, 255, 0.3);
-        }
-        
-        .light-theme .terminal-header {
-          background-color: rgba(200, 200, 200, 0.8);
-          border-color: var(--accent-blue);
-        }
-        
-        .light-theme .terminal-title {
-          color: var(--accent-blue);
-        }
-        
-        .light-theme .terminal-window::-webkit-scrollbar-thumb {
-          background: var(--accent-blue);
-        }
-        
-        .light-theme .terminal-input-form,
-        .light-theme .hack-progress-container {
-          background-color: rgba(200, 200, 200, 0.3);
-        }
-        
-        .light-theme .terminal-input-form {
-          border-color: rgba(77, 77, 255, 0.2);
-        }
-        
-        /* Animations */
-        @keyframes loading-dots {
-          0%, 20% {
-            content: ".";
-          }
-          40% {
-            content: "..";
-          }
-          60%, 80% {
-            content: "...";
-          }
-          100% {
-            content: "";
-          }
-        }
-        
-        /* Media queries */
-        @media (max-width: 768px) {
-          .terminal-container {
-            height: 60vh;
-          }
-          
-          .page-title {
-            font-size: 2.5rem;
-          }
-          
-          .terminal-window {
-            font-size: 0.8rem;
-          }
-          
-          .terminal-input {
-            font-size: 0.8rem;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .terminal-container {
-            height: 50vh;
-          }
-          
-          .page-title {
-            font-size: 2rem;
-          }
-          
-          .terminal-window {
-            padding: var(--space-sm);
-            font-size: 0.7rem;
-          }
-          
-          .terminal-input-form {
-            padding: var(--space-xs) var(--space-sm);
-          }
-          
-          .terminal-input {
-            font-size: 0.7rem;
-          }
-          
-          .terminal-prompt {
-            font-size: 0.7rem;
-          }
-        }
-      `}</style>
     </section>
   );
 };

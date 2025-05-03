@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAudio } from '../../contexts/AudioContext';
+import styles from './HolographicTimeline.module.css';
 
 // Timeline data
 const TIMELINE_DATA = [
@@ -134,30 +135,23 @@ const HolographicTimeline = ({ fullPage = false }) => {
   const canvasRef = useRef(null);
   const timelineRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState('all');
-  const [filteredItems, setFilteredItems] = useState([]);
   const [expandedItem, setExpandedItem] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   
-  // Apply filter
-  useEffect(() => {
-    if (activeCategory === 'all') {
-      setFilteredItems([...TIMELINE_DATA].sort((a, b) => {
-        const dateA = parseDate(a.date);
-        const dateB = parseDate(b.date);
-        return dateB - dateA; // Most recent first
-      }));
-    } else {
-      setFilteredItems(
-        [...TIMELINE_DATA]
-          .filter(item => item.category === activeCategory)
-          .sort((a, b) => {
-            const dateA = parseDate(a.date);
-            const dateB = parseDate(b.date);
-            return dateB - dateA; // Most recent first
-          })
-      );
-    }
+  // Create a memoized filtered list of items based on the active category
+  const filteredItems = useMemo(() => {
+    // Filter by category
+    const filtered = activeCategory === 'all' 
+      ? [...TIMELINE_DATA] 
+      : TIMELINE_DATA.filter(item => item.category === activeCategory);
+    
+    // Sort by date (most recent first)
+    return filtered.sort((a, b) => {
+      const dateA = parseDate(a.date);
+      const dateB = parseDate(b.date);
+      return dateB - dateA;
+    });
   }, [activeCategory]);
   
   // Handle category change
@@ -345,11 +339,11 @@ const HolographicTimeline = ({ fullPage = false }) => {
   };
   
   return (
-    <section className={`timeline-section ${fullPage ? 'full-page' : ''}`} id="experience">
+    <section className={`${styles.timelineSection} ${fullPage ? styles.fullPage : ''}`} id="experience">
       <div className="container">
         {!fullPage && (
           <motion.h2 
-            className="section-title"
+            className={styles.sectionTitle}
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -361,7 +355,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
         
         {fullPage && (
           <motion.h1 
-            className="page-title"
+            className={styles.pageTitle}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -371,7 +365,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
         )}
         
         <motion.div 
-          className="category-selector"
+          className={styles.categorySelector}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -380,24 +374,24 @@ const HolographicTimeline = ({ fullPage = false }) => {
           {CATEGORIES.map((category) => (
             <button
               key={category.id}
-              className={`category-button ${activeCategory === category.id ? 'active' : ''}`}
+              className={`${styles.categoryButton} ${activeCategory === category.id ? styles.active : ''}`}
               onClick={() => handleCategoryChange(category.id)}
             >
-              <span className="category-icon">{category.icon}</span>
-              <span className="category-name">{category.name}</span>
+              <span className={styles.categoryIcon}>{category.icon}</span>
+              <span className={styles.categoryName}>{category.name}</span>
             </button>
           ))}
         </motion.div>
         
-        <div className="timeline-container">
+        <div className={styles.timelineContainer}>
           <canvas 
             ref={canvasRef} 
-            className="timeline-grid"
+            className={styles.timelineGrid}
             aria-hidden="true"
           ></canvas>
           
           <motion.div 
-            className="timeline-items"
+            className={styles.timelineItems}
             ref={timelineRef}
             variants={containerVariants}
             initial="hidden"
@@ -405,7 +399,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
             viewport={{ once: true, margin: "-100px" }}
           >
             {filteredItems.length > 0 ? (
-              filteredItems.map((item, index) => {
+              filteredItems.map((item) => {
                 const categoryStyle = getCategoryStyle(item.category);
                 const isExpanded = expandedItem === item.id;
                 
@@ -413,7 +407,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
                   <motion.div 
                     key={item.id}
                     id={`timeline-item-${item.id}`}
-                    className={`timeline-item ${isExpanded ? 'expanded' : ''} ${hoveredItem === item.id ? 'hovered' : ''}`}
+                    className={`${styles.timelineItem} ${isExpanded ? styles.expanded : ''} ${hoveredItem === item.id ? styles.hovered : ''}`}
                     variants={itemVariants}
                     onClick={() => handleItemClick(item.id)}
                     onMouseEnter={() => setHoveredItem(item.id)}
@@ -422,44 +416,44 @@ const HolographicTimeline = ({ fullPage = false }) => {
                       '--timeline-color': categoryStyle.color
                     }}
                   >
-                    <div className="timeline-item-header">
-                      <div className="timeline-icon" style={{ backgroundColor: categoryStyle.color }}>
+                    <div className={styles.timelineItemHeader}>
+                      <div className={styles.timelineIcon} style={{ backgroundColor: categoryStyle.color }}>
                         {categoryStyle.icon}
                       </div>
                       
-                      <div className="timeline-header-content">
-                        <h3 className="timeline-title">{item.title}</h3>
-                        <div className="timeline-subtitle">
-                          <span className="timeline-company">{item.company}</span>
-                          <span className="timeline-separator">|</span>
-                          <span className="timeline-location">{item.location}</span>
+                      <div className={styles.timelineHeaderContent}>
+                        <h3 className={styles.timelineTitle}>{item.title}</h3>
+                        <div className={styles.timelineSubtitle}>
+                          <span className={styles.timelineCompany}>{item.company}</span>
+                          <span className={styles.timelineSeparator}>|</span>
+                          <span className={styles.timelineLocation}>{item.location}</span>
                         </div>
                       </div>
                       
-                      <div className="timeline-date">{item.date}</div>
+                      <div className={styles.timelineDate}>{item.date}</div>
                     </div>
                     
-                    <div className="timeline-content">
-                      <p className="timeline-description">{item.description}</p>
+                    <div className={styles.timelineContent}>
+                      <p className={styles.timelineDescription}>{item.description}</p>
                       
                       {isExpanded && (
-                        <div className="timeline-details">
-                          <div className="timeline-section">
-                            <h4 className="timeline-section-title">Key Achievements</h4>
-                            <ul className="timeline-achievements">
+                        <div className={styles.timelineDetails}>
+                          <div className={styles.timelineSection}>
+                            <h4 className={styles.timelineSectionTitle}>Key Achievements</h4>
+                            <ul className={styles.timelineAchievements}>
                               {item.achievements.map((achievement, idx) => (
-                                <li key={idx} className="timeline-achievement-item">
+                                <li key={idx} className={styles.timelineAchievementItem}>
                                   {achievement}
                                 </li>
                               ))}
                             </ul>
                           </div>
                           
-                          <div className="timeline-section">
-                            <h4 className="timeline-section-title">Skills Applied</h4>
-                            <div className="timeline-skills">
+                          <div className={styles.timelineSection}>
+                            <h4 className={styles.timelineSectionTitle}>Skills Applied</h4>
+                            <div className={styles.timelineSkills}>
                               {item.skills.map((skill, idx) => (
-                                <span key={idx} className="timeline-skill">
+                                <span key={idx} className={styles.timelineSkill}>
                                   {skill}
                                 </span>
                               ))}
@@ -469,19 +463,19 @@ const HolographicTimeline = ({ fullPage = false }) => {
                       )}
                     </div>
                     
-                    <div className="timeline-connector">
-                      <div className="timeline-line"></div>
-                      <div className="timeline-dot"></div>
+                    <div className={styles.timelineConnector}>
+                      <div className={styles.timelineLine}></div>
+                      <div className={styles.timelineDot}></div>
                     </div>
                   </motion.div>
                 );
               })
             ) : (
               <motion.div 
-                className="no-items-message"
+                className={styles.noItemsMessage}
                 variants={itemVariants}
               >
-                <div className="no-items-icon">🔍</div>
+                <div className={styles.noItemsIcon}>🔍</div>
                 <h3>NO TIMELINE ENTRIES FOUND</h3>
                 <p>Try selecting a different category filter.</p>
               </motion.div>
@@ -489,443 +483,6 @@ const HolographicTimeline = ({ fullPage = false }) => {
           </motion.div>
         </div>
       </div>
-      
-      <style jsx>{`
-        .timeline-section {
-          position: relative;
-          padding: var(--space-xxl) 0;
-          min-height: ${fullPage ? '100vh' : 'auto'};
-        }
-        
-        .timeline-section.full-page {
-          padding-top: calc(var(--header-height) + var(--space-xl));
-        }
-        
-        .section-title,
-        .page-title {
-          text-align: center;
-          margin-bottom: var(--space-xl);
-          color: var(--accent-cyan);
-          position: relative;
-          display: inline-block;
-          width: 100%;
-        }
-        
-        .page-title {
-          font-size: 3rem;
-        }
-        
-        .section-title::after,
-        .page-title::after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100px;
-          height: 3px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            var(--accent-cyan),
-            transparent
-          );
-        }
-        
-        .category-selector {
-          display: flex;
-          justify-content: center;
-          gap: var(--space-md);
-          margin-bottom: var(--space-xl);
-          flex-wrap: wrap;
-        }
-        
-        .category-button {
-          display: flex;
-          align-items: center;
-          gap: var(--space-xs);
-          padding: var(--space-sm) var(--space-md);
-          background-color: rgba(10, 10, 10, 0.5);
-          border: 1px solid var(--border-primary);
-          border-radius: var(--border-radius-sm);
-          color: var(--text-secondary);
-          transition: all var(--transition-normal);
-          cursor: none;
-        }
-        
-        .category-button:hover {
-          transform: translateY(-2px);
-          border-color: var(--accent-cyan);
-          box-shadow: 0 0 10px rgba(0, 255, 245, 0.2);
-        }
-        
-        .category-button.active {
-          background-color: rgba(0, 255, 245, 0.1);
-          border-color: var(--accent-cyan);
-          color: var(--accent-cyan);
-          box-shadow: 0 0 15px rgba(0, 255, 245, 0.3);
-        }
-        
-        .category-icon {
-          font-size: 1.2rem;
-        }
-        
-        .category-name {
-          font-family: var(--font-mono);
-          font-size: 0.8rem;
-          letter-spacing: 1px;
-        }
-        
-        .timeline-container {
-          position: relative;
-          width: 100%;
-          height: 600px;
-          background-color: rgba(10, 10, 10, 0.5);
-          border-radius: var(--border-radius-lg);
-          overflow: hidden;
-          border: 1px solid var(--border-primary);
-        }
-        
-        .timeline-grid {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-          pointer-events: none;
-        }
-        
-        .timeline-items {
-          position: relative;
-          z-index: 2;
-          height: 100%;
-          overflow-y: auto;
-          padding: var(--space-lg);
-        }
-        
-        .timeline-items::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        .timeline-items::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
-        
-        .timeline-items::-webkit-scrollbar-thumb {
-          background: var(--accent-cyan);
-          border-radius: 3px;
-        }
-        
-        .timeline-item {
-          position: relative;
-          background-color: rgba(20, 20, 20, 0.7);
-          border-radius: var(--border-radius-md);
-          margin-bottom: var(--space-lg);
-          overflow: hidden;
-          backdrop-filter: blur(5px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          transition: all var(--transition-normal);
-          transform-origin: center left;
-        }
-        
-        .timeline-item:hover,
-        .timeline-item.hovered {
-          transform: translateX(5px);
-          border-color: var(--timeline-color);
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), 0 0 10px var(--timeline-color);
-        }
-        
-        .timeline-item.expanded {
-          background-color: rgba(30, 30, 30, 0.8);
-        }
-        
-        .timeline-item-header {
-          display: flex;
-          align-items: center;
-          padding: var(--space-md);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          cursor: none;
-        }
-        
-        .timeline-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          margin-right: var(--space-md);
-          flex-shrink: 0;
-        }
-        
-        .timeline-header-content {
-          flex: 1;
-        }
-        
-        .timeline-title {
-          font-size: 1.2rem;
-          margin-bottom: var(--space-xs);
-          color: var(--text-primary);
-        }
-        
-        .timeline-subtitle {
-          display: flex;
-          align-items: center;
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          flex-wrap: wrap;
-        }
-        
-        .timeline-separator {
-          margin: 0 var(--space-xs);
-          color: var(--text-tertiary);
-        }
-        
-        .timeline-date {
-          font-family: var(--font-mono);
-          font-size: 0.9rem;
-          color: var(--timeline-color);
-          white-space: nowrap;
-          margin-left: var(--space-md);
-        }
-        
-        .timeline-content {
-          padding: var(--space-md);
-        }
-        
-        .timeline-description {
-          color: var(--text-secondary);
-          line-height: 1.5;
-          margin-bottom: var(--space-md);
-        }
-        
-        .timeline-details {
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          padding-top: var(--space-md);
-        }
-        
-        .timeline-section {
-          margin-bottom: var(--space-md);
-        }
-        
-        .timeline-section:last-child {
-          margin-bottom: 0;
-        }
-        
-        .timeline-section-title {
-          font-size: 1rem;
-          color: var(--timeline-color);
-          margin-bottom: var(--space-sm);
-          font-family: var(--font-mono);
-          letter-spacing: 1px;
-        }
-        
-        .timeline-achievements {
-          list-style-type: none;
-          padding-left: var(--space-md);
-        }
-        
-        .timeline-achievement-item {
-          position: relative;
-          color: var(--text-secondary);
-          margin-bottom: var(--space-xs);
-          line-height: 1.5;
-        }
-        
-        .timeline-achievement-item::before {
-          content: '▹';
-          position: absolute;
-          left: -15px;
-          color: var(--timeline-color);
-        }
-        
-        .timeline-skills {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-xs);
-        }
-        
-        .timeline-skill {
-          background-color: rgba(255, 255, 255, 0.1);
-          color: var(--text-primary);
-          padding: 3px 10px;
-          border-radius: var(--border-radius-sm);
-          font-size: 0.8rem;
-          border: 1px solid var(--timeline-color);
-        }
-        
-        .timeline-connector {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          pointer-events: none;
-          z-index: -1;
-        }
-        
-        .timeline-line {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 20px;
-          width: 1px;
-          background-color: var(--timeline-color);
-        }
-        
-        .timeline-dot {
-          position: absolute;
-          top: 30px;
-          left: 20px;
-          width: 10px;
-          height: 10px;
-          background-color: var(--timeline-color);
-          border-radius: 50%;
-          transform: translateX(-4.5px);
-          box-shadow: 0 0 10px var(--timeline-color);
-        }
-        
-        .no-items-message {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          color: var(--text-secondary);
-          text-align: center;
-        }
-        
-        .no-items-icon {
-          font-size: 3rem;
-          margin-bottom: var(--space-md);
-        }
-        
-        /* Light theme styles */
-        .light-theme .timeline-container {
-          background-color: rgba(245, 245, 245, 0.5);
-        }
-        
-        .light-theme .timeline-item {
-          background-color: rgba(230, 230, 230, 0.7);
-          border-color: rgba(0, 0, 0, 0.1);
-        }
-        
-        .light-theme .timeline-item.expanded {
-          background-color: rgba(215, 215, 215, 0.8);
-        }
-        
-        .light-theme .category-button {
-          background-color: rgba(220, 220, 220, 0.5);
-          border-color: rgba(0, 0, 0, 0.1);
-        }
-        
-        .light-theme .category-button:hover {
-          border-color: var(--accent-blue);
-          box-shadow: 0 0 10px rgba(77, 77, 255, 0.2);
-        }
-        
-        .light-theme .category-button.active {
-          background-color: rgba(77, 77, 255, 0.1);
-          border-color: var(--accent-blue);
-          color: var(--accent-blue);
-          box-shadow: 0 0 15px rgba(77, 77, 255, 0.3);
-        }
-        
-        .light-theme .timeline-items::-webkit-scrollbar-thumb {
-          background: var(--accent-blue);
-        }
-        
-        .light-theme .timeline-item-header,
-        .light-theme .timeline-details {
-          border-color: rgba(0, 0, 0, 0.1);
-        }
-        
-        .light-theme .timeline-skill {
-          background-color: rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Media queries */
-        @media (max-width: 768px) {
-          .category-selector {
-            gap: var(--space-sm);
-          }
-          
-          .category-button {
-            padding: var(--space-xs) var(--space-sm);
-          }
-          
-          .timeline-item-header {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          
-          .timeline-date {
-            margin-left: 0;
-            margin-top: var(--space-xs);
-          }
-          
-          .timeline-items {
-            padding: var(--space-md);
-          }
-          
-          .page-title {
-            font-size: 2.2rem;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .timeline-icon {
-            width: 32px;
-            height: 32px;
-            font-size: 0.9rem;
-          }
-          
-          .timeline-title {
-            font-size: 1rem;
-          }
-          
-          .timeline-subtitle {
-            font-size: 0.8rem;
-          }
-          
-          .timeline-date {
-            font-size: 0.8rem;
-          }
-          
-          .timeline-description {
-            font-size: 0.9rem;
-          }
-          
-          .timeline-section-title {
-            font-size: 0.9rem;
-          }
-          
-          .timeline-achievement-item,
-          .timeline-skill {
-            font-size: 0.8rem;
-          }
-          
-          .category-name {
-            display: none;
-          }
-          
-          .category-icon {
-            font-size: 1.5rem;
-          }
-          
-          .category-button {
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-          }
-        }
-      `}</style>
     </section>
   );
 };

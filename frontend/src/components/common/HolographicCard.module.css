@@ -1,0 +1,66 @@
+/* frontend/src/components/common/HolographicCard.module.css */
+.holographicCard {
+  position: relative;
+  border-style: solid;
+  background-color: var(--card-bg-color);
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.holographicCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(0, 255, 245, 0.1) 50%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+  transform: translateZ(1px);
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.holographicCard:hover::before {
+  opacity: 0.8;
+}
+
+.holographicCard.glassEffect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(8px);
+  z-index: -1;
+}
+
+.header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--card-color);
+  z-index: 2;
+}
+
+.content {
+  padding: 1rem;
+  flex: 1;
+  z-index: 2;
+  position: relative;
+}
+
+.footer {
+  padding: 1rem;
+  border-top: 1px solid var(--card-color);
+  z-index: 2;
+}

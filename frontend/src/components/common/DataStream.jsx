@@ -1,8 +1,10 @@
+// frontend/src/components/common/DataStream.jsx
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useDataStream } from '../../hooks/useDataStream';
+import styles from './DataStream.module.css';
 
 const DataStream = ({
   width = '100%',
@@ -99,12 +101,10 @@ const DataStream = ({
   return (
     <motion.div
       ref={containerRef}
-      className={`data-stream ${className}`}
+      className={`${styles.dataStream} ${className}`}
       style={{
         width,
         height,
-        position: 'relative',
-        overflow: 'hidden',
         ...style
       }}
       initial={{ opacity: 0 }}
@@ -114,26 +114,11 @@ const DataStream = ({
     >
       <canvas
         ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0
-        }}
+        className={styles.canvas}
       />
       
       {children && (
-        <div className="data-stream-content" style={{
-          position: 'relative',
-          zIndex: 1,
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
+        <div className={styles.content}>
           {children}
         </div>
       )}

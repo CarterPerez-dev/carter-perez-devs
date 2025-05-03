@@ -1,0 +1,337 @@
+/* AITerminal.module.css */
+.terminalSection {
+  padding: var(--space-xxl) 0;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pageTitle {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  color: var(--accent-cyan);
+  font-size: 3rem;
+  position: relative;
+}
+
+.pageTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-cyan),
+    transparent
+  );
+}
+
+.terminalContainer {
+  width: 100%;
+  height: 70vh;
+  max-height: 600px;
+  background-color: rgba(16, 16, 16, 0.95);
+  border: 1px solid var(--accent-cyan);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 245, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.terminalHeader {
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid var(--accent-cyan);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-sm);
+}
+
+.terminalTitle {
+  flex: 1;
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.terminalControls {
+  display: flex;
+  gap: 6px;
+}
+
+.terminalControl {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.terminalClose {
+  background-color: #ff5f56;
+}
+
+.terminalMinimize {
+  background-color: #ffbd2e;
+}
+
+.terminalMaximize {
+  background-color: #28c940;
+}
+
+.terminalWindow {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.terminalWindow::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminalWindow::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.terminalWindow::-webkit-scrollbar-thumb {
+  background: var(--accent-cyan);
+  border-radius: 4px;
+}
+
+.terminalEntry {
+  margin-bottom: var(--space-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.terminalPrompt {
+  display: inline-block;
+  margin-right: var(--space-xs);
+}
+
+.promptUser {
+  color: var(--accent-green);
+}
+
+.promptAt {
+  color: var(--text-primary);
+}
+
+.promptHost {
+  color: var(--accent-magenta);
+}
+
+.promptColon,
+.promptDollar {
+  color: var(--text-primary);
+}
+
+.promptPath {
+  color: var(--accent-blue);
+}
+
+.terminalCommand {
+  color: var(--text-primary);
+}
+
+.terminalOutput {
+  color: var(--text-secondary);
+  margin: var(--space-xs) 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.terminalSystem .terminalOutput {
+  color: var(--text-secondary);
+}
+
+.terminalAi .terminalOutput {
+  color: var(--accent-cyan);
+}
+
+.terminalError .terminalOutput {
+  color: #ff5f56;
+}
+
+.terminalLoading {
+  color: var(--accent-purple);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.loadingDots {
+  animation: loadingDots 1.5s infinite;
+}
+
+.terminalInputForm {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background-color: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(0, 255, 245, 0.2);
+}
+
+.terminalInput {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  caret-color: var(--accent-cyan);
+}
+
+.hackProgressContainer {
+  padding: var(--space-sm) var(--space-md);
+  background-color: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(255, 61, 61, 0.2);
+}
+
+.hackProgressLabel {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-magenta);
+}
+
+.hackProgressPercent {
+  font-weight: bold;
+}
+
+.hackProgressBar {
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hackProgressFill {
+  height: 100%;
+  background-color: var(--accent-magenta);
+  border-radius: 3px;
+  transition: width 0.3s ease-out;
+}
+
+.matrixOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.matrixChar {
+  position: absolute;
+  color: var(--accent-green);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  text-shadow: 0 0 5px var(--accent-green);
+}
+
+/* Light theme styles */
+:global(.light-theme) .terminalContainer {
+  background-color: rgba(235, 235, 235, 0.95);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(77, 77, 255, 0.3);
+}
+
+:global(.light-theme) .terminalHeader {
+  background-color: rgba(200, 200, 200, 0.8);
+  border-color: var(--accent-blue);
+}
+
+:global(.light-theme) .terminalTitle {
+  color: var(--accent-blue);
+}
+
+:global(.light-theme) .terminalWindow::-webkit-scrollbar-thumb {
+  background: var(--accent-blue);
+}
+
+:global(.light-theme) .terminalInputForm,
+:global(.light-theme) .hackProgressContainer {
+  background-color: rgba(200, 200, 200, 0.3);
+}
+
+:global(.light-theme) .terminalInputForm {
+  border-color: rgba(77, 77, 255, 0.2);
+}
+
+/* Animations */
+@keyframes loadingDots {
+  0%, 20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%, 80% {
+    content: "...";
+  }
+  100% {
+    content: "";
+  }
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .terminalContainer {
+    height: 60vh;
+  }
+  
+  .pageTitle {
+    font-size: 2.5rem;
+  }
+  
+  .terminalWindow {
+    font-size: 0.8rem;
+  }
+  
+  .terminalInput {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminalContainer {
+    height: 50vh;
+  }
+  
+  .pageTitle {
+    font-size: 2rem;
+  }
+  
+  .terminalWindow {
+    padding: var(--space-sm);
+    font-size: 0.7rem;
+  }
+  
+  .terminalInputForm {
+    padding: var(--space-xs) var(--space-sm);
+  }
+  
+  .terminalInput {
+    font-size: 0.7rem;
+  }
+  
+  .terminalPrompt {
+    font-size: 0.7rem;
+  }
+}

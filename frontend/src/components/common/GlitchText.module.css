@@ -1,0 +1,81 @@
+/* GlitchText.module.css */
+.glitchTextContainer {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.glitchText {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.glitchTextSizeSmall {
+  font-size: 1rem;
+}
+
+.glitchTextSizeMedium {
+  font-size: 1.5rem;
+}
+
+.glitchTextSizeLarge {
+  font-size: 2.5rem;
+}
+
+.glitchTextSizeXlarge {
+  font-size: 4rem;
+}
+
+.glitchTextContainer::before,
+.glitchTextContainer::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  clip: rect(0, 0, 0, 0);
+}
+
+.glitchTextContainer::before {
+  left: -2px;
+  animation: glitchAnim1 3s infinite linear alternate-reverse;
+}
+
+.glitchTextContainer::after {
+  left: 2px;
+  animation: glitchAnim2 2s infinite linear alternate-reverse;
+}
+
+.glitchActive::before {
+  animation: glitchAnim1 3s infinite linear alternate-reverse;
+}
+
+.glitchActive::after {
+  animation: glitchAnim2 2s infinite linear alternate-reverse;
+}
+
+.glitchInactive::before,
+.glitchInactive::after {
+  animation: none;
+}
+
+@keyframes glitchAnim1 {
+  0%, 100% { clip: rect(0, 9999px, 5px, 0); transform: skewX(0.2deg); }
+  20% { clip: rect(0, 9999px, 51px, 0); transform: skewX(0.1deg); }
+  40% { clip: rect(0, 9999px, 32px, 0); transform: skewX(0.2deg); }
+  60% { clip: rect(0, 9999px, 92px, 0); transform: skewX(-0.1deg); }
+  80% { clip: rect(0, 9999px, 18px, 0); transform: skewX(-0.2deg); }
+}
+
+@keyframes glitchAnim2 {
+  0%, 100% { clip: rect(0, 9999px, 24px, 0); transform: skewX(0.3deg); }
+  20% { clip: rect(0, 9999px, 63px, 0); transform: skewX(-0.1deg); }
+  40% { clip: rect(0, 9999px, 79px, 0); transform: skewX(0.1deg); }
+  60% { clip: rect(0, 9999px, 35px, 0); transform: skewX(0.4deg); }
+  80% { clip: rect(0, 9999px, 46px, 0); transform: skewX(0deg); }
+}

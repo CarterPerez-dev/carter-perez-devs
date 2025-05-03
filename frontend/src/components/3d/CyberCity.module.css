@@ -1,0 +1,5 @@
+/* frontend/src/components/3d/CyberCity.module.css */
+.cyberCity {
+  position: relative;
+  overflow: hidden;
+}

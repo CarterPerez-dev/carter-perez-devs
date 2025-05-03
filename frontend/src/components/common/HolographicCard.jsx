@@ -1,8 +1,10 @@
+// frontend/src/components/common/HolographicCard.jsx
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useHolographicEffect } from '../../hooks/useHolographicEffect';
+import styles from './HolographicCard.module.css';
 
 const HolographicCard = ({
   children,
@@ -75,19 +77,31 @@ const HolographicCard = ({
     }
   };
   
+  // Create CSS variables for dynamic styles
+  const cardStyle = {
+    width,
+    height,
+    borderWidth,
+    borderRadius,
+    borderColor: cardColor,
+    boxShadow: `0 0 ${glowSize}px ${isHovered ? glowSize * 2 : glowSize}px ${cardColor}`,
+    '--card-color': cardColor,
+    '--card-bg-color': theme === 'dark' ? 'rgba(10, 10, 10, 0.7)' : 'rgba(245, 245, 245, 0.7)',
+    ...style
+  };
+  
+  // Create className with conditional modifiers
+  const cardClassName = `
+    ${styles.holographicCard} 
+    ${glassEffect ? styles.glassEffect : ''} 
+    ${className}
+  `;
+
   return (
     <motion.div
       ref={cardRef}
-      className={`holographic-card ${className} ${glassEffect ? 'glass-effect' : ''}`}
-      style={{
-        width,
-        height,
-        borderWidth,
-        borderRadius,
-        borderColor: cardColor,
-        boxShadow: `0 0 ${glowSize}px ${isHovered ? glowSize * 2 : glowSize}px ${cardColor}`,
-        ...style
-      }}
+      className={cardClassName}
+      style={cardStyle}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -96,90 +110,20 @@ const HolographicCard = ({
       {...props}
     >
       {header && (
-        <div className="holographic-card-header">
+        <div className={styles.header}>
           {header}
         </div>
       )}
       
-      <div className="holographic-card-content">
+      <div className={styles.content}>
         {children}
       </div>
       
       {footer && (
-        <div className="holographic-card-footer">
+        <div className={styles.footer}>
           {footer}
         </div>
       )}
-      
-      <style jsx>{`
-        .holographic-card {
-          position: relative;
-          border-style: solid;
-          background-color: ${theme === 'dark' 
-            ? 'rgba(10, 10, 10, 0.7)' 
-            : 'rgba(245, 245, 245, 0.7)'};
-          overflow: hidden;
-          transition: all 0.3s ease-out;
-          display: flex;
-          flex-direction: column;
-          transform-style: preserve-3d;
-          perspective: 1000px;
-        }
-        
-        .holographic-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(
-            135deg,
-            transparent 0%,
-            rgba(${cardColor === 'var(--accent-cyan)' 
-              ? '0, 255, 245' 
-              : cardColor === 'var(--accent-blue)' 
-                ? '77, 77, 255' 
-                : '0, 255, 245'}, 0.1) 50%,
-            transparent 100%
-          );
-          z-index: 1;
-          pointer-events: none;
-          transform: translateZ(1px);
-          opacity: ${isHovered ? 0.8 : 0.3};
-          transition: opacity 0.3s ease;
-        }
-        
-        .holographic-card.glass-effect::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          backdrop-filter: blur(8px);
-          z-index: -1;
-        }
-        
-        .holographic-card-header {
-          padding: 1rem;
-          border-bottom: 1px solid ${cardColor};
-          z-index: 2;
-        }
-        
-        .holographic-card-content {
-          padding: 1rem;
-          flex: 1;
-          z-index: 2;
-          position: relative;
-        }
-        
-        .holographic-card-footer {
-          padding: 1rem;
-          border-top: 1px solid ${cardColor};
-          z-index: 2;
-        }
-      `}</style>
     </motion.div>
   );
 };

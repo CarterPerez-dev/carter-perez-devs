@@ -1,0 +1,329 @@
+/* HolographicNav.module.css */
+.holographicNav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-dropdown);
+  font-family: var(--font-display);
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--header-height);
+  padding: 0 1.5rem;
+  background-color: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--accent-cyan);
+  position: relative;
+  overflow: hidden;
+}
+
+.navContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 245, 0.1), transparent);
+  animation: navGlow 8s linear infinite;
+  pointer-events: none;
+}
+
+.navLogo {
+  display: flex;
+  align-items: center;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logoSymbol {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0, 255, 245, 0.7);
+  margin-right: 0.5rem;
+  position: relative;
+}
+
+.logoSymbol::before {
+  content: 'C';
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--accent-magenta);
+  filter: blur(4px);
+  opacity: 0.7;
+  animation: logoGlitch 5s infinite alternate;
+}
+
+.logoText {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+}
+
+.navControls {
+  display: flex;
+  align-items: center;
+}
+
+.themeToggle,
+.audioToggle,
+.menuToggle {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  cursor: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.themeToggle:hover,
+.audioToggle:hover {
+  background-color: rgba(0, 255, 245, 0.1);
+  color: var(--accent-cyan);
+  transform: translateY(-2px);
+}
+
+.menuToggle {
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  position: relative;
+}
+
+.menuToggleLine {
+  width: 100%;
+  height: 2px;
+  background-color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.menuToggle.active .menuToggleLine:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+  background-color: var(--accent-cyan);
+}
+
+.menuToggle.active .menuToggleLine:nth-child(2) {
+  opacity: 0;
+}
+
+.menuToggle.active .menuToggleLine:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+  background-color: var(--accent-cyan);
+}
+
+.menuToggle:hover .menuToggleLine {
+  background-color: var(--accent-cyan);
+}
+
+.navMenu {
+  position: absolute;
+  top: var(--header-height);
+  right: 0;
+  width: 250px;
+  background-color: rgba(10, 10, 10, 0.95);
+  border-left: 1px solid var(--accent-cyan);
+  border-bottom: 1px solid var(--accent-cyan);
+  max-height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+}
+
+.menuBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.menuContent {
+  padding: 1rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.menuItem {
+  position: relative;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.menuLink::after {
+  display: none;
+}
+
+.menuIcon {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+  color: var(--accent-cyan);
+  transition: all 0.3s ease;
+}
+
+.menuTitle {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.menuActiveIndicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 245, 0.7);
+}
+
+.menuLink.hovered {
+  color: var(--text-primary);
+  background-color: rgba(0, 255, 245, 0.1);
+  transform: translateX(5px);
+}
+
+.menuLink.hovered .menuIcon {
+  color: var(--accent-magenta);
+}
+
+.menuHoverEffect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(0, 255, 245, 0.05) 0%, 
+    rgba(0, 255, 245, 0.02) 40%, 
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* Light theme styles */
+:global(.light-theme) .navContainer {
+  background-color: rgba(245, 245, 245, 0.8);
+  border-bottom: 1px solid var(--accent-blue);
+}
+
+:global(.light-theme) .navContainer::before {
+  background: linear-gradient(90deg, transparent, rgba(77, 77, 255, 0.1), transparent);
+}
+
+:global(.light-theme) .logoSymbol {
+  color: var(--accent-blue);
+  text-shadow: 0 0 10px rgba(77, 77, 255, 0.7);
+}
+
+:global(.light-theme) .logoSymbol::before {
+  color: var(--accent-magenta);
+}
+
+:global(.light-theme) .menuToggleLine {
+  background-color: var(--text-primary);
+}
+
+:global(.light-theme) .menuToggle.active .menuToggleLine:nth-child(1),
+:global(.light-theme) .menuToggle.active .menuToggleLine:nth-child(3),
+:global(.light-theme) .menuToggle:hover .menuToggleLine {
+  background-color: var(--accent-blue);
+}
+
+:global(.light-theme) .navMenu {
+  background-color: rgba(245, 245, 245, 0.95);
+  border-left: 1px solid var(--accent-blue);
+  border-bottom: 1px solid var(--accent-blue);
+}
+
+:global(.light-theme) .menuIcon {
+  color: var(--accent-blue);
+}
+
+:global(.light-theme) .menuActiveIndicator {
+  background-color: var(--accent-blue);
+  box-shadow: 0 0 10px rgba(77, 77, 255, 0.7);
+}
+
+:global(.light-theme) .menuLink.hovered {
+  background-color: rgba(77, 77, 255, 0.1);
+}
+
+:global(.light-theme) .menuHoverEffect {
+  background: linear-gradient(90deg, 
+    rgba(77, 77, 255, 0.05) 0%, 
+    rgba(77, 77, 255, 0.02) 40%, 
+    transparent 100%);
+}
+
+/* Animations */
+@keyframes navGlow {
+  0%, 100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes logoGlitch {
+  0%, 100% {
+    transform: translate(0);
+    opacity: 0.7;
+  }
+  20% {
+    transform: translate(-1px, 1px);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translate(1px, -1px);
+    opacity: 0.7;
+  }
+  60% {
+    transform: translate(-1px, -1px);
+    opacity: 0.5;
+  }
+  80% {
+    transform: translate(1px, 1px);
+    opacity: 0.7;
+  }
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .navContainer {
+    padding: 0 1rem;
+  }
+  
+  .logoText {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoText {
+    display: none;
+  }
+}

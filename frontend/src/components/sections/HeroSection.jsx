@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAudio } from '../../contexts/AudioContext';
+import styles from './HeroSection.module.css';
 
 const HeroSection = () => {
   const { playSound } = useAudio();
@@ -242,42 +243,42 @@ const HeroSection = () => {
   };
   
   return (
-    <section className="hero-section">
-      <div className="hero-background"></div>
+    <section className={styles.heroSection}>
+      <div className={styles.heroBackground}></div>
       
       <motion.div
-        className="hero-content"
+        className={styles.heroContent}
         variants={containerVariants}
         initial="hidden"
         animate={isLoaded ? 'visible' : 'hidden'}
       >
-        <div className="hero-left">
+        <div className={styles.heroLeft}>
           <motion.h1 
-            className="hero-title" 
+            className={styles.heroTitle} 
             variants={itemVariants}
             data-text="NEURAL INTERFACE"
           >
-            <span className="title-main">NEURAL</span>
-            <span className="title-accent">INTERFACE</span>
+            <span className={styles.titleMain}>NEURAL</span>
+            <span className={styles.titleAccent}>INTERFACE</span>
           </motion.h1>
           
           <motion.div 
-            className="hero-subtitle" 
+            className={styles.heroSubtitle} 
             variants={itemVariants}
           >
             {subtitle}
-            <span className="blinking-cursor"></span>
+            <span className={styles.blinkingCursor}></span>
           </motion.div>
           
           <motion.p 
-            className="hero-description" 
+            className={styles.heroDescription} 
             variants={itemVariants}
           >
             Welcome to my digital nexus. I craft secure systems, develop full-stack applications, and specialize in cybersecurity solutions. Navigate through my digital portfolio to discover my projects, skills, and experiences.
           </motion.p>
           
           <motion.div 
-            className="hero-cta" 
+            className={styles.heroCta} 
             variants={itemVariants}
           >
             <Link 
@@ -299,274 +300,22 @@ const HeroSection = () => {
         </div>
         
         <motion.div 
-          className="hero-right"
+          className={styles.heroRight}
           variants={itemVariants}
           style={{
             transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`
           }}
         >
-          <div className="hologram-container">
-            <div className="hologram-frame"></div>
+          <div className={styles.hologramContainer}>
+            <div className={styles.hologramFrame}></div>
             <canvas 
               ref={canvasRef} 
-              className="hologram-canvas"
+              className={styles.hologramCanvas}
               aria-hidden="true"
             ></canvas>
           </div>
         </motion.div>
       </motion.div>
-      
-      <style jsx>{`
-        .hero-section {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          overflow: hidden;
-          padding: var(--space-xxl) 0;
-        }
-        
-        .hero-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.95));
-          z-index: -1;
-        }
-        
-        .hero-background::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: 
-            radial-gradient(circle at 20% 30%, rgba(0, 255, 245, 0.05) 0%, transparent 30%),
-            radial-gradient(circle at 80% 70%, rgba(255, 61, 61, 0.05) 0%, transparent 30%);
-        }
-        
-        .hero-content {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          max-width: var(--container-lg);
-          margin: 0 auto;
-          width: 100%;
-          padding: 0 var(--space-md);
-          z-index: 1;
-        }
-        
-        .hero-left {
-          flex: 1;
-          max-width: 600px;
-          padding-right: var(--space-xl);
-        }
-        
-        .hero-title {
-          font-size: 4rem;
-          font-weight: 900;
-          margin-bottom: var(--space-md);
-          line-height: 1.1;
-          position: relative;
-          display: inline-block;
-        }
-        
-        .title-main {
-          display: block;
-          color: var(--text-primary);
-        }
-        
-        .title-accent {
-          display: block;
-          color: var(--accent-cyan);
-          text-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
-          position: relative;
-        }
-        
-        .title-accent::before {
-          content: 'INTERFACE';
-          position: absolute;
-          top: 0;
-          left: 0;
-          color: var(--accent-magenta);
-          filter: blur(4px);
-          opacity: 0.7;
-          animation: title-glitch 5s infinite alternate;
-        }
-        
-        .hero-subtitle {
-          font-family: var(--font-mono);
-          font-size: 1rem;
-          margin-bottom: var(--space-lg);
-          color: var(--text-secondary);
-          letter-spacing: 1px;
-        }
-        
-        .blinking-cursor {
-          display: inline-block;
-          width: 10px;
-          height: 1rem;
-          background-color: var(--accent-cyan);
-          animation: blink 1s step-end infinite;
-          margin-left: 2px;
-          vertical-align: middle;
-        }
-        
-        .hero-description {
-          font-size: 1.1rem;
-          margin-bottom: var(--space-xl);
-          color: var(--text-secondary);
-          line-height: 1.6;
-        }
-        
-        .hero-cta {
-          display: flex;
-          gap: var(--space-md);
-        }
-        
-        .hero-right {
-          flex: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-        }
-        
-        .hologram-container {
-          width: 350px;
-          height: 350px;
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        
-        .hologram-frame {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          border: 2px solid var(--accent-cyan);
-          box-shadow: 0 0 20px rgba(0, 255, 245, 0.3);
-          z-index: 2;
-          pointer-events: none;
-        }
-        
-        .hologram-frame::before,
-        .hologram-frame::after {
-          content: '';
-          position: absolute;
-          background-color: var(--accent-cyan);
-        }
-        
-        .hologram-frame::before {
-          top: 10px;
-          right: 10px;
-          width: 20px;
-          height: 2px;
-        }
-        
-        .hologram-frame::after {
-          top: 10px;
-          right: 10px;
-          width: 2px;
-          height: 20px;
-        }
-        
-        .hologram-canvas {
-          width: 100%;
-          height: 100%;
-        }
-        
-        @keyframes blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-        
-        @keyframes title-glitch {
-          0%, 100% {
-            transform: translate(0);
-            opacity: 0.7;
-          }
-          20% {
-            transform: translate(-2px, 2px);
-            opacity: 0.5;
-          }
-          40% {
-            transform: translate(2px, -2px);
-            opacity: 0.7;
-          }
-          60% {
-            transform: translate(-2px, -2px);
-            opacity: 0.5;
-          }
-          80% {
-            transform: translate(2px, 2px);
-            opacity: 0.7;
-          }
-        }
-        
-        /* Media queries */
-        @media (max-width: 1024px) {
-          .hero-title {
-            font-size: 3.5rem;
-          }
-          
-          .hologram-container {
-            width: 300px;
-            height: 300px;
-          }
-        }
-        
-        @media (max-width: 768px) {
-          .hero-content {
-            flex-direction: column;
-            text-align: center;
-          }
-          
-          .hero-left {
-            padding-right: 0;
-            margin-bottom: var(--space-xl);
-          }
-          
-          .hero-cta {
-            justify-content: center;
-          }
-          
-          .hero-title {
-            font-size: 3rem;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .hero-title {
-            font-size: 2.5rem;
-          }
-          
-          .hero-subtitle {
-            font-size: 0.9rem;
-          }
-          
-          .hero-description {
-            font-size: 1rem;
-          }
-          
-          .hero-cta {
-            flex-direction: column;
-            width: 100%;
-          }
-          
-          .hologram-container {
-            width: 250px;
-            height: 250px;
-          }
-        }
-      `}</style>
     </section>
   );
 };

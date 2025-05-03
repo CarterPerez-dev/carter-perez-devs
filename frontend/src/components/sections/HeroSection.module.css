@@ -1,0 +1,250 @@
+
+.heroSection {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-xxl) 0;
+}
+
+.heroBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.95));
+  z-index: -1;
+}
+
+.heroBackground::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(0, 255, 245, 0.05) 0%, transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(255, 61, 61, 0.05) 0%, transparent 30%);
+}
+
+.heroContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 var(--space-md);
+  z-index: 1;
+}
+
+.heroLeft {
+  flex: 1;
+  max-width: 600px;
+  padding-right: var(--space-xl);
+}
+
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: var(--space-md);
+  line-height: 1.1;
+  position: relative;
+  display: inline-block;
+}
+
+.titleMain {
+  display: block;
+  color: var(--text-primary);
+}
+
+.titleAccent {
+  display: block;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0, 255, 245, 0.5);
+  position: relative;
+}
+
+.titleAccent::before {
+  content: 'INTERFACE';
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--accent-magenta);
+  filter: blur(4px);
+  opacity: 0.7;
+  animation: titleGlitch 5s infinite alternate;
+}
+
+.heroSubtitle {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  margin-bottom: var(--space-lg);
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+}
+
+.blinkingCursor {
+  display: inline-block;
+  width: 10px;
+  height: 1rem;
+  background-color: var(--accent-cyan);
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
+.heroDescription {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-xl);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.heroCta {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.heroRight {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.hologramContainer {
+  width: 350px;
+  height: 350px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hologramFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(0, 255, 245, 0.3);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hologramFrame::before,
+.hologramFrame::after {
+  content: '';
+  position: absolute;
+  background-color: var(--accent-cyan);
+}
+
+.hologramFrame::before {
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 2px;
+}
+
+.hologramFrame::after {
+  top: 10px;
+  right: 10px;
+  width: 2px;
+  height: 20px;
+}
+
+.hologramCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes titleGlitch {
+  0%, 100% {
+    transform: translate(0);
+    opacity: 0.7;
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translate(2px, -2px);
+    opacity: 0.7;
+  }
+  60% {
+    transform: translate(-2px, -2px);
+    opacity: 0.5;
+  }
+  80% {
+    transform: translate(2px, 2px);
+    opacity: 0.7;
+  }
+}
+
+/* Media queries */
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 3.5rem;
+  }
+  
+  .hologramContainer {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .heroLeft {
+    padding-right: 0;
+    margin-bottom: var(--space-xl);
+  }
+  
+  .heroCta {
+    justify-content: center;
+  }
+  
+  .heroTitle {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 0.9rem;
+  }
+  
+  .heroDescription {
+    font-size: 1rem;
+  }
+  
+  .heroCta {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hologramContainer {
+    width: 250px;
+    height: 250px;
+  }
+}

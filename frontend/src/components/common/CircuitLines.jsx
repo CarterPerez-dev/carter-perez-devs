@@ -1,6 +1,8 @@
+// frontend/src/components/common/CircuitLines.jsx
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../contexts/ThemeContext';
+import styles from './CircuitLines.module.css';
 
 const CircuitLines = ({
   color = 'auto',
@@ -314,25 +316,17 @@ const CircuitLines = ({
   
   return (
     <div 
-      className={`circuit-lines ${className}`}
+      className={`${styles.circuitLines} ${className}`}
       style={{ 
         width, 
         height, 
-        position: 'relative',
-        overflow: 'hidden',
         ...style
       }}
       {...props}
     >
       <canvas 
         ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%'
-        }}
+        className={styles.canvas}
       />
     </div>
   );

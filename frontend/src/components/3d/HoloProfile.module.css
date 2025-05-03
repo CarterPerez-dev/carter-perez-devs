@@ -1,0 +1,5 @@
+/* frontend/src/components/3d/HoloProfile.module.css */
+.holoProfile {
+  position: relative;
+  overflow: hidden;
+}

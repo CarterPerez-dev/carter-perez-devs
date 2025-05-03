@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
+import styles from './TechStackGalaxy.module.css';
 
 // Skill categories with icons represented as text for simplicity
 const SKILL_CATEGORIES = [
@@ -176,7 +178,8 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         const radius = Math.random() * 1.5 + 0.5;
         const distance = Math.random() * (Math.min(canvas.width, canvas.height) / 3) + 50;
         const angle = Math.random() * Math.PI * 2;
-        const speed = (0.2 + Math.random() * 0.8) * 0.001;
+        // REDUCED SPEED BY 50%
+        const speed = (0.2 + Math.random() * 0.8) * 0.0005; // Reduced from 0.001 to 0.0005
         
         // Color based on category
         const categoryIndex = Math.floor(Math.random() * SKILL_CATEGORIES.length);
@@ -236,6 +239,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
       
       // Update and draw stars
       for (const star of stars) {
+        // Only update angle if rotation is enabled
         if (isRotating) {
           star.angle += star.speed;
         }
@@ -350,11 +354,14 @@ const TechStackGalaxy = ({ fullPage = false }) => {
   };
   
   return (
-    <section className={`tech-stack-section ${fullPage ? 'full-page' : ''}`} id="tech-stack">
+    <section 
+      className={`${styles.techStackSection} ${fullPage ? styles.fullPage : ''}`} 
+      id="tech-stack"
+    >
       <div className="container">
         {!fullPage && (
           <motion.h2 
-            className="section-title"
+            className={styles.sectionTitle}
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -366,7 +373,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         
         {fullPage && (
           <motion.h1 
-            className="page-title"
+            className={styles.pageTitle}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -375,15 +382,15 @@ const TechStackGalaxy = ({ fullPage = false }) => {
           </motion.h1>
         )}
         
-        <div className="tech-galaxy-container" ref={galaxyContainerRef}>
+        <div className={styles.techGalaxyContainer} ref={galaxyContainerRef}>
           <canvas 
             ref={canvasRef} 
-            className="tech-galaxy-canvas"
+            className={styles.techGalaxyCanvas}
             aria-hidden="true"
           ></canvas>
           
           <motion.div 
-            className="category-selector"
+            className={styles.categorySelector}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -392,20 +399,20 @@ const TechStackGalaxy = ({ fullPage = false }) => {
             {SKILL_CATEGORIES.map((category) => (
               <motion.button 
                 key={category.id}
-                className={`category-button ${activeCategory === category.id ? 'active' : ''}`}
+                className={`${styles.categoryButton} ${activeCategory === category.id ? styles.active : ''}`}
                 onClick={() => setActiveCategory(category.id)}
                 variants={itemVariants}
                 style={{
                   '--category-color': category.color
                 }}
               >
-                <span className="category-icon">{category.icon}</span>
-                <span className="category-name">{category.name}</span>
+                <span className={styles.categoryIcon}>{category.icon}</span>
+                <span className={styles.categoryName}>{category.name}</span>
               </motion.button>
             ))}
             
             <motion.button 
-              className="rotation-toggle"
+              className={styles.rotationToggle}
               onClick={() => setIsRotating(!isRotating)}
               variants={itemVariants}
               aria-label={isRotating ? 'Pause rotation' : 'Resume rotation'}
@@ -416,7 +423,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
           </motion.div>
           
           <motion.div 
-            className="skills-display"
+            className={styles.skillsDisplay}
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -425,460 +432,58 @@ const TechStackGalaxy = ({ fullPage = false }) => {
             {filteredSkills.map((skill, index) => (
               <motion.div 
                 key={index}
-                className="skill-item"
+                className={styles.skillItem}
                 variants={itemVariants}
                 onMouseEnter={() => handleSkillHover(skill)}
                 onMouseLeave={handleSkillLeave}
               >
-                <div className="skill-name">{skill.name}</div>
-                <div className="skill-level-container">
+                <div className={styles.skillName}>{skill.name}</div>
+                <div className={styles.skillLevelContainer}>
                   <div 
-                    className="skill-level-bar" 
+                    className={styles.skillLevelBar} 
                     style={{ 
                       width: `${skill.level}%`,
                       backgroundColor: SKILL_CATEGORIES.find(c => c.id === skill.category)?.color
                     }}
                   ></div>
                 </div>
-                <div className="skill-level-text">{skill.level}%</div>
+                <div className={styles.skillLevelText}>{skill.level}%</div>
               </motion.div>
             ))}
           </motion.div>
           
           {skillDetails && (
             <div 
-              className="skill-details"
+              className={styles.skillDetails}
               style={{
                 '--detail-color': SKILL_CATEGORIES.find(c => c.id === skillDetails.category)?.color
               }}
             >
-              <div className="skill-details-header">
-                <div className="skill-details-name">{skillDetails.name}</div>
-                <div className="skill-details-category">
+              <div className={styles.skillDetailsHeader}>
+                <div className={styles.skillDetailsName}>{skillDetails.name}</div>
+                <div className={styles.skillDetailsCategory}>
                   {SKILL_CATEGORIES.find(c => c.id === skillDetails.category)?.name}
                 </div>
               </div>
               
-              <div className="skill-details-level">
-                <div className="skill-details-level-label">Proficiency</div>
-                <div className="skill-details-level-bar-container">
+              <div className={styles.skillDetailsLevel}>
+                <div className={styles.skillDetailsLevelLabel}>Proficiency</div>
+                <div className={styles.skillDetailsLevelBarContainer}>
                   <div 
-                    className="skill-details-level-bar" 
+                    className={styles.skillDetailsLevelBar} 
                     style={{ width: `${skillDetails.level}%` }}
                   ></div>
                 </div>
-                <div className="skill-details-level-text">{skillDetails.level}%</div>
+                <div className={styles.skillDetailsLevelText}>{skillDetails.level}%</div>
               </div>
               
-              <div className="skill-details-description">
+              <div className={styles.skillDetailsDescription}>
                 {getSkillDescription(skillDetails.name)}
               </div>
             </div>
           )}
         </div>
       </div>
-      
-      <style jsx>{`
-        .tech-stack-section {
-          position: relative;
-          padding: var(--space-xxl) 0;
-          min-height: ${fullPage ? '100vh' : 'auto'};
-        }
-        
-        .tech-stack-section.full-page {
-          padding-top: calc(var(--header-height) + var(--space-xl));
-        }
-        
-        .section-title,
-        .page-title {
-          text-align: center;
-          margin-bottom: var(--space-xl);
-          color: var(--accent-cyan);
-          position: relative;
-          display: inline-block;
-          width: 100%;
-        }
-        
-        .page-title {
-          font-size: 3rem;
-        }
-        
-        .section-title::after,
-        .page-title::after {
-          content: '';
-          position: absolute;
-          bottom: -10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100px;
-          height: 3px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            var(--accent-cyan),
-            transparent
-          );
-        }
-        
-        .tech-galaxy-container {
-          position: relative;
-          width: 100%;
-          height: 600px;
-          margin-bottom: var(--space-xl);
-          border-radius: var(--border-radius-lg);
-          overflow: hidden;
-          background-color: rgba(10, 10, 10, 0.5);
-          border: 1px solid var(--border-primary);
-        }
-        
-        .tech-galaxy-canvas {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 0;
-        }
-        
-        .category-selector {
-          position: absolute;
-          top: var(--space-md);
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          gap: var(--space-sm);
-          z-index: 1;
-          flex-wrap: wrap;
-          justify-content: center;
-          max-width: 90%;
-          padding: var(--space-sm);
-          background-color: rgba(10, 10, 10, 0.7);
-          border-radius: var(--border-radius-md);
-          backdrop-filter: blur(5px);
-        }
-        
-        .category-button {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: var(--space-sm);
-          background-color: rgba(20, 20, 20, 0.6);
-          border: 1px solid var(--border-primary);
-          border-radius: var(--border-radius-sm);
-          color: var(--text-secondary);
-          transition: all var(--transition-normal);
-          min-width: 80px;
-          cursor: none;
-        }
-        
-        .category-button:hover {
-          transform: translateY(-3px);
-          border-color: var(--category-color);
-          box-shadow: 0 0 10px rgba(var(--category-color), 0.3);
-        }
-        
-        .category-button.active {
-          border-color: var(--category-color);
-          background-color: rgba(var(--category-color), 0.2);
-          color: #fff;
-          box-shadow: 0 0 15px rgba(var(--category-color), 0.3);
-        }
-        
-        .category-icon {
-          font-size: 1.5rem;
-          margin-bottom: var(--space-xs);
-        }
-        
-        .category-name {
-          font-size: 0.8rem;
-          font-family: var(--font-mono);
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
-        
-        .rotation-toggle {
-          position: absolute;
-          top: var(--space-sm);
-          right: var(--space-sm);
-          width: 36px;
-          height: 36px;
-          background-color: rgba(20, 20, 20, 0.6);
-          border: 1px solid var(--border-primary);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.2rem;
-          transition: all var(--transition-normal);
-          cursor: none;
-        }
-        
-        .rotation-toggle:hover {
-          border-color: var(--accent-cyan);
-          box-shadow: 0 0 10px rgba(0, 255, 245, 0.3);
-        }
-        
-        .skills-display {
-          position: absolute;
-          bottom: var(--space-md);
-          left: var(--space-md);
-          right: var(--space-md);
-          max-height: 300px;
-          overflow-y: auto;
-          background-color: rgba(10, 10, 10, 0.8);
-          border-radius: var(--border-radius-md);
-          padding: var(--space-md);
-          z-index: 1;
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: var(--space-md);
-          backdrop-filter: blur(5px);
-        }
-        
-        .skills-display::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        .skills-display::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
-        
-        .skills-display::-webkit-scrollbar-thumb {
-          background: var(--accent-cyan);
-          border-radius: 3px;
-        }
-        
-        .skill-item {
-          background-color: rgba(20, 20, 20, 0.6);
-          border-radius: var(--border-radius-sm);
-          padding: var(--space-sm);
-          transition: all var(--transition-normal);
-        }
-        
-        .skill-item:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .skill-name {
-          color: var(--text-primary);
-          font-size: 0.9rem;
-          margin-bottom: var(--space-xs);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        
-        .skill-level-container {
-          width: 100%;
-          height: 6px;
-          background-color: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
-          overflow: hidden;
-          margin-bottom: var(--space-xs);
-        }
-        
-        .skill-level-bar {
-          height: 100%;
-          border-radius: 3px;
-          transition: width 1s ease-out;
-        }
-        
-        .skill-level-text {
-          color: var(--text-secondary);
-          font-size: 0.8rem;
-          text-align: right;
-          font-family: var(--font-mono);
-        }
-        
-        .skill-details {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 300px;
-          background-color: rgba(10, 10, 10, 0.9);
-          border-radius: var(--border-radius-md);
-          border: 1px solid var(--detail-color);
-          padding: var(--space-md);
-          z-index: 2;
-          box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(var(--detail-color), 0.3);
-          backdrop-filter: blur(10px);
-        }
-        
-        .skill-details::before {
-          content: '';
-          position: absolute;
-          top: -20px;
-          left: -20px;
-          width: 40px;
-          height: 40px;
-          border-top: 2px solid var(--detail-color);
-          border-left: 2px solid var(--detail-color);
-        }
-        
-        .skill-details::after {
-          content: '';
-          position: absolute;
-          bottom: -20px;
-          right: -20px;
-          width: 40px;
-          height: 40px;
-          border-bottom: 2px solid var(--detail-color);
-          border-right: 2px solid var(--detail-color);
-        }
-        
-        .skill-details-header {
-          margin-bottom: var(--space-md);
-          padding-bottom: var(--space-sm);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .skill-details-name {
-          color: var(--detail-color);
-          font-size: 1.2rem;
-          margin-bottom: var(--space-xs);
-        }
-        
-        .skill-details-category {
-          color: var(--text-secondary);
-          font-size: 0.8rem;
-          font-family: var(--font-mono);
-        }
-        
-        .skill-details-level {
-          margin-bottom: var(--space-md);
-        }
-        
-        .skill-details-level-label {
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          margin-bottom: var(--space-xs);
-        }
-        
-        .skill-details-level-bar-container {
-          width: 100%;
-          height: 10px;
-          background-color: rgba(255, 255, 255, 0.1);
-          border-radius: 5px;
-          overflow: hidden;
-          margin-bottom: var(--space-xs);
-        }
-        
-        .skill-details-level-bar {
-          height: 100%;
-          background-color: var(--detail-color);
-          border-radius: 5px;
-        }
-        
-        .skill-details-level-text {
-          color: var(--text-primary);
-          font-size: 0.9rem;
-          text-align: right;
-          font-family: var(--font-mono);
-        }
-        
-        .skill-details-description {
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          line-height: 1.5;
-        }
-        
-        /* Light theme styles */
-        .light-theme .tech-galaxy-container {
-          background-color: rgba(245, 245, 245, 0.5);
-        }
-        
-        .light-theme .category-selector,
-        .light-theme .skills-display {
-          background-color: rgba(245, 245, 245, 0.8);
-        }
-        
-        .light-theme .category-button,
-        .light-theme .skill-item,
-        .light-theme .rotation-toggle {
-          background-color: rgba(220, 220, 220, 0.6);
-          border-color: rgba(0, 0, 0, 0.1);
-        }
-        
-        .light-theme .skill-details {
-          background-color: rgba(245, 245, 245, 0.9);
-        }
-        
-        .light-theme .skill-level-container,
-        .light-theme .skill-details-level-bar-container {
-          background-color: rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Media queries */
-        @media (max-width: 768px) {
-          .tech-galaxy-container {
-            height: 700px;
-          }
-          
-          .category-selector {
-            max-width: 100%;
-            padding: var(--space-xs);
-            top: var(--space-sm);
-          }
-          
-          .category-button {
-            min-width: 60px;
-            padding: var(--space-xs);
-          }
-          
-          .category-icon {
-            font-size: 1.2rem;
-          }
-          
-          .category-name {
-            font-size: 0.7rem;
-          }
-          
-          .skills-display {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: var(--space-sm);
-            bottom: var(--space-sm);
-            left: var(--space-sm);
-            right: var(--space-sm);
-            padding: var(--space-sm);
-          }
-          
-          .skill-details {
-            width: 280px;
-          }
-          
-          .page-title {
-            font-size: 2.2rem;
-          }
-        }
-        
-        @media (max-width: 480px) {
-          .tech-galaxy-container {
-            height: 600px;
-          }
-          
-          .category-selector {
-            gap: var(--space-xs);
-          }
-          
-          .category-button {
-            min-width: 50px;
-          }
-          
-          .skills-display {
-            grid-template-columns: 1fr;
-            max-height: 250px;
-          }
-          
-          .skill-details {
-            width: 90%;
-            max-width: 280px;
-          }
-        }
-      `}</style>
     </section>
   );
 };
@@ -937,5 +542,9 @@ function getSkillDescription(skillName) {
   
   return descriptions[skillName] || 'A specialized technology skill in the selected category.';
 }
+
+TechStackGalaxy.propTypes = {
+  fullPage: PropTypes.bool
+};
 
 export default TechStackGalaxy;

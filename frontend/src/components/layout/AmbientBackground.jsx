@@ -196,19 +196,21 @@ const AmbientBackground = () => {
     };
   }, [theme, performanceLevel]);
 
+  const canvasStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -10,
+    pointerEvents: 'none'
+  };
+
   return (
     <canvas
       ref={canvasRef}
       className="ambient-background"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: -10,
-        pointerEvents: 'none'
-      }}
+      style={canvasStyle}
     />
   );
 };
