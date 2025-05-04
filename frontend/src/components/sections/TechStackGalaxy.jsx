@@ -105,6 +105,11 @@ const SKILLS = [
   { name: 'Load Balancing', category: 'networking', level: 70 }
 ];
 
+// Helper function to ensure values are finite numbers
+const ensureFinite = (value, fallback = 0) => {
+  return Number.isFinite(value) ? value : fallback;
+};
+
 const TechStackGalaxy = ({ fullPage = false }) => {
   const { theme } = useTheme();
   const canvasRef = useRef(null);
@@ -164,7 +169,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
     if (!canvasRef.current) return;
     
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     
     // Set canvas dimensions
     const setCanvasDimensions = () => {
@@ -336,23 +341,31 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         const parallaxX = mousePosition.x * (nebula.radius * 0.02);
         const parallaxY = mousePosition.y * (nebula.radius * 0.02);
         
-        const x = centerX + Math.cos(nebula.angle) * nebula.distance + parallaxX;
-        const y = centerY + Math.sin(nebula.angle) * nebula.distance + parallaxY;
+        // Ensure coordinates are finite numbers
+        const x = ensureFinite(centerX + Math.cos(nebula.angle) * nebula.distance + parallaxX, centerX);
+        const y = ensureFinite(centerY + Math.sin(nebula.angle) * nebula.distance + parallaxY, centerY);
         
-        // Create nebula gradient
-        const nebulaGradient = ctx.createRadialGradient(
-          x, y, 0,
-          x, y, nebula.radius * pulseFactor
-        );
+        // Ensure radius is a finite positive number
+        const nebulaRadius = ensureFinite(nebula.radius * pulseFactor, 10);
         
-        nebulaGradient.addColorStop(0, `${nebula.color}40`); // Core
-        nebulaGradient.addColorStop(0.5, `${nebula.color}20`); // Middle
-        nebulaGradient.addColorStop(1, 'transparent'); // Edge
-        
-        ctx.fillStyle = nebulaGradient;
-        ctx.beginPath();
-        ctx.arc(x, y, nebula.radius * pulseFactor, 0, Math.PI * 2);
-        ctx.fill();
+        // Create nebula gradient - FIX: Ensure all parameters are finite numbers
+        try {
+          const nebulaGradient = ctx.createRadialGradient(
+            x, y, 0,
+            x, y, nebulaRadius
+          );
+          
+          nebulaGradient.addColorStop(0, `${nebula.color}40`); // Core
+          nebulaGradient.addColorStop(0.5, `${nebula.color}20`); // Middle
+          nebulaGradient.addColorStop(1, 'transparent'); // Edge
+          
+          ctx.fillStyle = nebulaGradient;
+          ctx.beginPath();
+          ctx.arc(x, y, nebulaRadius, 0, Math.PI * 2);
+          ctx.fill();
+        } catch (error) {
+          console.warn('Skipping invalid nebula gradient', error);
+        }
       }
       
       // Draw galaxy spiral arms (subtle background pattern)
@@ -369,8 +382,8 @@ const TechStackGalaxy = ({ fullPage = false }) => {
           const spiralAngle = armAngle + t * Math.PI * 5; // Spiral rotation
           const distance = t * armLength; // Increase distance as we go out
           
-          const x = centerX + Math.cos(spiralAngle) * distance;
-          const y = centerY + Math.sin(spiralAngle) * distance;
+          const x = ensureFinite(centerX + Math.cos(spiralAngle) * distance, centerX);
+          const y = ensureFinite(centerY + Math.sin(spiralAngle) * distance, centerY);
           
           // Fade out as we go further
           const opacity = 0.05 * (1 - t);
@@ -391,28 +404,34 @@ const TechStackGalaxy = ({ fullPage = false }) => {
       const categoryColor = SKILL_CATEGORIES.find(c => c.id === activeCategory)?.color || '#00fff5';
       
       // Pulsing galaxy core
-      const coreSize = 60 + Math.sin(timestamp * 0.001) * 10;
+      const coreSize = ensureFinite(60 + Math.sin(timestamp * 0.001) * 10, 60);
       
       // Multi-layered core for more impressive effect
       for (let i = 0; i < 3; i++) {
-        const centerGradient = ctx.createRadialGradient(
-          centerX, centerY, 0,
-          centerX, centerY, coreSize * (1 - i * 0.2)
-        );
-        
-        centerGradient.addColorStop(0, `${categoryColor}${90 - i * 20}`);
-        centerGradient.addColorStop(0.5, `${categoryColor}${40 - i * 10}`);
-        centerGradient.addColorStop(1, 'transparent');
-        
-        ctx.fillStyle = centerGradient;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, coreSize * (1 - i * 0.2), 0, Math.PI * 2);
-        ctx.fill();
+        try {
+          const layerSize = ensureFinite(coreSize * (1 - i * 0.2), 10);
+          
+          const centerGradient = ctx.createRadialGradient(
+            centerX, centerY, 0,
+            centerX, centerY, layerSize
+          );
+          
+          centerGradient.addColorStop(0, `${categoryColor}${90 - i * 20}`);
+          centerGradient.addColorStop(0.5, `${categoryColor}${40 - i * 10}`);
+          centerGradient.addColorStop(1, 'transparent');
+          
+          ctx.fillStyle = centerGradient;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, layerSize, 0, Math.PI * 2);
+          ctx.fill();
+        } catch (error) {
+          console.warn('Skipping invalid center gradient', error);
+        }
       }
       
       // Animate center rays
       const rayCount = 8;
-      const rayLength = 100 + Math.sin(timestamp * 0.0005) * 20;
+      const rayLength = ensureFinite(100 + Math.sin(timestamp * 0.0005) * 20, 100);
       
       for (let i = 0; i < rayCount; i++) {
         const rayAngle = (i / rayCount) * Math.PI * 2 + timestamp * 0.0003;
@@ -424,16 +443,20 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         const endY = centerY + Math.sin(rayAngle) * rayLength;
         
         // Create ray gradient
-        const rayGradient = ctx.createLinearGradient(startX, startY, endX, endY);
-        rayGradient.addColorStop(0, `${categoryColor}70`);
-        rayGradient.addColorStop(1, 'transparent');
-        
-        ctx.strokeStyle = rayGradient;
-        ctx.lineWidth = 5 + Math.sin(timestamp * 0.002 + i) * 2;
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(endX, endY);
-        ctx.stroke();
+        try {
+          const rayGradient = ctx.createLinearGradient(startX, startY, endX, endY);
+          rayGradient.addColorStop(0, `${categoryColor}70`);
+          rayGradient.addColorStop(1, 'transparent');
+          
+          ctx.strokeStyle = rayGradient;
+          ctx.lineWidth = ensureFinite(5 + Math.sin(timestamp * 0.002 + i) * 2, 5);
+          ctx.beginPath();
+          ctx.moveTo(startX, startY);
+          ctx.lineTo(endX, endY);
+          ctx.stroke();
+        } catch (error) {
+          console.warn('Skipping invalid ray gradient', error);
+        }
       }
       
       // Check for shooting star creation
@@ -448,30 +471,35 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         const headY = shootingStar.startY + dy * shootingStar.progress;
         
         // Draw tail
-        const tailGradient = ctx.createLinearGradient(
-          headX, headY,
-          headX - Math.cos(angle) * shootingStar.length,
-          headY - Math.sin(angle) * shootingStar.length
-        );
-        
-        tailGradient.addColorStop(0, `${shootingStar.color}ff`);
-        tailGradient.addColorStop(1, 'transparent');
-        
-        ctx.strokeStyle = tailGradient;
-        ctx.lineWidth = shootingStar.width;
-        ctx.beginPath();
-        ctx.moveTo(headX, headY);
-        ctx.lineTo(
-          headX - Math.cos(angle) * shootingStar.length,
-          headY - Math.sin(angle) * shootingStar.length
-        );
-        ctx.stroke();
-        
-        // Draw head
-        ctx.fillStyle = `${shootingStar.color}ff`;
-        ctx.beginPath();
-        ctx.arc(headX, headY, shootingStar.width * 2, 0, Math.PI * 2);
-        ctx.fill();
+        try {
+          const tailStartX = ensureFinite(headX, centerX);
+          const tailStartY = ensureFinite(headY, centerY);
+          const tailEndX = ensureFinite(headX - Math.cos(angle) * shootingStar.length, centerX);
+          const tailEndY = ensureFinite(headY - Math.sin(angle) * shootingStar.length, centerY);
+          
+          const tailGradient = ctx.createLinearGradient(
+            tailStartX, tailStartY,
+            tailEndX, tailEndY
+          );
+          
+          tailGradient.addColorStop(0, `${shootingStar.color}ff`);
+          tailGradient.addColorStop(1, 'transparent');
+          
+          ctx.strokeStyle = tailGradient;
+          ctx.lineWidth = shootingStar.width;
+          ctx.beginPath();
+          ctx.moveTo(tailStartX, tailStartY);
+          ctx.lineTo(tailEndX, tailEndY);
+          ctx.stroke();
+          
+          // Draw head
+          ctx.fillStyle = `${shootingStar.color}ff`;
+          ctx.beginPath();
+          ctx.arc(headX, headY, shootingStar.width * 2, 0, Math.PI * 2);
+          ctx.fill();
+        } catch (error) {
+          console.warn('Skipping invalid shooting star', error);
+        }
         
         // Update progress
         shootingStar.progress += shootingStar.speed;
@@ -490,8 +518,9 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         const parallaxX = mousePosition.x * (star.distance * 0.02); // Reduced from 0.05
         const parallaxY = mousePosition.y * (star.distance * 0.02); // Reduced from 0.05
         
-        star.x = centerX + Math.cos(star.angle) * star.distance + parallaxX;
-        star.y = centerY + Math.sin(star.angle) * star.distance + parallaxY;
+        // Ensure coordinates are finite
+        star.x = ensureFinite(centerX + Math.cos(star.angle) * star.distance + parallaxX, centerX);
+        star.y = ensureFinite(centerY + Math.sin(star.angle) * star.distance + parallaxY, centerY);
         
         // Draw star with higher opacity for active category
         ctx.globalAlpha = star.category === activeCategory ? star.opacity * 1.5 : star.opacity * 0.5;
@@ -500,47 +529,57 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         if (star.tail) {
           const tailAngle = star.angle - Math.PI; // Opposite to movement direction
           
-          const tailGradient = ctx.createLinearGradient(
-            star.x, star.y,
-            star.x + Math.cos(tailAngle) * star.tailLength,
-            star.y + Math.sin(tailAngle) * star.tailLength
-          );
-          
-          tailGradient.addColorStop(0, star.color);
-          tailGradient.addColorStop(1, 'transparent');
-          
-          ctx.strokeStyle = tailGradient;
-          ctx.lineWidth = star.tailWidth * pulseFactor;
-          ctx.beginPath();
-          ctx.moveTo(star.x, star.y);
-          ctx.lineTo(
-            star.x + Math.cos(tailAngle) * star.tailLength,
-            star.y + Math.sin(tailAngle) * star.tailLength
-          );
-          ctx.stroke();
+          try {
+            const tailStartX = ensureFinite(star.x, centerX);
+            const tailStartY = ensureFinite(star.y, centerY);
+            const tailEndX = ensureFinite(star.x + Math.cos(tailAngle) * star.tailLength, centerX);
+            const tailEndY = ensureFinite(star.y + Math.sin(tailAngle) * star.tailLength, centerY);
+            
+            const tailGradient = ctx.createLinearGradient(
+              tailStartX, tailStartY,
+              tailEndX, tailEndY
+            );
+            
+            tailGradient.addColorStop(0, star.color);
+            tailGradient.addColorStop(1, 'transparent');
+            
+            ctx.strokeStyle = tailGradient;
+            ctx.lineWidth = ensureFinite(star.tailWidth * pulseFactor, 1);
+            ctx.beginPath();
+            ctx.moveTo(tailStartX, tailStartY);
+            ctx.lineTo(tailEndX, tailEndY);
+            ctx.stroke();
+          } catch (error) {
+            console.warn('Skipping invalid star tail', error);
+          }
         }
         
         // Draw star
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius * pulseFactor, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, ensureFinite(star.radius * pulseFactor, 1), 0, Math.PI * 2);
         ctx.fillStyle = star.color;
         ctx.fill();
         
         // Draw glow with pulsing effect
-        const glowSize = star.radius * (5 + pulseFactor * 3);
-        const glow = ctx.createRadialGradient(
-          star.x, star.y, 0,
-          star.x, star.y, glowSize
-        );
-        
-        glow.addColorStop(0, `${star.color}80`);
-        glow.addColorStop(1, 'transparent');
-        
-        ctx.globalAlpha = (star.category === activeCategory ? 0.5 : 0.2) * pulseFactor;
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
-        ctx.fill();
+        try {
+          const glowSize = ensureFinite(star.radius * (5 + pulseFactor * 3), 5);
+          
+          const glow = ctx.createRadialGradient(
+            star.x, star.y, 0,
+            star.x, star.y, glowSize
+          );
+          
+          glow.addColorStop(0, `${star.color}80`);
+          glow.addColorStop(1, 'transparent');
+          
+          ctx.globalAlpha = (star.category === activeCategory ? 0.5 : 0.2) * pulseFactor;
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
+          ctx.fill();
+        } catch (error) {
+          console.warn('Skipping invalid star glow', error);
+        }
         
         ctx.globalAlpha = 1;
       }
@@ -562,25 +601,29 @@ const TechStackGalaxy = ({ fullPage = false }) => {
           
           // Increased connection distance for more connections
           if (distance < 120) {
-            // Create connection gradient for more visual appeal
-            const connectionGradient = ctx.createLinearGradient(
-              star1.x, star1.y, star2.x, star2.y
-            );
-            
-            connectionGradient.addColorStop(0, `${categoryColor}50`);
-            connectionGradient.addColorStop(0.5, `${categoryColor}30`);
-            connectionGradient.addColorStop(1, `${categoryColor}50`);
-            
-            ctx.strokeStyle = connectionGradient;
-            
-            // Randomize opacity based on distance and time for shimmer effect
-            const opacity = (1 - distance / 120) * 0.7 * (0.7 + 0.3 * Math.sin(timestamp * 0.001 + i * j));
-            ctx.globalAlpha = opacity;
-            
-            ctx.beginPath();
-            ctx.moveTo(star1.x, star1.y);
-            ctx.lineTo(star2.x, star2.y);
-            ctx.stroke();
+            try {
+              // Create connection gradient for more visual appeal
+              const connectionGradient = ctx.createLinearGradient(
+                star1.x, star1.y, star2.x, star2.y
+              );
+              
+              connectionGradient.addColorStop(0, `${categoryColor}50`);
+              connectionGradient.addColorStop(0.5, `${categoryColor}30`);
+              connectionGradient.addColorStop(1, `${categoryColor}50`);
+              
+              ctx.strokeStyle = connectionGradient;
+              
+              // Randomize opacity based on distance and time for shimmer effect
+              const opacity = (1 - distance / 120) * 0.7 * (0.7 + 0.3 * Math.sin(timestamp * 0.001 + i * j));
+              ctx.globalAlpha = opacity;
+              
+              ctx.beginPath();
+              ctx.moveTo(star1.x, star1.y);
+              ctx.lineTo(star2.x, star2.y);
+              ctx.stroke();
+            } catch (error) {
+              console.warn('Skipping invalid connection gradient', error);
+            }
           }
         }
       }
