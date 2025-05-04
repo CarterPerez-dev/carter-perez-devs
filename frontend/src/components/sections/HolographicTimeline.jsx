@@ -140,11 +140,19 @@ const HolographicTimeline = ({ fullPage = false }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   
   // Create a memoized filtered list of items based on the active category
+  // Create a memoized filtered list of items based on the active category
   const filteredItems = useMemo(() => {
-    // Filter by category
+    // Filter by category - FIXED with better logging and case-insensitive comparison
+    console.log(`Filtering timeline by category: ${activeCategory}`);
     const filtered = activeCategory === 'all' 
       ? [...TIMELINE_DATA] 
-      : TIMELINE_DATA.filter(item => item.category === activeCategory);
+      : TIMELINE_DATA.filter(item => {
+          const matches = item.category.toLowerCase() === activeCategory.toLowerCase();
+          console.log(`Timeline item "${item.title}" has category: ${item.category} - matches filter: ${matches}`);
+          return matches;
+        });
+    
+    console.log(`Found ${filtered.length} matching timeline items`);
     
     // Sort by date (most recent first)
     return filtered.sort((a, b) => {

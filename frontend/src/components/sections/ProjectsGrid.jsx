@@ -40,7 +40,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       id: 2,
       title: 'Flask-Honeypot',
       description: 'A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.',
-      image: flask, // Fixed: use the imported image directly
+      image: flask,
       categories: ['cybersecurity'],
       technologies: ['Python', 'Flask', 'Docker', 'SQLite'],
       link: 'https://github.com/CarterPerez-dev/flask-honeypot',
@@ -50,7 +50,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       id: 3,
       title: 'Portfolio',
       description: 'A futuristic themed portfolio website with interactive elements and holographic UI. Features include 3D elements, glitch effects, and a custom terminal interface.',
-      image: cyber, // Fixed: use the imported image directly
+      image: cyber,
       categories: ['web dev'],
       technologies: ['React', 'Three.js', 'CSS3', 'Framer Motion'],
       link: 'https://github.com/CarterPerez-dev/carter-perez-devs',
@@ -60,7 +60,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       id: 4,
       title: 'AngelaCLI',
       description: 'An AI-powered command line tool that assists with coding tasks. Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.',
-      image: angela, // Fixed: use the imported image directly
+      image: angela,
       categories: ['ai'],
       technologies: ['Python', 'OpenAI API', 'TensorFlow', 'Click'],
       link: 'https://github.com/CarterPerez-dev/angela-cli',
@@ -81,7 +81,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       id: 6,
       title: 'Building Custom Solutions with Quality at the Core',
       description: 'As a System Integration Technician at SealingTech, my team and I are responsible for building custom defense systems that are not only powerful but also tailored to the unique needs of our customers. From selecting the right hardware specifications to configuring the complex systems into a carry-on compliant Cyber-Fly-Away Kit, we focus on optimizing performance,…',
-      image: blog2, // Fixed: use the imported image directly
+      image: blog2,
       categories: ['blogs', 'web dev'],
       date: 'March 22, 2025',
       link: 'https://www.sealingtech.com/2024/10/03/building-custom-solutions-with-quality-at-the-core/',
@@ -101,7 +101,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
     }
   ];
   
-  // Category filters - updated as requested
+  // Category filters
   const categories = [
     { id: 'all', name: 'ALL' },
     { id: 'cybersecurity', name: 'CYBERSECURITY' },
@@ -116,14 +116,21 @@ const ProjectsGrid = ({ fullPage = false }) => {
     setFilteredProjects([...projects]);
   }, []);
   
-  // Filter projects based on active filter - FIXED logic for "web dev" issue
+  // Filter projects based on active filter - FIXED logic for filtering issues
   useEffect(() => {
     if (activeFilter === 'all') {
       setFilteredProjects([...projects]);
     } else {
-      const filtered = projects.filter(project => 
-        project.categories.includes(activeFilter)
-      );
+      // More robust filtering with some debug logging
+      console.log(`Filtering by category: ${activeFilter}`);
+      const filtered = projects.filter(project => {
+        const hasCategory = project.categories.some(category => 
+          category.toLowerCase() === activeFilter.toLowerCase()
+        );
+        console.log(`Project "${project.title}" has categories: ${project.categories.join(', ')} - matches filter: ${hasCategory}`);
+        return hasCategory;
+      });
+      console.log(`Found ${filtered.length} matching projects`);
       setFilteredProjects(filtered);
     }
   }, [activeFilter]);
@@ -134,7 +141,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
     playSound('click');
   };
   
-  // Handle mouse movement for mild parallax effect (simplified to reduce glitchiness)
+  // Handle mouse movement for mild parallax effect
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!projectsContainerRef.current) return;
@@ -286,7 +293,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
                   <div className={styles.projectCategories}>
                     {project.categories.map((category, idx) => (
                       <span key={idx} className={styles.projectCategory}>
-                        {categories.find(c => c.id === category)?.name || category}
+                        {categories.find(c => c.id.toLowerCase() === category.toLowerCase())?.name || category.toUpperCase()}
                       </span>
                     ))}
                   </div>
