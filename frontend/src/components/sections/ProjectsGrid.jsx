@@ -244,8 +244,8 @@ const ProjectsGrid = ({ fullPage = false }) => {
           ref={projectsContainerRef}
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          animate="visible" // Use animate instead of whileInView
+          key={activeFilter} // Add a key that changes with filter
         >
           {filteredProjects.length > 0 ? (
             filteredProjects.map((project) => (

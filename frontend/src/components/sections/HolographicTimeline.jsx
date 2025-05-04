@@ -403,8 +403,8 @@ const HolographicTimeline = ({ fullPage = false }) => {
             ref={timelineRef}
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+            animate="visible" // Use animate instead of whileInView
+            key={activeCategory} // Add a key that changes with filter
           >
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => {
@@ -472,7 +472,6 @@ const HolographicTimeline = ({ fullPage = false }) => {
                     </div>
                     
                     <div className={styles.timelineConnector}>
-                      <div className={styles.timelineLine}></div>
                       <div className={styles.timelineDot}></div>
                     </div>
                   </motion.div>
