@@ -11,14 +11,14 @@ const TIMELINE_DATA = [
     id: 1,
     title: 'System Integration Technician II',
     company: 'Sealing Technologies',
-    location: 'Annapolis, MD',
-    date: '2024 - Present',
-    description: 'Building and configuring custom cybersecurity and defense systems, ensuring they meet client needs and perform reliably under demanding conditions.',
+    location: 'Columbia, MD',
+    date: 'June 2024 - April 2025',
+    description: 'Managed and optimized QA workflows for custom server builds, aligning with strict timelines and regulatory standards while maintaining computer hardware across the facility.',
     achievements: [
-      'Completed over 50 custom system builds with a 99.8% pass rate on quality assurance tests',
-      'Implemented new cable management techniques that reduced setup time by 15%',
-      'Authored a company blog post on efficient quality assurance processes',
-      'Reduced RMA rates by 22% through improved assembly procedures'
+      'Consulted on assembly and logistics for $40M worth of servers, network switches, and cyber kits',
+      'Authored multiple technical blogs for company website detailing efficient QA processes',
+      'Developed SOPs to standardize assembly procedures across teams',
+      'Streamlined onboarding processes for new team members'
     ],
     skills: ['System Integration', 'Quality Assurance', 'Hardware Configuration', 'Technical Documentation'],
     category: 'work'
@@ -27,64 +27,96 @@ const TIMELINE_DATA = [
     id: 2,
     title: "Master's Degree in Cybersecurity",
     company: 'University of Maryland Global Campus',
-    location: 'Adelphi, MD',
-    date: '2024 - Present',
-    description: 'Currently pursuing a master\'s degree with advanced studies in cybersecurity strategies and threat management.',
+    location: 'Largo, MD',
+    date: '2024 - May 2027',
+    description: 'Currently pursuing a master\'s degree in Cybersecurity with advanced studies in security strategies and threat management.',
     achievements: [
-      'Maintaining a 3.9 GPA while working full-time',
+      'Maintaining a strong academic record while working full-time',
       'Specializing in advanced security protocols and threat intelligence',
       'Participating in cybersecurity research projects',
-      'Member of the Cybersecurity Club'
+      'Developing expertise in security analysis and risk management'
     ],
     skills: ['Advanced Cybersecurity', 'Threat Intelligence', 'Security Research', 'Risk Management'],
     category: 'education'
   },
   {
     id: 3,
-    title: 'Developed ProxyAuthRequired.com',
-    company: 'Personal Project',
+    title: 'CertGames.com',
+    company: 'Full-Stack Project',
     location: 'Remote',
-    date: 'December, 2024',
-    description: 'Developed a centralized cybersecurity platform integrating AI-driven simulations and learning modules.',
+    date: '2024 - Present',
+    description: 'Developed full-stack cybersecurity platform using React/Redux frontend, Python/Flask backend, MongoDB database, Redis caching, Nginx, and targeted OpenAI capabilities for cybersecurity training.',
     achievements: [
-      'Built a secure, scalable platform leveraging Docker containers and multi-stage builds',
-      'Integrated advanced log analysis and compliance tools',
-      'Created an educational hub tailored for CompTIA certifications',
-      'Successfully launched with positive user feedback'
+      'Built platform serving 500+ active learners (100+ paying subscribers) within 2 months',
+      'Created comprehensive learning content including 13k+ questions across certification paths',
+      'Developed 10+ interactive learning games and 15+ customizable themes',
+      'Implemented real-time support system for enhanced user experience'
     ],
-    skills: ['React', 'Python', 'Flask', 'MongoDB', 'Docker', 'AI Integration'],
+    skills: ['React', 'Redux', 'Python', 'Flask', 'MongoDB', 'OpenAI Integration', 'Docker'],
     category: 'project'
   },
   {
     id: 4,
+    title: 'CertGames iOS App',
+    company: 'Mobile Development',
+    location: 'Remote',
+    date: '2024 - Present',
+    description: 'Developed native iOS application for CompTIA certification practice using React Native, complementing the web platform and providing on-the-go learning experiences.',
+    achievements: [
+      'Published app on Apple App Store with positive user ratings',
+      'Implemented seamless cross-platform experience between web and mobile',
+      'Optimized for iOS devices with offline capabilities',
+      'Designed intuitive mobile UI for certification practice'
+    ],
+    skills: ['React Native', 'Mobile Development', 'iOS App Store', 'Cross-Platform Integration'],
+    category: 'project'
+  },
+  {
+    id: 5,
+    title: 'Flask-Honeypot Python Package',
+    company: 'Open Source Security Tool',
+    location: 'Remote',
+    date: '2025 - Present',
+    description: 'Created a sophisticated cybersecurity deception system published on PyPI that redirects 500+ common attack vectors to 20+ realistic-looking fake admin dashboards and portals.',
+    achievements: [
+      'Developed comprehensive attack detection for common penetration testing paths',
+      'Implemented 30+ data point collection including geolocation and behavioral patterns',
+      'Built interactive admin dashboard for threat intelligence visualization',
+      'Published as Python package with simplified integration for existing Flask apps'
+    ],
+    skills: ['Python', 'Flask', 'Cybersecurity', 'Honeypot Development', 'PyPI Package'],
+    category: 'project'
+  },
+  {
+    id: 6,
     title: 'CompTIA Certification Path',
     company: 'CompTIA',
     location: 'Remote',
     date: '2024',
-    description: 'Completed the full CompTIA cybersecurity path within nine months, acquiring seven certifications including A+, Network+, Security+, CySA+, PenTest+, and CASP+.',
+    description: 'Completed comprehensive CompTIA certification path including A+, Network+, Security+, CySA+, PenTest+, and CASP+, establishing a strong foundation in cybersecurity principles and practices.',
     achievements: [
-      'Achieved all certifications on first attempt',
-      'Completed certifications in record time',
-      'Developed efficient study techniques for rapid certification',
-      'Presented study methods at ISSA UMBC chapter'
+      'Earned six major CompTIA certifications in rapid succession',
+      'Developed expertise across security domains from fundamentals to advanced topics',
+      'Applied certification knowledge to practical security projects',
+      'Obtained PCEP certification from Python Institute'
     ],
     skills: ['Cybersecurity Fundamentals', 'Network Security', 'Penetration Testing', 'Security Analysis'],
     category: 'certification'
   },
   {
-    id: 5,
+    id: 7,
     title: 'General Manager',
     company: "Jimmy John's",
     location: 'Severna Park, MD',
-    date: '2022 - 2024',
-    description: 'Managed daily operations, supervised staff, and ensured customer satisfaction. Optimized workflows and enhanced team performance.',
+    date: 'December 2022 - July 2024',
+    description: 'Supervised 10+ staff members, optimizing task delegation and daily procedures for smooth restaurant operations while handling technical systems management.',
     achievements: [
-      'Increased store revenue by 18% through operational improvements',
-      'Reduced employee turnover by 35% through improved training',
-      'Maintained network and POS systems with 99.7% uptime',
-      'Implemented new inventory system reducing waste by 12%'
+      'Diagnosed and repaired POS systems and networks across five stores',
+      'Optimized workflows to eliminate excess labor costs and improve COGS',
+      'Reduced delivery times by 8 minutes weekly, becoming top-performing GM in 5-store franchise',
+      'Created prep and cleaning checklists to improve back-of-house efficiency'
     ],
-    skills: ['Team Management', 'Operations', 'Customer Service', 'Technical Support'],
+    skills: ['Team Management', 'Operations', 'Technical Support', 'Process Optimization'],
     category: 'work'
   }
 ];
