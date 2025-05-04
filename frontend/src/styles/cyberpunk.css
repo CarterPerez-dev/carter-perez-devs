@@ -856,3 +856,70 @@
     transform: rotate(360deg);
   }
 }
+/* Red theme styles */
+:global(.light-theme) .neon-border {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 5px var(--accent-cyan), inset 0 0 5px var(--accent-cyan);
+}
+
+:global(.light-theme) .neon-border:hover {
+  box-shadow: 0 0 10px var(--accent-cyan), inset 0 0 10px var(--accent-cyan);
+}
+
+:global(.light-theme) .neon-text {
+  color: var(--accent-cyan);
+  text-shadow: 0 0 5px var(--accent-cyan);
+}
+
+:global(.light-theme) .neon-text:hover {
+  text-shadow: 0 0 10px var(--accent-cyan), 0 0 20px var(--accent-cyan);
+}
+
+:global(.light-theme) .cyber-button {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+
+:global(.light-theme) .cyber-button::before {
+  background: linear-gradient(120deg, transparent, transparent 40%, var(--accent-cyan));
+}
+
+:global(.light-theme) .cyber-button:hover {
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+:global(.light-theme) .cyber-button::after {
+  background-color: var(--accent-cyan);
+}
+
+:global(.light-theme) .cyber-card {
+  background-color: rgba(15, 8, 8, 0.7);
+}
+
+:global(.light-theme) .cyber-card::before {
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+}
+
+:global(.light-theme) .cyber-card::after {
+  background-color: var(--bg-secondary);
+  border-color: var(--accent-cyan);
+}
+
+:global(.light-theme) .cyber-card__title {
+  color: var(--accent-cyan);
+}
+
+:global(.light-theme) .terminal-bg {
+  background-color: rgba(15, 8, 8, 0.95);
+}
+
+:global(.light-theme) .terminal-text {
+  color: #ff3333;
+}
+
+:global(.light-theme) .terminal-cursor {
+  background-color: #ff3333;
+}
+
+
+

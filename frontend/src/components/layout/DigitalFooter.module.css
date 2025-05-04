@@ -184,16 +184,16 @@
   font-weight: 700;
 }
 
-/* Light theme styles */
+/* Red theme styles */
 :global(.light-theme) .footerBackground {
-  background-color: rgba(245, 245, 245, 0.8);
-  border-top: 1px solid var(--accent-blue);
+  background-color: rgba(15, 8, 8, 0.8);
+  border-top: 1px solid var(--accent-cyan);
 }
 
 :global(.light-theme) .footerBackground::before {
   background: linear-gradient(90deg, 
     transparent, 
-    var(--accent-blue), 
+    var(--accent-cyan), 
     transparent
   );
 }
@@ -201,20 +201,20 @@
 :global(.light-theme) .statValue,
 :global(.light-theme) .timeValue,
 :global(.light-theme) .copyrightSymbol {
-  color: var(--accent-blue);
+  color: var(--accent-cyan);
 }
 
 :global(.light-theme) .footerLink:hover {
-  color: var(--accent-blue);
+  color: var(--accent-cyan);
 }
 
 :global(.light-theme) .socialLink {
-  background-color: rgba(77, 77, 255, 0.1);
-  color: var(--accent-blue);
+  background-color: rgba(230, 46, 46, 0.1);
+  color: var(--accent-cyan);
 }
 
 :global(.light-theme) .socialLink:hover {
-  background-color: var(--accent-blue);
+  background-color: var(--accent-cyan);
   color: var(--bg-primary);
 }
 

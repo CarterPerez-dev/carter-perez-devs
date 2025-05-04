@@ -660,7 +660,7 @@
 }
 
 @keyframes holographic-glitch-effect-1 {
-  0% { clip: rect(40px, 9999px, 44px, 0); }
+  0%, 100% { clip: rect(40px, 9999px, 44px, 0); }
   5% { clip: rect(94px, 9999px, 66px, 0); }
   10% { clip: rect(23px, 9999px, 36px, 0); }
   15% { clip: rect(15px, 9999px, 28px, 0); }
@@ -684,7 +684,7 @@
 }
 
 @keyframes holographic-glitch-effect-2 {
-  0% { clip: rect(77px, 9999px, 96px, 0); }
+  0%, 100% { clip: rect(77px, 9999px, 96px, 0); }
   5% { clip: rect(45px, 9999px, 13px, 0); }
   10% { clip: rect(64px, 9999px, 35px, 0); }
   15% { clip: rect(95px, 9999px, 46px, 0); }
@@ -813,111 +813,111 @@
   box-shadow: 0 0 8px var(--holo-blue);
 }
 
-/* ------ LIGHT THEME OVERRIDES ------ */
+/* ------ RED THEME OVERRIDES ------ */
 
-.light-theme .holographic-container {
-  background-color: rgba(245, 245, 245, 0.5);
-  border-color: var(--holo-blue);
-  box-shadow: 0 0 20px rgba(77, 77, 255, 0.2);
+:global(.light-theme) .holographic-container {
+  background-color: rgba(15, 8, 8, 0.5);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 20px rgba(230, 46, 46, 0.2);
 }
 
-.light-theme .holographic-container.interactive:hover {
+:global(.light-theme) .holographic-container.interactive:hover {
   box-shadow: 
-    0 0 30px rgba(77, 77, 255, 0.3),
-    0 0 60px rgba(77, 77, 255, 0.1);
+    0 0 30px rgba(230, 46, 46, 0.3),
+    0 0 60px rgba(230, 46, 46, 0.1);
 }
 
-.light-theme .holographic-grid {
+:global(.light-theme) .holographic-grid {
   background-image: 
-    linear-gradient(to right, rgba(77, 77, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(77, 77, 255, 0.2) 1px, transparent 1px);
+    linear-gradient(to right, rgba(230, 46, 46, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(230, 46, 46, 0.2) 1px, transparent 1px);
 }
 
-.light-theme .holographic-scan::after {
+:global(.light-theme) .holographic-scan::after {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--holo-blue) 50%,
+    var(--accent-cyan) 50%,
     transparent 100%
   );
 }
 
-.light-theme .holographic-text {
+:global(.light-theme) .holographic-text {
   text-shadow: 
-    0 0 5px var(--holo-blue),
-    0 0 10px var(--holo-blue-transparent);
+    0 0 5px var(--accent-cyan),
+    0 0 10px rgba(230, 46, 46, 0.1);
 }
 
-.light-theme .holographic-text-outline {
-  -webkit-text-stroke: 1px var(--holo-blue);
-  text-shadow: 0 0 10px var(--holo-blue-transparent);
+:global(.light-theme) .holographic-text-outline {
+  -webkit-text-stroke: 1px var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(230, 46, 46, 0.1);
 }
 
-.light-theme .holographic-card {
-  background-color: rgba(245, 245, 245, 0.7);
-  border-color: var(--holo-blue);
-  box-shadow: 0 0 15px var(--holo-blue-transparent);
+:global(.light-theme) .holographic-card {
+  background-color: rgba(15, 8, 8, 0.7);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(230, 46, 46, 0.3);
 }
 
-.light-theme .holographic-card:hover {
-  border-color: var(--holo-blue);
+:global(.light-theme) .holographic-card:hover {
+  border-color: var(--accent-cyan);
   box-shadow: 
-    0 0 20px var(--holo-blue-transparent),
-    0 0 40px var(--holo-blue-transparent);
+    0 0 20px rgba(230, 46, 46, 0.3),
+    0 0 40px rgba(230, 46, 46, 0.1);
 }
 
-.light-theme .holographic-panel {
-  background-color: rgba(245, 245, 245, 0.6);
-  border-color: var(--holo-blue);
-  box-shadow: 0 0 15px var(--holo-blue-transparent);
+:global(.light-theme) .holographic-panel {
+  background-color: rgba(15, 8, 8, 0.6);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 15px rgba(230, 46, 46, 0.3);
 }
 
-.light-theme .holographic-panel-header {
-  border-bottom-color: var(--holo-blue);
+:global(.light-theme) .holographic-panel-header {
+  border-bottom-color: var(--accent-cyan);
 }
 
-.light-theme .holographic-panel::before,
-.light-theme .holographic-panel::after {
-  border-color: var(--holo-blue);
+:global(.light-theme) .holographic-panel::before,
+:global(.light-theme) .holographic-panel::after {
+  border-color: var(--accent-cyan);
 }
 
-.light-theme .holographic-node {
-  background-color: var(--holo-blue);
-  box-shadow: 0 0 10px var(--holo-blue);
+:global(.light-theme) .holographic-node {
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
 }
 
-.light-theme .holographic-node::before {
-  border-color: var(--holo-blue);
+:global(.light-theme) .holographic-node::before {
+  border-color: var(--accent-cyan);
 }
 
-.light-theme .holographic-connection {
-  background-color: var(--holo-blue-transparent);
-  box-shadow: 0 0 8px var(--holo-blue);
+:global(.light-theme) .holographic-connection {
+  background-color: rgba(230, 46, 46, 0.1);
+  box-shadow: 0 0 8px var(--accent-cyan);
 }
 
-.light-theme .holographic-button {
-  background-color: rgba(77, 77, 255, 0.1);
-  border-color: var(--holo-blue);
+:global(.light-theme) .holographic-button {
+  background-color: rgba(230, 46, 46, 0.1);
+  border-color: var(--accent-cyan);
 }
 
-.light-theme .holographic-button:hover {
-  background-color: rgba(77, 77, 255, 0.2);
+:global(.light-theme) .holographic-button:hover {
+  background-color: rgba(230, 46, 46, 0.2);
   box-shadow: 
-    0 0 15px var(--holo-blue-transparent),
-    0 0 30px var(--holo-blue-transparent);
+    0 0 15px rgba(230, 46, 46, 0.3),
+    0 0 30px rgba(230, 46, 46, 0.1);
 }
 
-.light-theme .holographic-button::before {
+:global(.light-theme) .holographic-button::before {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(77, 77, 255, 0.3),
+    rgba(230, 46, 46, 0.3),
     transparent
   );
 }
 
-.light-theme .holographic-cursor {
-  background-color: var(--holo-blue);
+:global(.light-theme) .holographic-cursor {
+  background-color: var(--accent-cyan);
 }
 
 /* ------ RESPONSIVE ADJUSTMENTS ------ */

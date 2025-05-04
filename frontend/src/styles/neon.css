@@ -730,106 +730,107 @@
 
 /* ------ LIGHT THEME OVERRIDES ------ */
 
-.light-theme .neon-text {
-  color: var(--neon-blue);
+/* Red theme overrides */
+:global(.light-theme) .neon-text {
+  color: var(--accent-cyan);
   text-shadow: 
-    var(--neon-text-shadow-sm) var(--neon-blue),
-    var(--neon-text-shadow-md) var(--neon-blue);
+    var(--neon-text-shadow-sm) var(--accent-cyan),
+    var(--neon-text-shadow-md) var(--accent-cyan);
 }
 
-.light-theme .neon-border {
-  border-color: var(--neon-blue);
+:global(.light-theme) .neon-border {
+  border-color: var(--accent-cyan);
   box-shadow: 
-    var(--neon-glow-sm) var(--neon-blue),
-    inset var(--neon-glow-sm) var(--neon-blue);
+    var(--neon-glow-sm) var(--accent-cyan),
+    inset var(--neon-glow-sm) var(--accent-cyan);
 }
 
-.light-theme .neon-button {
-  border-color: var(--neon-blue);
-  color: var(--neon-blue);
+:global(.light-theme) .neon-button {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
 }
 
-.light-theme .neon-button:hover, .light-theme .neon-button:focus {
-  background-color: rgba(77, 77, 255, 0.2);
-  box-shadow: 0 0 15px rgba(77, 77, 255, 0.5);
+:global(.light-theme) .neon-button:hover, :global(.light-theme) .neon-button:focus {
+  background-color: rgba(230, 46, 46, 0.2);
+  box-shadow: 0 0 15px rgba(230, 46, 46, 0.5);
 }
 
-.light-theme .neon-button::before {
+:global(.light-theme) .neon-button::before {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(77, 77, 255, 0.4),
+    rgba(230, 46, 46, 0.4),
     transparent
   );
 }
 
-.light-theme .neon-input {
-  border-color: var(--neon-blue);
+:global(.light-theme) .neon-input {
+  border-color: var(--accent-cyan);
 }
 
-.light-theme .neon-input:focus {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 10px rgba(77, 77, 255, 0.5);
+:global(.light-theme) .neon-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(230, 46, 46, 0.5);
 }
 
-.light-theme .neon-link {
-  color: var(--neon-blue);
+:global(.light-theme) .neon-link {
+  color: var(--accent-cyan);
 }
 
-.light-theme .neon-link::after {
-  background-color: var(--neon-blue);
-  box-shadow: 0 0 5px var(--neon-blue);
+:global(.light-theme) .neon-link::after {
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 5px var(--accent-cyan);
 }
 
-.light-theme .neon-link:hover, .light-theme .neon-link:focus {
-  text-shadow: 0 0 5px var(--neon-blue);
+:global(.light-theme) .neon-link:hover, :global(.light-theme) .neon-link:focus {
+  text-shadow: 0 0 5px var(--accent-cyan);
 }
 
-.light-theme .neon-badge {
-  background-color: rgba(77, 77, 255, 0.1);
-  border-color: var(--neon-blue);
-  color: var(--neon-blue);
-  box-shadow: 0 0 5px rgba(77, 77, 255, 0.3);
+:global(.light-theme) .neon-badge {
+  background-color: rgba(230, 46, 46, 0.1);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 5px rgba(230, 46, 46, 0.3);
 }
 
-.light-theme .neon-card {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 10px rgba(77, 77, 255, 0.3);
+:global(.light-theme) .neon-card {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(230, 46, 46, 0.3);
 }
 
-.light-theme .neon-card:hover {
-  box-shadow: 0 0 20px rgba(77, 77, 255, 0.5);
+:global(.light-theme) .neon-card:hover {
+  box-shadow: 0 0 20px rgba(230, 46, 46, 0.5);
 }
 
-.light-theme .neon-card::before {
-  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+:global(.light-theme) .neon-card::before {
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
 }
 
-.light-theme .neon-card::after {
-  border-top-color: var(--neon-blue);
-  border-right-color: var(--neon-blue);
+:global(.light-theme) .neon-card::after {
+  border-top-color: var(--accent-cyan);
+  border-right-color: var(--accent-cyan);
 }
 
-.light-theme .neon-progress-bar {
-  background-color: var(--neon-blue);
-  box-shadow: 0 0 8px var(--neon-blue);
+:global(.light-theme) .neon-progress-bar {
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
 }
 
-.light-theme .neon-divider {
-  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
-  box-shadow: 0 0 5px var(--neon-blue);
+:global(.light-theme) .neon-divider {
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  box-shadow: 0 0 5px var(--accent-cyan);
 }
 
-.light-theme .neon-icon {
-  color: var(--neon-blue);
-  filter: drop-shadow(0 0 3px var(--neon-blue));
+:global(.light-theme) .neon-icon {
+  color: var(--accent-cyan);
+  filter: drop-shadow(0 0 3px var(--accent-cyan));
 }
 
-.light-theme .neon-icon:hover {
-  filter: drop-shadow(0 0 5px var(--neon-blue));
+:global(.light-theme) .neon-icon:hover {
+  filter: drop-shadow(0 0 5px var(--accent-cyan));
 }
 
-.light-theme .neon-outline::before {
-  border-color: var(--neon-blue);
-  box-shadow: 0 0 5px var(--neon-blue);
+:global(.light-theme) .neon-outline::before {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 5px var(--accent-cyan);
 }

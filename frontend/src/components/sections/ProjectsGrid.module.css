@@ -332,18 +332,6 @@
   color: var(--accent-magenta);
 }
 
-/* Light theme styles */
-:global(.light-theme) .projectCard {
-  background-color: rgba(245, 245, 245, 0.8);
-}
-
-:global(.light-theme) .projectImageOverlay {
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(245, 245, 245, 0.8) 100%
-  );
-}
 
 :global(.light-theme) .projectCard.hovered {
   border-color: var(--accent-blue);

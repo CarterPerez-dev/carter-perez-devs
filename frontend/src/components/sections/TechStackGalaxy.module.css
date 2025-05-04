@@ -428,42 +428,6 @@
     color: #ddd;
 }
 
-/* Light theme styles */
-:global(.light-theme) .techGalaxyContainer {
-  background-color: rgba(245, 245, 245, 0.5);
-}
-
-:global(.light-theme) .categorySelector {
-  background-color: rgba(245, 245, 245, 0.2);
-}
-
-:global(.light-theme) .skillsDisplay {
-  background-color: rgba(245, 245, 245, 0.7);
-}
-
-:global(.light-theme) .categoryButton {
-  background-color: rgba(220, 220, 220, 0.6);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-:global(.light-theme) .categoryButton.active {
-  background-color: rgba(255, 255, 255, 0.8);
-  color: rgba(0, 0, 0, 0.8);
-}
-
-:global(.light-theme) .skillDetails {
-  background-color: rgba(245, 245, 245, 0.9);
-}
-
-:global(.light-theme) .skillItem {
-  background-color: rgba(200, 200, 200, 0.6);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-:global(.light-theme) .skillLevelContainer,
-:global(.light-theme) .skillDetailsLevelBarContainer {
-  background-color: rgba(0, 0, 0, 0.1);
-}
 
 /* Media queries */
 @media (max-width: 768px) {

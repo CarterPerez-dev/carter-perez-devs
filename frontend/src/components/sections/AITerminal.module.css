@@ -245,34 +245,7 @@
   text-shadow: 0 0 5px var(--accent-green);
 }
 
-/* Light theme styles */
-:global(.light-theme) .terminalContainer {
-  background-color: rgba(235, 235, 235, 0.95);
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(77, 77, 255, 0.3);
-}
 
-:global(.light-theme) .terminalHeader {
-  background-color: rgba(200, 200, 200, 0.8);
-  border-color: var(--accent-blue);
-}
-
-:global(.light-theme) .terminalTitle {
-  color: var(--accent-blue);
-}
-
-:global(.light-theme) .terminalWindow::-webkit-scrollbar-thumb {
-  background: var(--accent-blue);
-}
-
-:global(.light-theme) .terminalInputForm,
-:global(.light-theme) .hackProgressContainer {
-  background-color: rgba(200, 200, 200, 0.3);
-}
-
-:global(.light-theme) .terminalInputForm {
-  border-color: rgba(77, 77, 255, 0.2);
-}
 
 /* Animations */
 @keyframes loadingDots {
