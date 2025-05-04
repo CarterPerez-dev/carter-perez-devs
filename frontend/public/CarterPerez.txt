@@ -1,0 +1,50 @@
+﻿Carter Perez
+CarterPerez44@gmail.com • (443) 510-0866 • Annapolis, MD • Portfolio: https://carterperez-dev.com
+
+
+WORK EXPERIENCE 
+
+
+Sealing Technologies                                                                          June. 2024 – April. 2025
+Integration Tech II                                                                                            Columbia, MD
+* Managed and optimized QA workflows for custom server builds, aligning with strict timelines and regulatory standards..
+* Upgraded and maintained computer hardware across the facility, ensuring optimal performance and seamless integration with custom server builds.
+* Played a key role in consulting on the assembly and logistics of $40m worth of servers, network switches, and Cyber kits.
+* Authored multiple blogs for the company website detailing efficient quality assurance processes for high-stakes assembly projects.
+* Developed SOPs to standardize assembly procedures across teams and streamline onboarding.
+ 
+Jimmy Johns                                                                                               Dec. 2022 – July. 2024
+General Manager                                                                                                 Severna Park, MD
+* Supervised 10+ staff members, optimizing task delegation and daily procedures for smooth restaurant operations.
+* Diagnosed and repaired POS systems and networks across five stores, maintaining service reliability for the franchise.
+* Optimized workflows and processes to eliminate excess labor costs and COGS, resulting in smoother operations.
+* Reduced delivery times by 8 minutes weekly, securing recognition as the top-performing GM within a 5-store franchise.
+* Created prep and cleaning checklists to improve back-of-house efficiency and accountability.
+
+
+CERTIFICATIONS
+        
+CompTIA A+, Network+, Security+, CySA+, PenTest+, CASP+ | Python Institute PCEP
+
+
+EDUCATION 
+        
+University of Maryland Global Campus                                                                                    May, 2027
+MS, Cyber Security                                                                                                              Largo, MD
+
+
+PROJECTS
+* Title: CertGames.com | iOS App: https://apps.apple.com/us/app/comptia-cert-games-practice/id6743811522
+* GitHub: github.com/CarterPerez-dev/CertGames-Core (Web) | github.com/CarterPerez-dev/CertGames-IOS  (iOS)
+* Developed full-stack cybersecurity platform using React/Redux frontend, Python/Flask backend, React Native, MongoDB database, Redis caching, Nginx, and targeted OpenAI capabilities.
+* Provides accessible education used by 500+ active learners (100+ paying subscribers) within 2 months, driven by comprehensive content including 13k+ questions, 10+ learning games, 15+ themes, and real-time support.
+* Title: Flask-Honeypot |PyPi: https://pypi.org/project/flask-honeypot/0.1.1/
+* Sophisticated cybersecurity deception system Python package that redirects 500+ common attack vectors to 20+ realistic-looking fake admin dashboards and portals
+* Records all attacker interactions collecting 30+ data points including geolocation and behavioral patterns with built-in admin dashboard.
+
+
+SKILLS 
+
+
+* Technical Engineering & Development: Splunk SIEM, AWS WAF & Shield, Eventbridge, Cloudwatch, EC2, S3, CloudFront, Docker, GitHub Actions, Linux CLI, Python, JavaScript, HTML, CSS, Shell, Regex, Nginx, Apache, GitHub, SSL and TLS management, Identity and Access Management (IAM).
+* Governance, Collaboration & Strategy: Team building, peer mentoring, certification training, customer satisfaction, MITRE ATT&CK, ITIL, ISO 27001, COBIT, NIST 800-53, Cyber Kill Chains, CRM systems.

@@ -1,105 +1,37 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAudio } from '../../contexts/AudioContext';
-import { useGlitch } from '../../hooks/useGlitch';
 import styles from './ResumeHologram.module.css';
+import { FaUserSecret, FaGithub, FaPhone, FaBriefcase, FaGraduationCap, FaLinux, FaCode, FaTrophy } from 'react-icons/fa'; 
 
-// Import projects from ProjectsGrid data
-const PROJECTS_DATA = [
-  {
-    id: 1,
-    title: 'CertGames.com',
-    description: 'A gamified platform for certification preparation. Follow structured roadmaps to learn, practice, and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.',
-    categories: ['cybersecurity', 'education'],
-    technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
-    link: 'https://certgames.com',
-    featured: true
-  },
-  {
-    id: 2,
-    title: 'Flask-Honeypot',
-    description: 'A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.',
-    categories: ['cybersecurity'],
-    technologies: ['Python', 'Flask', 'Docker', 'SQLite'],
-    link: 'https://github.com/CarterPerez-dev/flask-honeypot',
-    featured: false
-  },
-  {
-    id: 3,
-    title: 'Portfolio',
-    description: 'A futuristic themed portfolio website with interactive elements and holographic UI. Features include 3D elements, glitch effects, and a custom terminal interface.',
-    categories: ['web dev'],
-    technologies: ['React', 'Three.js', 'CSS3', 'Framer Motion'],
-    link: 'https://github.com/CarterPerez-dev/carter-perez-devs',
-    featured: false
-  },
-  {
-    id: 4,
-    title: 'AngelaCLI',
-    description: 'An AI-powered command line tool that assists with coding tasks. Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.',
-    categories: ['ai'],
-    technologies: ['Python', 'OpenAI API', 'TensorFlow', 'Click'],
-    link: 'https://github.com/CarterPerez-dev/angela-cli',
-    featured: false
-  }
-];
-
-// Blog posts from ProjectsGrid
-const BLOG_POSTS = [
-  {
-    id: 5,
-    title: 'How My Career Growth Led to Enhancing Customer Experience',
-    description: 'Certifications have a unique way of shaping not only the knowledge we carry but also the way we approach challenges. As an Integration Technician at SealingTech, earning professional CompTIA certifications such as the A+, Network+, Security+, Network+, CySa+, Pentest+, and CASP+ have placed me on a learning path which has become the catalyst for personal….',
-    categories: ['blogs', 'cybersecurity'],
-    date: 'April 15, 2025',
-    link: 'https://www.sealingtech.com/2025/02/03/how-my-career-growth-led-to-enhancing-customer-experience/',
-    isBlog: true
-  },
-  {
-    id: 6,
-    title: 'Building Custom Solutions with Quality at the Core',
-    description: 'As a System Integration Technician at SealingTech, my team and I are responsible for building custom defense systems that are not only powerful but also tailored to the unique needs of our customers. From selecting the right hardware specifications to configuring the complex systems into a carry-on compliant Cyber-Fly-Away Kit, we focus on optimizing performance,…',
-    categories: ['blogs', 'web dev'],
-    date: 'March 22, 2025',
-    link: 'https://www.sealingtech.com/2024/10/03/building-custom-solutions-with-quality-at-the-core/',
-    isBlog: true
-  },
-  {
-    id: 7,
-    title: 'Top 10 Tips to Pass the CompTIA Security+ Exam on Your First Try',
-    description: 'The CompTIA Security+ certification is one of the most sought-after entry-level cybersecurity certifications. With over 900,000 Security+ certified professionals worldwide, this certification validates the baseline skills necessary to perform core security functions and serves as a springboard for more advanced cybersecurity roles...',
-    categories: ['blogs', 'ai', 'education'],
-    date: 'February 8, 2025',
-    link: 'https://certgames.com/blog/comptia-security-plus-exam-tips',
-    isBlog: true
-  }
-];
 
 // Resume sections data
 const RESUME_SECTIONS = [
   {
     id: 'profile',
     title: 'Profile',
-    icon: '👤',
-    content: `Dedicated System Integration Technician with strong cybersecurity expertise. Proven ability to build, configure, and optimize custom security systems. Holds seven CompTIA certifications and pursuing a master's degree in Cybersecurity. Combines technical knowledge with practical skills to deliver reliable, secure solutions.`
+    icon: FaUserSecret,
+    color: '#00bcd4',
+    content: `Driven Cybersecurity Professional and Integration Technician II with strong technical expertise in system integration, penetration testing, and secure development. Skilled in detecting vulnerabilities, building secure applications, and implementing defensive countermeasures. Currently pursuing a Master's in Cybersecurity while expanding my expertise through hands-on projects and professional certification paths. Committed to continuous learning and staying at the forefront of cybersecurity innovation.`
   },
   {
     id: 'experience',
     title: 'Experience',
-    icon: '💼',
+    icon: FaBriefcase,
+    color: '#ff9800',
     content: [
       {
-        title: 'System Integration Technician II',
+        title: 'Integration Technician II',
         company: 'Sealing Technologies',
-        location: 'Annapolis, MD',
+        location: 'Columbia, MD',
         duration: '2024 - Present',
         responsibilities: [
-          'Build and configure custom cybersecurity and defense systems',
-          'Ensure systems meet client specifications and reliability standards',
-          'Perform quality assurance and optimization testing',
-          'Collaborate with cross-functional teams to deliver comprehensive solutions',
-          'Document build processes and system configurations'
+          'Manage and optimize QA workflows for custom server builds, ensuring alignment with strict timelines and regulatory standards',
+          'Upgrade and maintain computer hardware across the facility for optimal performance with custom server builds',
+          'Consult on assembly and logistics for $40M worth of servers, network switches, and cyber kits',
+          'Author technical blogs for company website detailing efficient QA processes for high-stakes assembly projects',
+          'Develop and implement SOPs to standardize assembly procedures and streamline onboarding across teams'
         ]
       },
       {
@@ -108,23 +40,11 @@ const RESUME_SECTIONS = [
         location: 'Severna Park, MD',
         duration: '2022 - 2024',
         responsibilities: [
-          'Managed daily operations and supervised staff',
-          'Ensured efficient workflows and high customer satisfaction',
-          'Maintained network and POS systems functionality',
-          'Implemented new inventory procedures to reduce waste',
-          'Diagnosed and resolved technical issues'
-        ]
-      },
-      {
-        title: 'General Manager',
-        company: "Jimmy John's",
-        location: 'Annapolis, MD',
-        duration: '2022 - 2022',
-        responsibilities: [
-          'Diagnosed network & POS issues',
-          'Oversaw staff scheduling and training',
-          'Ensured compliance with company standards',
-          'Optimized operational workflows'
+          'Supervised 10+ staff members, optimizing task delegation and daily procedures for smooth operations',
+          'Diagnosed and repaired POS systems and networks across five stores, maintaining franchise service reliability',
+          'Optimized workflows and processes to eliminate excess labor costs and COGS, resulting in smoother operations',
+          'Reduced delivery times by 8 minutes weekly, securing recognition as top-performing GM in 5-store franchise',
+          'Created prep and cleaning checklists to improve back-of-house efficiency and accountability'
         ]
       }
     ]
@@ -132,35 +52,18 @@ const RESUME_SECTIONS = [
   {
     id: 'education',
     title: 'Education',
-    icon: '🎓',
+    icon: FaGraduationCap,
+    color: '#4caf50',
     content: [
       {
         degree: "Master's Degree in Cybersecurity",
         institution: 'University of Maryland Global Campus',
-        duration: '2024 - Present',
+        duration: '2024 - 2027',
         details: [
-          'Focus on advanced security protocols and threat intelligence',
-          'GPA: 3.9',
-          'Expected graduation: 2026'
-        ]
-      },
-      {
-        degree: "Associate's Degree in Cybersecurity",
-        institution: 'Anne Arundel Community College',
-        duration: '2022 - 2024',
-        details: [
-          'Graduated with honors (3.8 GPA)',
-          'Focus on network security and ethical hacking',
-          'Participated in capture-the-flag competitions'
-        ]
-      },
-      {
-        degree: 'High School Diploma',
-        institution: 'South River High School',
-        duration: '2018 - 2022',
-        details: [
-          'Focus on science and mathematics',
-          'Participated in STEM-related extracurriculars'
+          'Focus on advanced security protocols, penetration testing, and threat intelligence',
+          'Active member of Cybersecurity Club and Programming Club',
+          'Expected graduation: May 2027',
+          'Research areas include threat hunting and zero-day vulnerability detection'
         ]
       }
     ]
@@ -168,52 +71,73 @@ const RESUME_SECTIONS = [
   {
     id: 'skills',
     title: 'Technical Skills',
-    icon: '💻',
+    icon: FaLinux,
+    color: '#e91e63',
     content: {
       categories: [
         {
           name: 'Cybersecurity',
           skills: [
-            'Risk Assessment',
-            'Threat Mitigation',
-            'Compliance (ISO 27001, 9001:2015)',
-            'Role-Based Access Controls',
-            'Encryption Best Practices',
-            'Incident Response Planning'
+            'Penetration Testing',
+            'Vulnerability Assessment',
+            'Security Monitoring',
+            'Incident Response',
+            'MITRE ATT&CK Framework',
+            'Threat Hunting',
+            'Digital Forensics',
+            'Splunk SIEM'
           ]
         },
         {
           name: 'Development',
           skills: [
             'Python',
-            'JavaScript',
+            'JavaScript/React',
             'HTML/CSS',
             'Shell Scripting',
-            'React',
             'Flask',
+            'Redux',
             'MongoDB',
-            'Docker'
+            'Docker/Containerization'
           ]
         },
         {
           name: 'Networking',
           skills: [
             'TCP/IP',
-            'DNS/DHCP',
-            'Firewalls (UFW, iptables)',
-            'Secure Network Configurations',
-            'SSH Encryption',
-            'VPNs'
+            'Firewall Management',
+            'AWS WAF & Shield',
+            'VPN Configuration',
+            'Network Security',
+            'Intrusion Detection Systems',
+            'IAM Implementation',
+            'SSL/TLS Management'
           ]
         },
         {
-          name: 'Cloud & DevOps',
+          name: 'Cloud & Infrastructure',
           skills: [
-            'AWS Security (EC2, S3, WAF, Shield)',
+            'AWS (EC2, S3, CloudFront)',
+            'Docker Orchestration',
+            'Nginx/Apache Configuration',
             'CI/CD Pipelines',
-            'Containerization',
-            'Infrastructure as Code',
-            'Web Servers (Nginx, Apache)'
+            'Git/GitHub',
+            'Linux Administration',
+            'CloudWatch Monitoring',
+            'EventBridge Integration'
+          ]
+        },
+        {
+          name: 'Governance',
+          skills: [
+            'ISO 27001',
+            'NIST 800-53',
+            'Risk Assessment',
+            'Compliance Frameworks',
+            'COBIT Implementation',
+            'ITIL Best Practices',
+            'Security Auditing',
+            'Policy Development'
           ]
         }
       ]
@@ -222,7 +146,8 @@ const RESUME_SECTIONS = [
   {
     id: 'certifications',
     title: 'Certifications',
-    icon: '🏆',
+    icon: FaTrophy,
+    color: '#ffeb3b',
     content: [
       {
         name: 'CompTIA A+',
@@ -255,47 +180,85 @@ const RESUME_SECTIONS = [
         date: 'December 2024'
       },
       {
-        name: 'PCEP (Certified Entry-Level Python Programmer)',
+        name: 'PCEP – Certified Entry-Level Python Programmer',
         issuer: 'Python Institute',
-        date: 'June 2024'
+        date: 'February 2025'
       }
     ]
   },
   {
     id: 'projects',
     title: 'Projects',
-    icon: '🚀',
-    content: PROJECTS_DATA.map(project => ({
-      name: project.title,
-      description: project.description,
-      technologies: project.technologies,
-      link: project.link,
-      featured: project.featured
-    }))
-  },
-  {
-    id: 'blogs',
-    title: 'Publications',
-    icon: '📝',
-    content: BLOG_POSTS.map(blog => ({
-      name: blog.title,
-      description: blog.description,
-      date: blog.date,
-      link: blog.link,
-      categories: blog.categories
-    }))
+    icon: FaGithub,
+     color: '#FFF',
+    content: [
+      {
+        name: 'CertGames.com',
+        description: 'A gamified platform for certification preparation with 500+ active learners (100+ paying subscribers) in just 2 months. Features comprehensive content including 13k+ questions, 10+ learning games, 15+ themes, and real-time support to make cybersecurity education accessible and engaging.',
+        technologies: ['React', 'Redux', 'Python/Flask', 'MongoDB', 'Redis', 'OpenAI'],
+        link: 'https://certgames.com',
+        featured: false
+      },
+      {
+        name: 'Flask-Honeypot',
+        description: 'A sophisticated cybersecurity deception system built as a Python package that redirects 500+ common attack vectors to 20+ realistic-looking fake admin dashboards and portals. Records all attacker interactions collecting 30+ data points including geolocation and behavioral patterns with built-in admin dashboard for comprehensive threat intelligence.',
+        technologies: ['Python', 'Flask', 'Docker', 'MongoDB', 'Redis'],
+        link: 'https://github.com/CarterPerez-dev/flask-honeypot',
+        featured: false
+      },
+      {
+        name: 'AngelaCLI',
+        description: 'An AI-powered command line tool that assists with coding tasks and cybersecurity assessments. Integrates with development workflows to provide context-aware suggestions and can perform preliminary vulnerability scanning on code repositories to identify potential security weaknesses before deployment.',
+        technologies: ['Python', 'OpenAI API', 'TensorFlow', 'Click'],
+        link: 'https://github.com/CarterPerez-dev/angela-cli',
+        featured: false
+      }
+    ]
   },
   {
     id: 'contact',
     title: 'Contact',
-    icon: '📞',
+    color: '#2196f3',
+    icon: FaPhone,
     content: {
-      email: 'CarterPerez-dev@ProxyAuthRequired.com',
+      email: 'CarterPerez-dev@gmail.com',
       phone: '443-510-0866',
       location: 'Annapolis, MD',
       github: 'https://github.com/CarterPerez-dev',
-      linkedin: 'https://www.linkedin.com/in/carter-perez-ProxyAuthRequired/'
+      linkedin: 'https://www.linkedin.com/in/carterperez-dev/'
     }
+  }
+];
+
+// Project data for the gifts section
+const GIFT_OPTIONS = [
+  {
+    id: 'health',
+    name: '+ 500 HEALTH',
+    subtext: 'Apocalyptic Potion',
+    icon: '🧪',
+    color: 'var(--accent-green)'
+  },
+  {
+    id: 'power',
+    name: '+ 2000 POWER',
+    subtext: 'The Power of Code',
+    icon: '⚡',
+    color: 'var(--accent-magenta)'
+  },
+  {
+    id: 'intelligence',
+    name: '+ 750 INTELLIGENCE',
+    subtext: 'Forest Potion',
+    icon: '🧠',
+    color: 'var(--accent-green)'
+  },
+  {
+    id: 'mana',
+    name: '+ 12,000 MANA',
+    subtext: 'Ice Potion',
+    icon: '✨',
+    color: 'var(--accent-blue)'
   }
 ];
 
@@ -303,537 +266,283 @@ const ResumeHologram = () => {
   const { theme } = useTheme();
   const { playSound } = useAudio();
   const canvasRef = useRef(null);
-  const titleRef = useRef(null);
-  const resumeContainerRef = useRef(null);
+  const containerRef = useRef(null);
   const [activeSection, setActiveSection] = useState('profile');
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [hologramState, setHologramState] = useState({
-    flicker: false,
-    glitch: false,
-    scanLine: 0,
-    noise: 0.05
-  });
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const [selectedGift, setSelectedGift] = useState(null);
+  const [glitchEffect, setGlitchEffect] = useState(false);
   
-  // Initialize glitch effect for title
-  const { startGlitch } = useGlitch(titleRef, {
-    intensity: 3,
-    duration: 500,
-    continuousGlitch: false
-  });
-  
-  // Simulate hologram effects with periodic glitches and flickers
+  // Canvas animation for background effects
   useEffect(() => {
-    // Random glitch effect
-    const glitchInterval = setInterval(() => {
-      if (Math.random() < 0.2) {
-        setHologramState(prevState => ({ 
-          ...prevState, 
-          glitch: true 
-        }));
-        
-        // Trigger title glitch
-        if (Math.random() < 0.5) {
-          startGlitch();
-        }
-        
-        // Reset glitch after short duration
-        setTimeout(() => {
-          setHologramState(prevState => ({ 
-            ...prevState, 
-            glitch: false 
-          }));
-        }, 200 + Math.random() * 300);
-      }
-    }, 3000);
-    
-    // Random flicker effect
-    const flickerInterval = setInterval(() => {
-      if (Math.random() < 0.15) {
-        setHologramState(prevState => ({ 
-          ...prevState, 
-          flicker: true 
-        }));
-        
-        // Reset flicker after short duration
-        setTimeout(() => {
-          setHologramState(prevState => ({ 
-            ...prevState, 
-            flicker: false 
-          }));
-        }, 100 + Math.random() * 150);
-      }
-    }, 5000);
-    
-    // Scan line animation
-    const scanLineInterval = setInterval(() => {
-      setHologramState(prevState => ({ 
-        ...prevState, 
-        scanLine: (prevState.scanLine + 1) % 100 
-      }));
-    }, 50);
-    
-    // Noise intensity variation
-    const noiseInterval = setInterval(() => {
-      setHologramState(prevState => ({ 
-        ...prevState, 
-        noise: 0.03 + Math.random() * 0.04
-      }));
-    }, 200);
-    
-    return () => {
-      clearInterval(glitchInterval);
-      clearInterval(flickerInterval);
-      clearInterval(scanLineInterval);
-      clearInterval(noiseInterval);
-    };
-  }, [startGlitch]);
-  
-  // 3D Holographic effect with advanced canvas rendering
-  useEffect(() => {
-    if (!canvasRef.current || !resumeContainerRef.current) return;
+    if (!canvasRef.current || !containerRef.current) return;
     
     const canvas = canvasRef.current;
+    const container = containerRef.current;
     const ctx = canvas.getContext('2d');
     
     // Set canvas dimensions
-    const setCanvasDimensions = () => {
-      const rect = resumeContainerRef.current.getBoundingClientRect();
+    const updateCanvasSize = () => {
+      const rect = container.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
     };
     
-    window.addEventListener('resize', setCanvasDimensions);
-    setCanvasDimensions();
+    window.addEventListener('resize', updateCanvasSize);
+    updateCanvasSize();
     
-    // Holographic parameters
-    const primaryColor = theme === 'dark' 
-      ? { r: 0, g: 255, b: 245 } 
-      : { r: 77, g: 77, b: 255 };
-    const secondaryColor = { r: 255, g: 61, b: 61 };
-    
-    // Create grid-based data points
-    const gridSpacing = 30;
-    const cols = Math.ceil(canvas.width / gridSpacing);
-    const rows = Math.ceil(canvas.height / gridSpacing);
-    const dataPoints = [];
-    
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        if (Math.random() < 0.3) { // Only create some points
-          dataPoints.push({
-            x: i * gridSpacing + (Math.random() * gridSpacing * 0.5),
-            y: j * gridSpacing + (Math.random() * gridSpacing * 0.5),
-            size: 1 + Math.random(),
-            pulsePhase: Math.random() * Math.PI * 2,
-            pulseSpeed: 0.02 + Math.random() * 0.03,
-            connections: []
-          });
-        }
-      }
-    }
-    
-    // Connect nearby data points
-    dataPoints.forEach(point => {
-      dataPoints.forEach(otherPoint => {
-        if (point === otherPoint) return;
-        
-        const dx = point.x - otherPoint.x;
-        const dy = point.y - otherPoint.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        if (distance < gridSpacing * 1.5 && Math.random() < 0.3) {
-          point.connections.push(otherPoint);
-        }
-      });
-    });
-    
-    // Data flow particles
-    const particles = [];
-    
-    const createParticle = (startPoint, endPoint) => {
-      particles.push({
-        startPoint,
-        endPoint,
-        progress: 0,
-        speed: 0.005 + Math.random() * 0.01,
-        size: 1.5 + Math.random(),
-        color: Math.random() < 0.8 ? primaryColor : secondaryColor,
-        alpha: 0.6 + Math.random() * 0.4
-      });
-    };
-    
-    // Create initial particles
-    const initialParticleCount = Math.floor(dataPoints.length * 0.2);
-    for (let i = 0; i < initialParticleCount; i++) {
-      const randomPoint = dataPoints[Math.floor(Math.random() * dataPoints.length)];
-      if (randomPoint.connections.length > 0) {
-        const randomConnection = randomPoint.connections[Math.floor(Math.random() * randomPoint.connections.length)];
-        createParticle(randomPoint, randomConnection);
-      }
-    }
-    
-    // Animation function
-    const animate = () => {
-      // Clear canvas
+    // Create grid lines
+    const drawGrid = () => {
+      const gridSize = 30;
+      const primaryColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.15)' : 'rgba(77, 77, 255, 0.15)';
+      const secondaryColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.05)' : 'rgba(77, 77, 255, 0.05)';
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Apply scan line effect
-      const scanLineY = (canvas.height * hologramState.scanLine) / 100;
-      ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.1)`;
-      ctx.fillRect(0, scanLineY, canvas.width, 2);
-      
-      // Apply hologram flicker
-      if (hologramState.flicker) {
-        ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.05)`;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      
-      // Apply digital noise
-      if (hologramState.noise > 0) {
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        
-        for (let i = 0; i < data.length; i += 4) {
-          if (Math.random() < hologramState.noise) {
-            data[i] = primaryColor.r * Math.random();     // R
-            data[i + 1] = primaryColor.g * Math.random(); // G
-            data[i + 2] = primaryColor.b * Math.random(); // B
-            data[i + 3] = Math.random() * 50;             // A
-          }
-        }
-        
-        ctx.putImageData(imageData, 0, 0);
-      }
-      
-      // Draw glitch effect
-      if (hologramState.glitch) {
-        const glitchHeight = 20 + Math.random() * 30;
-        const glitchY = Math.random() * canvas.height;
-        
-        ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.2)`;
-        ctx.fillRect(0, glitchY, canvas.width, glitchHeight);
-        
-        // Draw offset copies for RGB split effect
-        ctx.globalCompositeOperation = 'screen';
-        ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
-        ctx.fillRect(2, glitchY + 2, canvas.width, glitchHeight - 4);
-        ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-        ctx.fillRect(-2, glitchY - 2, canvas.width, glitchHeight + 4);
-        ctx.globalCompositeOperation = 'source-over';
-      }
-      
-      // Draw data points and connections
-      dataPoints.forEach(point => {
-        // Update pulse phase
-        point.pulsePhase += point.pulseSpeed;
-        if (point.pulsePhase > Math.PI * 2) {
-          point.pulsePhase -= Math.PI * 2;
-        }
-        
-        // Calculate pulse effect
-        const pulseFactor = 0.7 + Math.sin(point.pulsePhase) * 0.3;
-        
-        // Draw connections first
-        point.connections.forEach(connectedPoint => {
-          ctx.beginPath();
-          ctx.moveTo(point.x, point.y);
-          ctx.lineTo(connectedPoint.x, connectedPoint.y);
-          
-          // Glow effect based on active section
-          const distToActive = getDistanceToActiveSection((point.x + connectedPoint.x) / 2, (point.y + connectedPoint.y) / 2);
-          const alpha = Math.max(0.03, Math.min(0.2, 1 - distToActive / 1000));
-          
-          ctx.strokeStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, ${alpha})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        });
-        
-        // Draw the data point with pulse effect
-        const pointSize = point.size * pulseFactor;
-        
+      // Draw vertical lines
+      for (let x = 0; x < canvas.width; x += gridSize) {
         ctx.beginPath();
-        ctx.arc(point.x, point.y, pointSize, 0, Math.PI * 2);
-        
-        // Distance-based glow
-        const distToActive = getDistanceToActiveSection(point.x, point.y);
-        const alpha = Math.max(0.1, Math.min(0.5, 1 - distToActive / 1000));
-        
-        ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, ${alpha})`;
-        ctx.fill();
-      });
-      
-      // Update and draw particles
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const particle = particles[i];
-        
-        // Update progress
-        particle.progress += particle.speed;
-        
-        // Remove if completed
-        if (particle.progress >= 1) {
-          // Create new particle
-          if (Math.random() < 0.7) {
-            const randomPoint = dataPoints[Math.floor(Math.random() * dataPoints.length)];
-            if (randomPoint.connections.length > 0) {
-              const randomConnection = randomPoint.connections[Math.floor(Math.random() * randomPoint.connections.length)];
-              createParticle(randomPoint, randomConnection);
-            }
-          }
-          
-          particles.splice(i, 1);
-          continue;
-        }
-        
-        // Calculate current position
-        const currentX = particle.startPoint.x + (particle.endPoint.x - particle.startPoint.x) * particle.progress;
-        const currentY = particle.startPoint.y + (particle.endPoint.y - particle.startPoint.y) * particle.progress;
-        
-        // Draw particle
-        ctx.beginPath();
-        ctx.arc(currentX, currentY, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${particle.alpha})`;
-        ctx.fill();
-        
-        // Add glow
-        const glowSize = particle.size * 3;
-        const gradient = ctx.createRadialGradient(
-          currentX, currentY, 0,
-          currentX, currentY, glowSize
-        );
-        
-        gradient.addColorStop(0, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${particle.alpha * 0.8})`);
-        gradient.addColorStop(1, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, 0)`);
-        
-        ctx.beginPath();
-        ctx.arc(currentX, currentY, glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.strokeStyle = x % (gridSize * 2) === 0 ? primaryColor : secondaryColor;
+        ctx.lineWidth = x % (gridSize * 3) === 0 ? 1 : 0.5;
+        ctx.stroke();
       }
       
-      // Add new particles occasionally
-      if (Math.random() < 0.05 && particles.length < Math.floor(dataPoints.length * 0.3)) {
-        const randomPoint = dataPoints[Math.floor(Math.random() * dataPoints.length)];
-        if (randomPoint.connections.length > 0) {
-          const randomConnection = randomPoint.connections[Math.floor(Math.random() * randomPoint.connections.length)];
-          createParticle(randomPoint, randomConnection);
-        }
+      // Draw horizontal lines
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.strokeStyle = y % (gridSize * 2) === 0 ? primaryColor : secondaryColor;
+        ctx.lineWidth = y % (gridSize * 3) === 0 ? 1 : 0.5;
+        ctx.stroke();
       }
       
-      // Draw highlight around active section
+      // Draw scan line
+      const scanLineY = (Date.now() % 3000) / 3000 * canvas.height;
+      ctx.beginPath();
+      ctx.moveTo(0, scanLineY);
+      ctx.lineTo(canvas.width, scanLineY);
+      ctx.strokeStyle = theme === 'dark' 
+        ? 'rgba(0, 255, 245, 0.3)' 
+        : 'rgba(77, 77, 255, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      // Draw glow around active section
       const activeElement = document.getElementById(`section-${activeSection}`);
-      
       if (activeElement) {
         const rect = activeElement.getBoundingClientRect();
-        const canvasRect = canvas.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
         
-        // Convert rect to canvas coordinates
-        const highlightRect = {
-          x: rect.left - canvasRect.left,
-          y: rect.top - canvasRect.top,
-          width: rect.width,
-          height: rect.height
-        };
+        // Calculate position relative to canvas
+        const x = rect.left - containerRect.left;
+        const y = rect.top - containerRect.top;
+        const width = rect.width;
+        const height = rect.height;
         
-        // Draw glow effect
-        const glowSize = 25;
+        // Draw glow
+        ctx.strokeStyle = theme === 'dark' 
+          ? 'rgba(0, 255, 245, 0.5)' 
+          : 'rgba(77, 77, 255, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x - 5, y - 5, width + 10, height + 10);
         
-        // Create gradient
-        const glow = ctx.createLinearGradient(
-          highlightRect.x, 
-          highlightRect.y, 
-          highlightRect.x + highlightRect.width, 
-          highlightRect.y + highlightRect.height
-        );
+        // Add inner glow
+        const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
+        gradient.addColorStop(0, theme === 'dark' 
+          ? 'rgba(0, 255, 245, 0.1)' 
+          : 'rgba(77, 77, 255, 0.1)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
         
-        glow.addColorStop(0, `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.1)`);
-        glow.addColorStop(0.5, `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.2)`);
-        glow.addColorStop(1, `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.1)`);
-        
-        // Draw rounded rectangle with glow
-        drawRoundedRect(
-          ctx, 
-          highlightRect.x - glowSize, 
-          highlightRect.y - glowSize, 
-          highlightRect.width + glowSize * 2, 
-          highlightRect.height + glowSize * 2, 
-          10,
-          glow
-        );
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, y, width, height);
       }
-      
-      // Request next animation frame
-      requestAnimationFrame(animate);
     };
     
-    // Helper function to draw rounded rectangle
-    const drawRoundedRect = (ctx, x, y, width, height, radius, fill) => {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      
-      ctx.fillStyle = fill;
-      ctx.fill();
+    // Animation loop
+    let animationId;
+    const animate = () => {
+      drawGrid();
+      animationId = requestAnimationFrame(animate);
     };
     
-    // Get distance from point to active section
-    const getDistanceToActiveSection = (x, y) => {
-      const activeElement = document.getElementById(`section-${activeSection}`);
-      
-      if (!activeElement) return 1000; // Default large distance
-      
-      const rect = activeElement.getBoundingClientRect();
-      const canvasRect = canvas.getBoundingClientRect();
-      
-      // Convert rect to canvas coordinates
-      const sectionRect = {
-        x: rect.left - canvasRect.left,
-        y: rect.top - canvasRect.top,
-        width: rect.width,
-        height: rect.height
-      };
-      
-      // Calculate center of section
-      const centerX = sectionRect.x + sectionRect.width / 2;
-      const centerY = sectionRect.y + sectionRect.height / 2;
-      
-      // Calculate distance
-      return Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-    };
+    animate();
     
-    // Start animation
-    const animationId = requestAnimationFrame(animate);
-    
-    // Clean up
+    // Cleanup
     return () => {
-      window.removeEventListener('resize', setCanvasDimensions);
       cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', updateCanvasSize);
     };
-  }, [theme, activeSection, hologramState]);
+  }, [theme, activeSection]);
   
-  // Simulate download progress
-  const handleDownload = (format) => {
-    setIsDownloading(true);
-    setDownloadProgress(0);
-    playSound('click');
-    
-    // Simulating download progress
-    const interval = setInterval(() => {
-      setDownloadProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setIsDownloading(false);
-            setShowDownloadOptions(false);
-            
-            // Trigger glitch effect on completion
-            setHologramState(prevState => ({ ...prevState, glitch: true }));
+  // Trigger a glitch effect
+  const triggerGlitch = () => {
+    setGlitchEffect(true);
+    setTimeout(() => setGlitchEffect(false), 200);
+  };
+  
+  // Simulate download process
+    // Simulate download process
+    const handleDownload = (format) => {
+      setIsDownloading(true);
+      setDownloadProgress(0);
+      playSound('click');
+  
+      // Simulate download progress
+      const interval = setInterval(() => {
+        setDownloadProgress(prev => {
+          const nextProgress = prev + (Math.random() * 5) + 2;
+          if (nextProgress >= 100) {
+            clearInterval(interval);
+            setDownloadProgress(100); // Ensure it hits 100
+  
+            // --- START OF CHANGES ---
             setTimeout(() => {
-              setHologramState(prevState => ({ ...prevState, glitch: false }));
-            }, 500);
-            
-            // In a real implementation, trigger actual download here
-            const link = document.createElement('a');
-            link.href = '/assets/CarterPerez.pdf';
-            link.download = `Carter_Perez_Resume.${format.toLowerCase()}`;
-            link.click();
-          }, 500);
-          return 100;
-        }
-        return prev + (Math.random() * 5) + 2;
-      });
-    }, 100);
+              setIsDownloading(false);
+              setShowDownloadOptions(false);
+              triggerGlitch(); // Keep the visual effect
+  
+              // Determine the correct filename and URL based on format
+              let fileName = '';
+              let fileUrl = '';
+              const baseName = 'CarterPerez'; // Consistent base name
+  
+              switch (format.toLowerCase()) {
+                case 'pdf':
+                  fileName = `${baseName}.pdf`;
+                  fileUrl = `/${fileName}`; // Path relative to the public folder root
+                  break;
+                case 'docx':
+                  fileName = `${baseName}.docx`;
+                  fileUrl = `/${fileName}`; // Path relative to the public folder root
+                  break;
+                case 'txt':
+                  fileName = `${baseName}.txt`;
+                  fileUrl = `/${fileName}`; // Path relative to the public folder root
+                  break;
+                default:
+                  console.error("Invalid download format:", format);
+                  // Optionally, show an error to the user here
+                  return; // Stop if the format is unknown
+              }
+  
+              // Create link element
+              const link = document.createElement('a');
+  
+              // Set the href to the file in the public folder
+              link.href = fileUrl;
+  
+              // Set the download attribute to the desired filename for the user
+              link.download = fileName;
+  
+              // Append to the DOM, click, and then remove
+              // Appending is necessary for Firefox compatibility
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+  
+            }, 500); // Delay after progress hits 100
+            // --- END OF CHANGES ---
+            return 100; // Return 100 for the state update
+          }
+          return nextProgress; // Continue progress update
+        });
+      }, 100);
+    };
+  
+  // Handle gift selection
+  const handleGiftSelect = (gift) => {
+    setSelectedGift(gift);
+    playSound('click');
+    triggerGlitch();
+    setTimeout(() => {
+      setShowGiftModal(false);
+      setSelectedGift(null);
+    }, 1500);
   };
   
-  // Render experience list
-  const renderExperienceList = (experiences) => {
-    return experiences.map((exp, index) => (
-      <div key={index} className={styles.experienceItem}>
+  // Render experience items
+  const renderExperienceItems = (experienceList) => {
+    return experienceList.map((item, index) => (
+      <div key={index} className={styles.experienceCard}>
         <div className={styles.experienceHeader}>
-          <h3 className={styles.experienceTitle}>{exp.title}</h3>
+          <h4 className={styles.experienceTitle}>{item.title}</h4>
           <div className={styles.experienceMeta}>
-            <span className={styles.experienceCompany}>{exp.company}</span>
-            <span className={styles.experienceSeparator}>|</span>
-            <span className={styles.experienceLocation}>{exp.location}</span>
-            <span className={styles.experienceSeparator}>|</span>
-            <span className={styles.experienceDuration}>{exp.duration}</span>
+            <span className={styles.companyName}>{item.company}</span>
+            <span className={styles.metaSeparator}>|</span>
+            <span className={styles.locationText}>{item.location}</span>
+            <span className={styles.metaSeparator}>|</span>
+            <span className={styles.durationText}>{item.duration}</span>
           </div>
         </div>
-        
-        <ul className={styles.experienceResponsibilities}>
-          {exp.responsibilities.map((item, idx) => (
-            <li key={idx} className={styles.experienceResponsibilityItem}>{item}</li>
+        <ul className={styles.responsibilitiesList}>
+          {item.responsibilities.map((resp, idx) => (
+            <li key={idx} className={styles.responsibilityItem}>{resp}</li>
           ))}
         </ul>
       </div>
     ));
   };
   
-  // Render education list
-  const renderEducationList = (educations) => {
-    return educations.map((edu, index) => (
-      <div key={index} className={styles.educationItem}>
+  // Render education items
+  const renderEducationItems = (educationList) => {
+    return educationList.map((item, index) => (
+      <div key={index} className={styles.educationCard}>
         <div className={styles.educationHeader}>
-          <h3 className={styles.educationDegree}>{edu.degree}</h3>
+          <h4 className={styles.educationDegree}>{item.degree}</h4>
           <div className={styles.educationMeta}>
-            <span className={styles.educationInstitution}>{edu.institution}</span>
-            <span className={styles.educationSeparator}>|</span>
-            <span className={styles.educationDuration}>{edu.duration}</span>
+            <span className={styles.institutionName}>{item.institution}</span>
+            <span className={styles.metaSeparator}>|</span>
+            <span className={styles.durationText}>{item.duration}</span>
           </div>
         </div>
-        
         <ul className={styles.educationDetails}>
-          {edu.details.map((item, idx) => (
-            <li key={idx} className={styles.educationDetailItem}>{item}</li>
+          {item.details.map((detail, idx) => (
+            <li key={idx} className={styles.detailItem}>{detail}</li>
           ))}
         </ul>
       </div>
     ));
   };
   
-  // Render skills list
-  const renderSkillsList = (skillsData) => {
+  // Render skills items
+  const renderSkillsItems = (skillsData) => {
     return skillsData.categories.map((category, index) => (
-      <div key={index} className={styles.skillsCategory}>
-        <h3 className={styles.skillsCategoryName}>{category.name}</h3>
+      <div key={index} className={styles.skillCategory}>
+        <h4 className={styles.categoryName}>{category.name}</h4>
         <div className={styles.skillsGrid}>
           {category.skills.map((skill, idx) => (
-            <div key={idx} className={styles.skillItem}>{skill}</div>
+            <div key={idx} className={styles.skillBadge}>{skill}</div>
           ))}
         </div>
       </div>
     ));
   };
   
-  // Render certifications list
-  const renderCertificationsList = (certifications) => {
-    return certifications.map((cert, index) => (
-      <div key={index} className={styles.certificationItem}>
+  // Render certifications
+  const renderCertificationItems = (certList) => {
+    return certList.map((cert, index) => (
+      <div key={index} className={styles.certificationCard}>
         <div className={styles.certificationName}>{cert.name}</div>
         <div className={styles.certificationMeta}>
-          <span className={styles.certificationIssuer}>{cert.issuer}</span>
-          <span className={styles.certificationSeparator}>|</span>
-          <span className={styles.certificationDate}>{cert.date}</span>
+          <span className={styles.issuerName}>{cert.issuer}</span>
+          <span className={styles.metaSeparator}>|</span>
+          <span className={styles.dateText}>{cert.date}</span>
         </div>
       </div>
     ));
   };
   
-  // Render projects list
-  const renderProjectsList = (projects) => {
-    return projects.map((project, index) => (
-      <div key={index} className={`${styles.projectItem} ${project.featured ? styles.featuredProject : ''}`}>
+  // Render project items
+  const renderProjectItems = (projectList) => {
+    return projectList.map((project, index) => (
+      <div key={index} className={`${styles.projectCard} ${project.featured ? styles.featuredProject : ''}`}>
         <div className={styles.projectHeader}>
-          <h3 className={styles.projectName}>{project.name}</h3>
+          <h4 className={styles.projectName}>{project.name}</h4>
           <a 
             href={project.link} 
             target="_blank" 
@@ -844,102 +553,61 @@ const ResumeHologram = () => {
             View
           </a>
         </div>
-        
         <p className={styles.projectDescription}>{project.description}</p>
-        
-        <div className={styles.projectTechnologies}>
+        <div className={styles.technologiesList}>
           {project.technologies.map((tech, idx) => (
-            <span key={idx} className={styles.projectTechnology}>{tech}</span>
+            <span key={idx} className={styles.technologyBadge}>{tech}</span>
           ))}
         </div>
       </div>
     ));
   };
   
-  // Render blogs list
-  const renderBlogsList = (blogs) => {
-    return blogs.map((blog, index) => (
-      <div key={index} className={styles.blogItem}>
-        <div className={styles.blogHeader}>
-          <h3 className={styles.blogName}>{blog.name}</h3>
-          <div className={styles.blogDate}>{blog.date}</div>
-        </div>
-        
-        <p className={styles.blogDescription}>{blog.description}</p>
-        
-        <div className={styles.blogFooter}>
-          <div className={styles.blogCategories}>
-            {blog.categories.map((category, idx) => (
-              <span key={idx} className={styles.blogCategory}>{category}</span>
-            ))}
-          </div>
-          
+  // Render contact info
+  const renderContactInfo = (contactData) => {
+    return (
+      <div className={styles.contactGrid}>
+        <div className={styles.contactCard}>
+          <div className={styles.contactLabel}>Email</div>
           <a 
-            href={blog.link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className={styles.blogLink}
+            href={`mailto:${contactData.email}`}
+            className={styles.contactValue}
             onClick={() => playSound('click')}
           >
-            Read Article
+            {contactData.email}
           </a>
         </div>
-      </div>
-    ));
-  };
-  
-  // Render contact information
-  const renderContactInfo = (contact) => {
-    return (
-      <div className={styles.contactInfo}>
-        <div className={styles.contactItem}>
-          <div className={styles.contactLabel}>Email</div>
-          <div className={styles.contactValue}>
-            <a 
-              href={`mailto:${contact.email}`} 
-              className={styles.contactLink}
-              onClick={() => playSound('click')}
-            >
-              {contact.email}
-            </a>
-          </div>
-        </div>
-        
-        <div className={styles.contactItem}>
+        <div className={styles.contactCard}>
           <div className={styles.contactLabel}>Phone</div>
-          <div className={styles.contactValue}>
-            <a 
-              href={`tel:${contact.phone}`} 
-              className={styles.contactLink}
-              onClick={() => playSound('click')}
-            >
-              {contact.phone}
-            </a>
-          </div>
+          <a 
+            href={`tel:${contactData.phone}`}
+            className={styles.contactValue}
+            onClick={() => playSound('click')}
+          >
+            {contactData.phone}
+          </a>
         </div>
-        
-        <div className={styles.contactItem}>
+        <div className={styles.contactCard}>
           <div className={styles.contactLabel}>Location</div>
-          <div className={styles.contactValue}>{contact.location}</div>
+          <div className={styles.contactValue}>{contactData.location}</div>
         </div>
-        
-        <div className={styles.contactItem}>
+        <div className={styles.contactCard}>
           <div className={styles.contactLabel}>Profiles</div>
-          <div className={styles.contactSocial}>
+          <div className={styles.socialLinks}>
             <a 
-              href={contact.github} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className={styles.contactSocialLink}
+              href={contactData.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.socialLink}
               onClick={() => playSound('click')}
             >
               GitHub
             </a>
             <a 
-              href={contact.linkedin} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className={styles.contactSocialLink}
+              href={contactData.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.socialLink}
               onClick={() => playSound('click')}
             >
               LinkedIn
@@ -949,34 +617,39 @@ const ResumeHologram = () => {
       </div>
     );
   };
+
+  // Render profile section
+  const renderProfileSection = (content) => {
+    return (
+      <div className={styles.profileCard}>
+        <p className={styles.profileText}>{content}</p>
+      </div>
+    );
+  };
   
-  // Render section content based on activeSection
+  // Render active section content
   const renderSectionContent = () => {
     const section = RESUME_SECTIONS.find(s => s.id === activeSection);
     
-    if (!section) {
-      return <div>Section not found</div>;
-    }
+    if (!section) return null;
     
     switch (section.id) {
       case 'profile':
-        return <p className={styles.sectionText}>{section.content}</p>;
+        return renderProfileSection(section.content);
       case 'experience':
-        return renderExperienceList(section.content);
+        return renderExperienceItems(section.content);
       case 'education':
-        return renderEducationList(section.content);
+        return renderEducationItems(section.content);
       case 'skills':
-        return renderSkillsList(section.content);
+        return renderSkillsItems(section.content);
       case 'certifications':
-        return renderCertificationsList(section.content);
+        return renderCertificationItems(section.content);
       case 'projects':
-        return renderProjectsList(section.content);
-      case 'blogs':
-        return renderBlogsList(section.content);
+        return renderProjectItems(section.content);
       case 'contact':
         return renderContactInfo(section.content);
       default:
-        return <div>Content not available</div>;
+        return <div>Section content not available</div>;
     }
   };
   
@@ -986,71 +659,55 @@ const ResumeHologram = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.05
       }
     }
   };
   
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
-      y: 0,
       opacity: 1,
-      transition: { type: 'spring', stiffness: 100 }
+      y: 0,
+      transition: { duration: 0.3 }
     }
   };
-  
-  // Hologram effect classes based on state
-  const hologramEffectClasses = `
-    ${styles.resumeContainer} 
-    ${hologramState.flicker ? styles.flicker : ''} 
-    ${hologramState.glitch ? styles.glitch : ''}
-  `;
-  
+
   return (
     <section className={styles.resumeSection} id="resume">
       <div className={styles.scanLines}></div>
-      <div className={styles.hologramProjection}></div>
       
       <div className="container">
         <motion.h1 
-          ref={titleRef}
           className={styles.pageTitle}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          data-text="Neural Résumé Interface"
         >
-          Neural Résumé Interface
+          Résumé Interface
         </motion.h1>
         
         <motion.div 
-          ref={resumeContainerRef}
-          className={hologramEffectClasses}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          ref={containerRef}
+          className={`${styles.resumeContainer} ${glitchEffect ? styles.glitchEffect : ''}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.1 }}
         >
           <canvas 
-            ref={canvasRef} 
-            className={styles.resumeCanvas}
+            ref={canvasRef}
+            className={styles.backgroundCanvas}
             aria-hidden="true"
           ></canvas>
           
           <div className={styles.resumeContent}>
             <div className={styles.resumeHeader}>
-              <motion.div 
-                className={styles.resumeIdentity}
-                variants={itemVariants}
-              >
-                <h2 className={styles.resumeName}>Carter Rush Perez</h2>
-                <div className={styles.resumeTitle}>System Integration Technician & Cybersecurity Specialist</div>
-              </motion.div>
+              <div className={styles.profileInfo}>
+                <h2 className={styles.profileName}>Carter Rush Perez</h2>
+                <div className={styles.profileTitle}>System Integration Technician & Cybersecurity Specialist</div>
+              </div>
               
-              <motion.div 
-                className={styles.resumeActions}
-                variants={itemVariants}
-              >
+              <div className={styles.actionButtons}>
                 <button 
                   className={styles.downloadButton}
                   onClick={() => {
@@ -1060,15 +717,17 @@ const ResumeHologram = () => {
                   disabled={isDownloading}
                 >
                   {isDownloading ? (
-                    <span className={styles.downloadProgress}>
+                    <div className={styles.downloadProgress}>
                       <span className={styles.progressText}>DOWNLOADING</span>
-                      <span 
-                        className={styles.progressBar} 
-                        style={{ width: `${downloadProgress}%` }}
-                      ></span>
-                    </span>
+                      <div className={styles.progressBar}>
+                        <div 
+                          className={styles.progressFill} 
+                          style={{ width: `${downloadProgress}%` }}
+                        ></div>
+                      </div>
+                    </div>
                   ) : (
-                    <span className="button-text">DOWNLOAD RÉSUMÉ</span>
+                    <>DOWNLOAD RÉSUMÉ</>
                   )}
                 </button>
                 
@@ -1094,52 +753,51 @@ const ResumeHologram = () => {
                     </button>
                   </div>
                 )}
-              </motion.div>
+              </div>
             </div>
             
-            <div className={styles.resumeBody}>
+            <div className={styles.resumeMain}>
               <motion.div 
-                className={styles.resumeNav}
-                variants={itemVariants}
+                className={styles.sectionNav}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
               >
-                <div className={styles.navTitle}>SECTIONS</div>
-                {RESUME_SECTIONS.map((section) => (
-                  <button 
-                    key={section.id}
-                    className={`${styles.navItem} ${activeSection === section.id ? styles.active : ''}`}
-                    onClick={() => {
-                      setActiveSection(section.id);
-                      playSound('click');
-                      
-                      // Trigger mild glitch effect on section change
-                      setHologramState(prevState => ({ ...prevState, glitch: true }));
-                      setTimeout(() => {
-                        setHologramState(prevState => ({ ...prevState, glitch: false }));
-                      }, 150);
-                    }}
-                  >
-                    <span className={styles.navIcon}>{section.icon}</span>
-                    <span className={styles.navLabel}>{section.title}</span>
-                  </button>
-                ))}
+                {RESUME_SECTIONS.map((section) => {
+                  const IconComponent = section.icon; // Get the specific icon component for this section
+                  return (
+                    <motion.button
+                      key={section.id}
+                      className={`${styles.navButton} ${activeSection === section.id ? styles.activeNav : ''}`}
+                      onClick={() => {
+                        setActiveSection(section.id);
+                        playSound('click');
+                        triggerGlitch();
+                      }}
+                      variants={itemVariants}
+                    >
+                      <span className={styles.navIcon}>
+                        {/* Render the IconComponent and pass the color prop */}
+                        <IconComponent color={section.color} />
+                      </span>
+                      <span className={styles.navText}>{section.title}</span>
+                    </motion.button>
+                  );
+                })}
               </motion.div>
               
               <motion.div 
-                className={styles.resumeSectionContent}
-                variants={itemVariants}
                 id={`section-${activeSection}`}
-                key={activeSection} // Force re-render on section change
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                className={styles.sectionContent}
+                key={activeSection}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <div className={styles.sectionHeader}>
-                  <h2 className={styles.sectionTitle}>
-                    <span className={styles.sectionIcon}>
-                      {RESUME_SECTIONS.find(s => s.id === activeSection)?.icon}
-                    </span>
-                    <span>{RESUME_SECTIONS.find(s => s.id === activeSection)?.title}</span>
-                  </h2>
+                  <h3 className={styles.sectionTitle}>
+                    {RESUME_SECTIONS.find(s => s.id === activeSection)?.icon} {RESUME_SECTIONS.find(s => s.id === activeSection)?.title}
+                  </h3>
                 </div>
                 
                 <div className={styles.sectionBody}>
@@ -1149,6 +807,45 @@ const ResumeHologram = () => {
             </div>
           </div>
         </motion.div>
+        
+        {/* Gift selection modal */}
+        {showGiftModal && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.giftModal}>
+              <div className={styles.modalHeader}>
+                <h3 className={styles.modalTitle}>Choose Your Gift</h3>
+                <div 
+                  className={styles.closeButton}
+                  onClick={() => {
+                    setShowGiftModal(false);
+                    playSound('click');
+                  }}
+                >
+                  ×
+                </div>
+              </div>
+              
+              <div className={styles.modalContent}>
+                <p className={styles.modalText}>What power will you choose? What do you want to get?</p>
+                
+                <div className={styles.giftGrid}>
+                  {GIFT_OPTIONS.map((gift) => (
+                    <div 
+                      key={gift.id}
+                      className={`${styles.giftCard} ${selectedGift?.id === gift.id ? styles.selectedGift : ''}`}
+                      onClick={() => handleGiftSelect(gift)}
+                      style={{ '--gift-color': gift.color }}
+                    >
+                      <div className={styles.giftIcon}>{gift.icon}</div>
+                      <div className={styles.giftName}>{gift.name}</div>
+                      <div className={styles.giftSubtext}>{gift.subtext}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
