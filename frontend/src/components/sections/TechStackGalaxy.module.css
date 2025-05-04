@@ -78,35 +78,58 @@
 
 .categoryButton {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: var(--space-sm);
-  background-color: rgba(0, 0, 0, 0.1);
-  border: 1px solid #000;
+  background-color: rgba(10, 10, 10, 0.6);
+  border: 1px solid var(--border-primary);
   border-radius: var(--border-radius-sm);
   color: var(--text-secondary);
   transition: all var(--transition-normal);
-  min-width: 80px;
+  min-width: 100px;
   cursor: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.categoryButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+  z-index: 0;
 }
 
 .categoryButton:hover {
   transform: translateY(-3px);
   border-color: var(--category-color);
-  box-shadow: 0 0 10px rgba(var(--category-color), 0.3);
+  box-shadow: 0 0 10px rgba(0, 255, 245, 0.3);
+}
+
+.categoryButton:hover::before {
+  left: 100%;
 }
 
 .categoryButton.active {
   border-color: var(--category-color);
-  background-color: rgba(var(--category-color), 0.2);
-  color: #fff;
-  box-shadow: 0 0 15px rgba(var(--category-color), 0.3);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: var(--text-primary);
+  box-shadow: 0 0 15px var(--category-color);
 }
 
 .categoryIcon {
   font-size: 1.5rem;
   margin-bottom: var(--space-xs);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .categoryName {
@@ -114,45 +137,28 @@
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
 }
 
-.rotationToggle {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
-  width: 36px;
-  height: 36px;
-  background-color: rgba(20, 20, 20, 0.6);
-  border: 1px solid var(--border-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: all var(--transition-normal);
-  cursor: none;
-  z-index: 10; /* Ensure it's above the canvas */
-}
-
-.rotationToggle:hover {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 10px rgba(0, 255, 245, 0.3);
-}
+/* Removed .rotationToggle since we're removing that button */
 
 .skillsDisplay {
   position: absolute;
-  bottom: var(--space-xs); /* Moved further down to avoid galaxy overlap */
+  bottom: var(--space-md);
   left: var(--space-md);
   right: var(--space-md);
   max-height: 300px;
   overflow-y: auto;
   border-radius: var(--border-radius-md);
   padding: var(--space-md);
-  z-index: 5; /* Ensure it's above the canvas but below the skill details */
+  z-index: 5;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: var(--space-md);
   backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-primary);
 }
 
 .skillsDisplay::-webkit-scrollbar {
@@ -170,15 +176,17 @@
 }
 
 .skillItem {
-  background-color: rgba(20, 20, 20, 0.1);
+  background-color: rgba(20, 20, 20, 0.6);
   border-radius: var(--border-radius-sm);
   padding: var(--space-sm);
   transition: all var(--transition-normal);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .skillItem:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .skillName {
@@ -222,8 +230,8 @@
   border-radius: var(--border-radius-md);
   border: 1px solid var(--detail-color);
   padding: var(--space-md);
-  z-index: 20; /* Ensure it's above everything else */
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(var(--detail-color), 0.3);
+  z-index: 20;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), 0 0 15px var(--detail-color);
   backdrop-filter: blur(10px);
 }
 
@@ -310,20 +318,31 @@
   background-color: rgba(245, 245, 245, 0.5);
 }
 
-:global(.light-theme) .categorySelector,
-:global(.light-theme) .skillsDisplay {
-  background-color: rgba(245, 245, 245, 0.8);
+:global(.light-theme) .categorySelector {
+  background-color: rgba(245, 245, 245, 0.2);
 }
 
-:global(.light-theme) .categoryButton,
-:global(.light-theme) .skillItem,
-:global(.light-theme) .rotationToggle {
+:global(.light-theme) .skillsDisplay {
+  background-color: rgba(245, 245, 245, 0.7);
+}
+
+:global(.light-theme) .categoryButton {
   background-color: rgba(220, 220, 220, 0.6);
   border-color: rgba(0, 0, 0, 0.1);
 }
 
+:global(.light-theme) .categoryButton.active {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.8);
+}
+
 :global(.light-theme) .skillDetails {
   background-color: rgba(245, 245, 245, 0.9);
+}
+
+:global(.light-theme) .skillItem {
+  background-color: rgba(200, 200, 200, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 :global(.light-theme) .skillLevelContainer,
@@ -344,7 +363,7 @@
   }
   
   .categoryButton {
-    min-width: 60px;
+    min-width: 80px;
     padding: var(--space-xs);
   }
   
@@ -384,7 +403,7 @@
   }
   
   .categoryButton {
-    min-width: 50px;
+    min-width: 60px;
   }
   
   .skillsDisplay {

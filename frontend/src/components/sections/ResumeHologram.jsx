@@ -2,7 +2,79 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAudio } from '../../contexts/AudioContext';
+import { useGlitch } from '../../hooks/useGlitch';
 import styles from './ResumeHologram.module.css';
+
+// Import projects from ProjectsGrid data
+const PROJECTS_DATA = [
+  {
+    id: 1,
+    title: 'CertGames.com',
+    description: 'A gamified platform for certification preparation. Follow structured roadmaps to learn, practice, and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.',
+    categories: ['cybersecurity', 'education'],
+    technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
+    link: 'https://certgames.com',
+    featured: true
+  },
+  {
+    id: 2,
+    title: 'Flask-Honeypot',
+    description: 'A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.',
+    categories: ['cybersecurity'],
+    technologies: ['Python', 'Flask', 'Docker', 'SQLite'],
+    link: 'https://github.com/CarterPerez-dev/flask-honeypot',
+    featured: false
+  },
+  {
+    id: 3,
+    title: 'Portfolio',
+    description: 'A futuristic themed portfolio website with interactive elements and holographic UI. Features include 3D elements, glitch effects, and a custom terminal interface.',
+    categories: ['web dev'],
+    technologies: ['React', 'Three.js', 'CSS3', 'Framer Motion'],
+    link: 'https://github.com/CarterPerez-dev/carter-perez-devs',
+    featured: false
+  },
+  {
+    id: 4,
+    title: 'AngelaCLI',
+    description: 'An AI-powered command line tool that assists with coding tasks. Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.',
+    categories: ['ai'],
+    technologies: ['Python', 'OpenAI API', 'TensorFlow', 'Click'],
+    link: 'https://github.com/CarterPerez-dev/angela-cli',
+    featured: false
+  }
+];
+
+// Blog posts from ProjectsGrid
+const BLOG_POSTS = [
+  {
+    id: 5,
+    title: 'How My Career Growth Led to Enhancing Customer Experience',
+    description: 'Certifications have a unique way of shaping not only the knowledge we carry but also the way we approach challenges. As an Integration Technician at SealingTech, earning professional CompTIA certifications such as the A+, Network+, Security+, Network+, CySa+, Pentest+, and CASP+ have placed me on a learning path which has become the catalyst for personal….',
+    categories: ['blogs', 'cybersecurity'],
+    date: 'April 15, 2025',
+    link: 'https://www.sealingtech.com/2025/02/03/how-my-career-growth-led-to-enhancing-customer-experience/',
+    isBlog: true
+  },
+  {
+    id: 6,
+    title: 'Building Custom Solutions with Quality at the Core',
+    description: 'As a System Integration Technician at SealingTech, my team and I are responsible for building custom defense systems that are not only powerful but also tailored to the unique needs of our customers. From selecting the right hardware specifications to configuring the complex systems into a carry-on compliant Cyber-Fly-Away Kit, we focus on optimizing performance,…',
+    categories: ['blogs', 'web dev'],
+    date: 'March 22, 2025',
+    link: 'https://www.sealingtech.com/2024/10/03/building-custom-solutions-with-quality-at-the-core/',
+    isBlog: true
+  },
+  {
+    id: 7,
+    title: 'Top 10 Tips to Pass the CompTIA Security+ Exam on Your First Try',
+    description: 'The CompTIA Security+ certification is one of the most sought-after entry-level cybersecurity certifications. With over 900,000 Security+ certified professionals worldwide, this certification validates the baseline skills necessary to perform core security functions and serves as a springboard for more advanced cybersecurity roles...',
+    categories: ['blogs', 'ai', 'education'],
+    date: 'February 8, 2025',
+    link: 'https://certgames.com/blog/comptia-security-plus-exam-tips',
+    isBlog: true
+  }
+];
 
 // Resume sections data
 const RESUME_SECTIONS = [
@@ -193,26 +265,25 @@ const RESUME_SECTIONS = [
     id: 'projects',
     title: 'Projects',
     icon: '🚀',
-    content: [
-      {
-        name: 'ProxyAuthRequired.com',
-        description: 'A centralized cybersecurity platform integrating AI-driven simulations and learning modules.',
-        technologies: ['React', 'Python', 'Flask', 'MongoDB', 'Docker'],
-        link: 'https://github.com/username/proxyauthrequired'
-      },
-      {
-        name: 'CertsGamified',
-        description: 'A gamified platform for certification preparation with structured learning roadmaps.',
-        technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
-        link: 'https://github.com/username/certsgamified'
-      },
-      {
-        name: 'AutoApplication',
-        description: 'An automated application bot for job sites, streamlining the application process.',
-        technologies: ['Python', 'Selenium', 'BeautifulSoup'],
-        link: 'https://github.com/username/autoapplication'
-      }
-    ]
+    content: PROJECTS_DATA.map(project => ({
+      name: project.title,
+      description: project.description,
+      technologies: project.technologies,
+      link: project.link,
+      featured: project.featured
+    }))
+  },
+  {
+    id: 'blogs',
+    title: 'Publications',
+    icon: '📝',
+    content: BLOG_POSTS.map(blog => ({
+      name: blog.title,
+      description: blog.description,
+      date: blog.date,
+      link: blog.link,
+      categories: blog.categories
+    }))
   },
   {
     id: 'contact',
@@ -232,120 +303,322 @@ const ResumeHologram = () => {
   const { theme } = useTheme();
   const { playSound } = useAudio();
   const canvasRef = useRef(null);
+  const titleRef = useRef(null);
+  const resumeContainerRef = useRef(null);
   const [activeSection, setActiveSection] = useState('profile');
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [hologramState, setHologramState] = useState({
+    flicker: false,
+    glitch: false,
+    scanLine: 0,
+    noise: 0.05
+  });
   
-  // Holographic effect animation
+  // Initialize glitch effect for title
+  const { startGlitch } = useGlitch(titleRef, {
+    intensity: 3,
+    duration: 500,
+    continuousGlitch: false
+  });
+  
+  // Simulate hologram effects with periodic glitches and flickers
   useEffect(() => {
-    if (!canvasRef.current) return;
+    // Random glitch effect
+    const glitchInterval = setInterval(() => {
+      if (Math.random() < 0.2) {
+        setHologramState(prevState => ({ 
+          ...prevState, 
+          glitch: true 
+        }));
+        
+        // Trigger title glitch
+        if (Math.random() < 0.5) {
+          startGlitch();
+        }
+        
+        // Reset glitch after short duration
+        setTimeout(() => {
+          setHologramState(prevState => ({ 
+            ...prevState, 
+            glitch: false 
+          }));
+        }, 200 + Math.random() * 300);
+      }
+    }, 3000);
+    
+    // Random flicker effect
+    const flickerInterval = setInterval(() => {
+      if (Math.random() < 0.15) {
+        setHologramState(prevState => ({ 
+          ...prevState, 
+          flicker: true 
+        }));
+        
+        // Reset flicker after short duration
+        setTimeout(() => {
+          setHologramState(prevState => ({ 
+            ...prevState, 
+            flicker: false 
+          }));
+        }, 100 + Math.random() * 150);
+      }
+    }, 5000);
+    
+    // Scan line animation
+    const scanLineInterval = setInterval(() => {
+      setHologramState(prevState => ({ 
+        ...prevState, 
+        scanLine: (prevState.scanLine + 1) % 100 
+      }));
+    }, 50);
+    
+    // Noise intensity variation
+    const noiseInterval = setInterval(() => {
+      setHologramState(prevState => ({ 
+        ...prevState, 
+        noise: 0.03 + Math.random() * 0.04
+      }));
+    }, 200);
+    
+    return () => {
+      clearInterval(glitchInterval);
+      clearInterval(flickerInterval);
+      clearInterval(scanLineInterval);
+      clearInterval(noiseInterval);
+    };
+  }, [startGlitch]);
+  
+  // 3D Holographic effect with advanced canvas rendering
+  useEffect(() => {
+    if (!canvasRef.current || !resumeContainerRef.current) return;
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
     // Set canvas dimensions
     const setCanvasDimensions = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const rect = resumeContainerRef.current.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     };
     
     window.addEventListener('resize', setCanvasDimensions);
     setCanvasDimensions();
     
     // Holographic parameters
-    const grid = {
-      spacing: 25,
-      dotSize: 1,
-      color: theme === 'dark' ? 'rgba(0, 255, 245, 0.4)' : 'rgba(77, 77, 255, 0.4)'
-    };
+    const primaryColor = theme === 'dark' 
+      ? { r: 0, g: 255, b: 245 } 
+      : { r: 77, g: 77, b: 255 };
+    const secondaryColor = { r: 255, g: 61, b: 61 };
     
-    const particles = [];
-    const linesCount = 5;
+    // Create grid-based data points
+    const gridSpacing = 30;
+    const cols = Math.ceil(canvas.width / gridSpacing);
+    const rows = Math.ceil(canvas.height / gridSpacing);
+    const dataPoints = [];
     
-    // Create particles along paths
-    const createParticles = () => {
-      // Reset particles
-      particles.length = 0;
-      
-      // Create flowing lines
-      for (let i = 0; i < linesCount; i++) {
-        const startX = Math.random() * canvas.width;
-        const startY = Math.random() * canvas.height;
-        const length = 100 + Math.random() * 200;
-        const angle = Math.random() * Math.PI * 2;
-        
-        const endX = startX + Math.cos(angle) * length;
-        const endY = startY + Math.sin(angle) * length;
-        
-        // Create particles along the line
-        const particleCount = Math.max(5, Math.floor(length / 20));
-        
-        for (let j = 0; j < particleCount; j++) {
-          const t = j / particleCount;
-          
-          particles.push({
-            x: startX + (endX - startX) * t,
-            y: startY + (endY - startY) * t,
-            size: 2 + Math.random() * 2,
-            speed: 0.5 + Math.random() * 1.5,
-            color: Math.random() > 0.7 ? 'rgba(255, 61, 61, 0.7)' : grid.color.replace('0.4', '0.7'),
-            direction: angle,
-            life: 1 + Math.random() * 2
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        if (Math.random() < 0.3) { // Only create some points
+          dataPoints.push({
+            x: i * gridSpacing + (Math.random() * gridSpacing * 0.5),
+            y: j * gridSpacing + (Math.random() * gridSpacing * 0.5),
+            size: 1 + Math.random(),
+            pulsePhase: Math.random() * Math.PI * 2,
+            pulseSpeed: 0.02 + Math.random() * 0.03,
+            connections: []
           });
         }
       }
+    }
+    
+    // Connect nearby data points
+    dataPoints.forEach(point => {
+      dataPoints.forEach(otherPoint => {
+        if (point === otherPoint) return;
+        
+        const dx = point.x - otherPoint.x;
+        const dy = point.y - otherPoint.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < gridSpacing * 1.5 && Math.random() < 0.3) {
+          point.connections.push(otherPoint);
+        }
+      });
+    });
+    
+    // Data flow particles
+    const particles = [];
+    
+    const createParticle = (startPoint, endPoint) => {
+      particles.push({
+        startPoint,
+        endPoint,
+        progress: 0,
+        speed: 0.005 + Math.random() * 0.01,
+        size: 1.5 + Math.random(),
+        color: Math.random() < 0.8 ? primaryColor : secondaryColor,
+        alpha: 0.6 + Math.random() * 0.4
+      });
     };
     
-    // Draw holographic grid
-    const drawGrid = () => {
+    // Create initial particles
+    const initialParticleCount = Math.floor(dataPoints.length * 0.2);
+    for (let i = 0; i < initialParticleCount; i++) {
+      const randomPoint = dataPoints[Math.floor(Math.random() * dataPoints.length)];
+      if (randomPoint.connections.length > 0) {
+        const randomConnection = randomPoint.connections[Math.floor(Math.random() * randomPoint.connections.length)];
+        createParticle(randomPoint, randomConnection);
+      }
+    }
+    
+    // Animation function
+    const animate = () => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw grid dots
-      for (let x = 0; x < canvas.width; x += grid.spacing) {
-        for (let y = 0; y < canvas.height; y += grid.spacing) {
-          const distanceToActiveSection = getDistanceToActiveSection(x, y);
-          const alpha = Math.max(0.1, Math.min(0.7, 1 - distanceToActiveSection / 500));
-          
-          ctx.beginPath();
-          ctx.arc(x, y, grid.dotSize, 0, Math.PI * 2);
-          ctx.fillStyle = grid.color.replace('0.4', alpha.toFixed(2));
-          ctx.fill();
-        }
+      // Apply scan line effect
+      const scanLineY = (canvas.height * hologramState.scanLine) / 100;
+      ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.1)`;
+      ctx.fillRect(0, scanLineY, canvas.width, 2);
+      
+      // Apply hologram flicker
+      if (hologramState.flicker) {
+        ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.05)`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
+      
+      // Apply digital noise
+      if (hologramState.noise > 0) {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        
+        for (let i = 0; i < data.length; i += 4) {
+          if (Math.random() < hologramState.noise) {
+            data[i] = primaryColor.r * Math.random();     // R
+            data[i + 1] = primaryColor.g * Math.random(); // G
+            data[i + 2] = primaryColor.b * Math.random(); // B
+            data[i + 3] = Math.random() * 50;             // A
+          }
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+      }
+      
+      // Draw glitch effect
+      if (hologramState.glitch) {
+        const glitchHeight = 20 + Math.random() * 30;
+        const glitchY = Math.random() * canvas.height;
+        
+        ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.2)`;
+        ctx.fillRect(0, glitchY, canvas.width, glitchHeight);
+        
+        // Draw offset copies for RGB split effect
+        ctx.globalCompositeOperation = 'screen';
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.1)';
+        ctx.fillRect(2, glitchY + 2, canvas.width, glitchHeight - 4);
+        ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+        ctx.fillRect(-2, glitchY - 2, canvas.width, glitchHeight + 4);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      
+      // Draw data points and connections
+      dataPoints.forEach(point => {
+        // Update pulse phase
+        point.pulsePhase += point.pulseSpeed;
+        if (point.pulsePhase > Math.PI * 2) {
+          point.pulsePhase -= Math.PI * 2;
+        }
+        
+        // Calculate pulse effect
+        const pulseFactor = 0.7 + Math.sin(point.pulsePhase) * 0.3;
+        
+        // Draw connections first
+        point.connections.forEach(connectedPoint => {
+          ctx.beginPath();
+          ctx.moveTo(point.x, point.y);
+          ctx.lineTo(connectedPoint.x, connectedPoint.y);
+          
+          // Glow effect based on active section
+          const distToActive = getDistanceToActiveSection((point.x + connectedPoint.x) / 2, (point.y + connectedPoint.y) / 2);
+          const alpha = Math.max(0.03, Math.min(0.2, 1 - distToActive / 1000));
+          
+          ctx.strokeStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        });
+        
+        // Draw the data point with pulse effect
+        const pointSize = point.size * pulseFactor;
+        
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, pointSize, 0, Math.PI * 2);
+        
+        // Distance-based glow
+        const distToActive = getDistanceToActiveSection(point.x, point.y);
+        const alpha = Math.max(0.1, Math.min(0.5, 1 - distToActive / 1000));
+        
+        ctx.fillStyle = `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, ${alpha})`;
+        ctx.fill();
+      });
       
       // Update and draw particles
-      const updatedParticles = [];
-      
-      for (const particle of particles) {
-        // Update position
-        particle.x += Math.cos(particle.direction) * particle.speed;
-        particle.y += Math.sin(particle.direction) * particle.speed;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const particle = particles[i];
         
-        // Update life
-        particle.life -= 0.01;
+        // Update progress
+        particle.progress += particle.speed;
         
-        // Keep if still alive
-        if (particle.life > 0 && 
-            particle.x > 0 && particle.x < canvas.width && 
-            particle.y > 0 && particle.y < canvas.height) {
-          updatedParticles.push(particle);
+        // Remove if completed
+        if (particle.progress >= 1) {
+          // Create new particle
+          if (Math.random() < 0.7) {
+            const randomPoint = dataPoints[Math.floor(Math.random() * dataPoints.length)];
+            if (randomPoint.connections.length > 0) {
+              const randomConnection = randomPoint.connections[Math.floor(Math.random() * randomPoint.connections.length)];
+              createParticle(randomPoint, randomConnection);
+            }
+          }
           
-          // Draw particle
-          ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-          ctx.fillStyle = particle.color.replace('0.7', (particle.life * 0.6).toFixed(2));
-          ctx.fill();
+          particles.splice(i, 1);
+          continue;
         }
+        
+        // Calculate current position
+        const currentX = particle.startPoint.x + (particle.endPoint.x - particle.startPoint.x) * particle.progress;
+        const currentY = particle.startPoint.y + (particle.endPoint.y - particle.startPoint.y) * particle.progress;
+        
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(currentX, currentY, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${particle.alpha})`;
+        ctx.fill();
+        
+        // Add glow
+        const glowSize = particle.size * 3;
+        const gradient = ctx.createRadialGradient(
+          currentX, currentY, 0,
+          currentX, currentY, glowSize
+        );
+        
+        gradient.addColorStop(0, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${particle.alpha * 0.8})`);
+        gradient.addColorStop(1, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, 0)`);
+        
+        ctx.beginPath();
+        ctx.arc(currentX, currentY, glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
       }
       
-      // Update particles array
-      particles.splice(0, particles.length, ...updatedParticles);
-      
-      // Add new particles if needed
-      if (particles.length < linesCount * 5) {
-        createParticles();
+      // Add new particles occasionally
+      if (Math.random() < 0.05 && particles.length < Math.floor(dataPoints.length * 0.3)) {
+        const randomPoint = dataPoints[Math.floor(Math.random() * dataPoints.length)];
+        if (randomPoint.connections.length > 0) {
+          const randomConnection = randomPoint.connections[Math.floor(Math.random() * randomPoint.connections.length)];
+          createParticle(randomPoint, randomConnection);
+        }
       }
       
       // Draw highlight around active section
@@ -364,7 +637,7 @@ const ResumeHologram = () => {
         };
         
         // Draw glow effect
-        const glowSize = 20;
+        const glowSize = 25;
         
         // Create gradient
         const glow = ctx.createLinearGradient(
@@ -374,12 +647,12 @@ const ResumeHologram = () => {
           highlightRect.y + highlightRect.height
         );
         
-        glow.addColorStop(0, theme === 'dark' ? 'rgba(0, 255, 245, 0.1)' : 'rgba(77, 77, 255, 0.1)');
-        glow.addColorStop(0.5, theme === 'dark' ? 'rgba(0, 255, 245, 0.2)' : 'rgba(77, 77, 255, 0.2)');
-        glow.addColorStop(1, theme === 'dark' ? 'rgba(0, 255, 245, 0.1)' : 'rgba(77, 77, 255, 0.1)');
+        glow.addColorStop(0, `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.1)`);
+        glow.addColorStop(0.5, `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.2)`);
+        glow.addColorStop(1, `rgba(${primaryColor.r}, ${primaryColor.g}, ${primaryColor.b}, 0.1)`);
         
         // Draw rounded rectangle with glow
-        roundRect(
+        drawRoundedRect(
           ctx, 
           highlightRect.x - glowSize, 
           highlightRect.y - glowSize, 
@@ -389,10 +662,13 @@ const ResumeHologram = () => {
           glow
         );
       }
+      
+      // Request next animation frame
+      requestAnimationFrame(animate);
     };
     
     // Helper function to draw rounded rectangle
-    const roundRect = (ctx, x, y, width, height, radius, fill) => {
+    const drawRoundedRect = (ctx, x, y, width, height, radius, fill) => {
       ctx.beginPath();
       ctx.moveTo(x + radius, y);
       ctx.lineTo(x + width - radius, y);
@@ -413,7 +689,7 @@ const ResumeHologram = () => {
     const getDistanceToActiveSection = (x, y) => {
       const activeElement = document.getElementById(`section-${activeSection}`);
       
-      if (!activeElement) return 500; // Default large distance
+      if (!activeElement) return 1000; // Default large distance
       
       const rect = activeElement.getBoundingClientRect();
       const canvasRect = canvas.getBoundingClientRect();
@@ -434,24 +710,15 @@ const ResumeHologram = () => {
       return Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
     };
     
-    // Initialize particles
-    createParticles();
-    
-    // Animation loop
-    let animationId;
-    const animate = () => {
-      drawGrid();
-      animationId = requestAnimationFrame(animate);
-    };
-    
-    animate();
+    // Start animation
+    const animationId = requestAnimationFrame(animate);
     
     // Clean up
     return () => {
       window.removeEventListener('resize', setCanvasDimensions);
       cancelAnimationFrame(animationId);
     };
-  }, [theme, activeSection]);
+  }, [theme, activeSection, hologramState]);
   
   // Simulate download progress
   const handleDownload = (format) => {
@@ -467,6 +734,12 @@ const ResumeHologram = () => {
           setTimeout(() => {
             setIsDownloading(false);
             setShowDownloadOptions(false);
+            
+            // Trigger glitch effect on completion
+            setHologramState(prevState => ({ ...prevState, glitch: true }));
+            setTimeout(() => {
+              setHologramState(prevState => ({ ...prevState, glitch: false }));
+            }, 500);
             
             // In a real implementation, trigger actual download here
             const link = document.createElement('a');
@@ -558,7 +831,7 @@ const ResumeHologram = () => {
   // Render projects list
   const renderProjectsList = (projects) => {
     return projects.map((project, index) => (
-      <div key={index} className={styles.projectItem}>
+      <div key={index} className={`${styles.projectItem} ${project.featured ? styles.featuredProject : ''}`}>
         <div className={styles.projectHeader}>
           <h3 className={styles.projectName}>{project.name}</h3>
           <a 
@@ -578,6 +851,38 @@ const ResumeHologram = () => {
           {project.technologies.map((tech, idx) => (
             <span key={idx} className={styles.projectTechnology}>{tech}</span>
           ))}
+        </div>
+      </div>
+    ));
+  };
+  
+  // Render blogs list
+  const renderBlogsList = (blogs) => {
+    return blogs.map((blog, index) => (
+      <div key={index} className={styles.blogItem}>
+        <div className={styles.blogHeader}>
+          <h3 className={styles.blogName}>{blog.name}</h3>
+          <div className={styles.blogDate}>{blog.date}</div>
+        </div>
+        
+        <p className={styles.blogDescription}>{blog.description}</p>
+        
+        <div className={styles.blogFooter}>
+          <div className={styles.blogCategories}>
+            {blog.categories.map((category, idx) => (
+              <span key={idx} className={styles.blogCategory}>{category}</span>
+            ))}
+          </div>
+          
+          <a 
+            href={blog.link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={styles.blogLink}
+            onClick={() => playSound('click')}
+          >
+            Read Article
+          </a>
         </div>
       </div>
     ));
@@ -666,6 +971,8 @@ const ResumeHologram = () => {
         return renderCertificationsList(section.content);
       case 'projects':
         return renderProjectsList(section.content);
+      case 'blogs':
+        return renderBlogsList(section.content);
       case 'contact':
         return renderContactInfo(section.content);
       default:
@@ -693,20 +1000,33 @@ const ResumeHologram = () => {
     }
   };
   
+  // Hologram effect classes based on state
+  const hologramEffectClasses = `
+    ${styles.resumeContainer} 
+    ${hologramState.flicker ? styles.flicker : ''} 
+    ${hologramState.glitch ? styles.glitch : ''}
+  `;
+  
   return (
     <section className={styles.resumeSection} id="resume">
+      <div className={styles.scanLines}></div>
+      <div className={styles.hologramProjection}></div>
+      
       <div className="container">
         <motion.h1 
+          ref={titleRef}
           className={styles.pageTitle}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          data-text="Neural Résumé Interface"
         >
           Neural Résumé Interface
         </motion.h1>
         
         <motion.div 
-          className={styles.resumeContainer}
+          ref={resumeContainerRef}
+          className={hologramEffectClasses}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -790,6 +1110,12 @@ const ResumeHologram = () => {
                     onClick={() => {
                       setActiveSection(section.id);
                       playSound('click');
+                      
+                      // Trigger mild glitch effect on section change
+                      setHologramState(prevState => ({ ...prevState, glitch: true }));
+                      setTimeout(() => {
+                        setHologramState(prevState => ({ ...prevState, glitch: false }));
+                      }, 150);
                     }}
                   >
                     <span className={styles.navIcon}>{section.icon}</span>
@@ -802,6 +1128,10 @@ const ResumeHologram = () => {
                 className={styles.resumeSectionContent}
                 variants={itemVariants}
                 id={`section-${activeSection}`}
+                key={activeSection} // Force re-render on section change
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 <div className={styles.sectionHeader}>
                   <h2 className={styles.sectionTitle}>

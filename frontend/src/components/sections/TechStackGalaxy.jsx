@@ -1,45 +1,55 @@
+// frontend/src/components/sections/TechStackGalaxy.jsx
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import styles from './TechStackGalaxy.module.css';
+// Import React icons for categories
+import { 
+  ShieldCheck, 
+  Code, 
+  Database, 
+  Cloud, 
+  Gear, 
+  Globe 
+} from 'phosphor-react';
 
-// Skill categories with icons represented as text for simplicity
+// Skill categories with React icons
 const SKILL_CATEGORIES = [
   {
     id: 'cybersecurity',
     name: 'Cybersecurity',
-    icon: '🔒',
+    iconComponent: ShieldCheck,
     color: '#ff3d3d'
   },
   {
     id: 'frontend',
     name: 'Frontend',
-    icon: '🖥️',
+    iconComponent: Code,
     color: '#00fff5'
   },
   {
     id: 'backend',
     name: 'Backend',
-    icon: '⚙️',
+    iconComponent: Cloud,
     color: '#4d4dff'
   },
   {
     id: 'devops',
     name: 'DevOps',
-    icon: '🔄',
+    iconComponent: Gear,
     color: '#00ff9f'
   },
   {
     id: 'databases',
     name: 'Databases',
-    icon: '💾',
+    iconComponent: Database,
     color: '#d22aff'
   },
   {
     id: 'networking',
     name: 'Networking',
-    icon: '🌐',
+    iconComponent: Globe,
     color: '#ffcc00'
   }
 ];
@@ -102,7 +112,6 @@ const TechStackGalaxy = ({ fullPage = false }) => {
   const [activeCategory, setActiveCategory] = useState('cybersecurity');
   const [filteredSkills, setFilteredSkills] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
-  const [isRotating, setIsRotating] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [skillDetails, setSkillDetails] = useState(null);
   
@@ -123,16 +132,17 @@ const TechStackGalaxy = ({ fullPage = false }) => {
     setFilteredSkills(SKILLS.filter(skill => skill.category === activeCategory));
   }, [activeCategory]);
   
-  // Handle mouse movement for parallax effect
+  // Handle mouse movement for parallax effect - REDUCED SENSITIVITY
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!galaxyContainerRef.current) return;
       
       const rect = galaxyContainerRef.current.getBoundingClientRect();
       
+      // Reduce sensitivity by factor of 3
       setMousePosition({
-        x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
-        y: ((e.clientY - rect.top) / rect.height - 0.5) * 2
+        x: ((e.clientX - rect.left) / rect.width - 0.5) * 2 * 0.3,
+        y: ((e.clientY - rect.top) / rect.height - 0.5) * 2 * 0.3
       });
     };
     
@@ -149,7 +159,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
     };
   }, []);
   
-  // 3D Galaxy Animation
+  // 3D Galaxy Animation - ENHANCED VERSION
   useEffect(() => {
     if (!canvasRef.current) return;
     
@@ -167,23 +177,65 @@ const TechStackGalaxy = ({ fullPage = false }) => {
     
     // Galaxy parameters
     const stars = [];
+    const nebulae = []; // New: Background nebulae
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     
-    // Create stars
+    // Create background nebulae
+    const createNebulae = () => {
+      const nebulaCount = 5; // Number of nebulae
+      
+      for (let i = 0; i < nebulaCount; i++) {
+        const radius = 50 + Math.random() * 150;
+        const distance = Math.random() * (Math.min(canvas.width, canvas.height) / 3);
+        const angle = Math.random() * Math.PI * 2;
+        
+        // Position nebula
+        const x = centerX + Math.cos(angle) * distance;
+        const y = centerY + Math.sin(angle) * distance;
+        
+        // Get color from a category
+        const categoryIndex = Math.floor(Math.random() * SKILL_CATEGORIES.length);
+        const color = SKILL_CATEGORIES[categoryIndex].color;
+        
+        nebulae.push({
+          x,
+          y,
+          radius,
+          color,
+          opacity: 0.03 + Math.random() * 0.05,
+          angle,
+          speed: 0.00005, // Very slow rotation
+          pulseSpeed: 0.0005 + Math.random() * 0.001,
+          pulsePhase: Math.random() * Math.PI * 2
+        });
+      }
+    };
+    
+    // Create stars with enhanced properties
     const createStars = () => {
-      const starCount = Math.min(Math.floor(canvas.width * canvas.height / 3000), 200);
+      const baseStarCount = Math.min(Math.floor(canvas.width * canvas.height / 3000), 200);
+      const starCount = baseStarCount * 1.5; // Increased star count by 50%
       
       for (let i = 0; i < starCount; i++) {
-        const radius = Math.random() * 1.5 + 0.5;
-        const distance = Math.random() * (Math.min(canvas.width, canvas.height) / 3) + 50;
-        const angle = Math.random() * Math.PI * 2;
-        // REDUCED SPEED BY 50%
-        const speed = (0.2 + Math.random() * 0.8) * 0.0005; // Reduced from 0.001 to 0.0005
+        // More variety in star sizes
+        const radius = 0.5 + Math.pow(Math.random(), 2) * 2.5;
         
-        // Color based on category
+        // Distribute stars more realistically (more density near center)
+        const distanceFactor = Math.pow(Math.random(), 1.5); // Concentrate more stars toward center
+        const distance = distanceFactor * (Math.min(canvas.width, canvas.height) / 2.5) + 10;
+        const angle = Math.random() * Math.PI * 2;
+        
+        // SIGNIFICANTLY REDUCED SPEED (by 75%)
+        const speed = (0.2 + Math.random() * 0.8) * 0.00025;
+        
+        // Color based on category with more variation
         const categoryIndex = Math.floor(Math.random() * SKILL_CATEGORIES.length);
         const category = SKILL_CATEGORIES[categoryIndex];
+        const baseColor = category.color;
+        
+        // Create slight color variations
+        const color = adjustColor(baseColor, -20 + Math.random() * 40);
         
         stars.push({
           x: centerX + Math.cos(angle) * distance,
@@ -192,61 +244,251 @@ const TechStackGalaxy = ({ fullPage = false }) => {
           distance,
           angle,
           speed,
-          color: category.color,
-          opacity: 0.3 + Math.random() * 0.7,
-          category: category.id
+          color,
+          opacity: 0.4 + Math.random() * 0.6, // Brighter stars
+          category: category.id,
+          pulseSpeed: 0.002 + Math.random() * 0.003, // For pulsing effect
+          pulsePhase: Math.random() * Math.PI * 2,
+          tail: Math.random() > 0.8, // Some stars have tails
+          tailLength: 5 + Math.random() * 15,
+          tailWidth: 0.5 + Math.random() * 1
         });
       }
     };
     
-    // Render galaxy
-    const renderGalaxy = () => {
+    // Helper function to adjust color brightness
+    const adjustColor = (hexColor, percent) => {
+      // Convert hex to RGB
+      let r = parseInt(hexColor.substr(1, 2), 16);
+      let g = parseInt(hexColor.substr(3, 2), 16);
+      let b = parseInt(hexColor.substr(5, 2), 16);
+      
+      // Adjust brightness
+      r = Math.max(0, Math.min(255, r + percent));
+      g = Math.max(0, Math.min(255, g + percent));
+      b = Math.max(0, Math.min(255, b + percent));
+      
+      // Convert back to hex
+      return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+    };
+    
+    // Create occasional shooting star
+    const createShootingStar = () => {
+      if (Math.random() > 0.99) { // Low probability for rarity
+        const startAngle = Math.random() * Math.PI * 2;
+        const endAngle = startAngle + (Math.random() * Math.PI / 4 - Math.PI / 8);
+        
+        const startDistance = Math.min(canvas.width, canvas.height) / 4;
+        const endDistance = Math.min(canvas.width, canvas.height) / 2;
+        
+        const categoryIndex = Math.floor(Math.random() * SKILL_CATEGORIES.length);
+        const color = SKILL_CATEGORIES[categoryIndex].color;
+        
+        return {
+          startX: centerX + Math.cos(startAngle) * startDistance,
+          startY: centerY + Math.sin(startAngle) * startDistance,
+          endX: centerX + Math.cos(endAngle) * endDistance,
+          endY: centerY + Math.sin(endAngle) * endDistance,
+          progress: 0,
+          speed: 0.02 + Math.random() * 0.03,
+          color,
+          width: 1 + Math.random() * 2,
+          length: 20 + Math.random() * 30
+        };
+      }
+      return null;
+    };
+    
+    // Render galaxy with enhanced visuals
+    const renderGalaxy = (timestamp) => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Apply galaxy background
-      const galaxyGradient = ctx.createRadialGradient(
+      // Create deep space background
+      const spaceGradient = ctx.createRadialGradient(
         centerX, centerY, 0,
-        centerX, centerY, Math.min(canvas.width, canvas.height) / 2
+        centerX, centerY, Math.min(canvas.width, canvas.height)
       );
       
       if (theme === 'dark') {
-        galaxyGradient.addColorStop(0, 'rgba(0, 20, 40, 0.3)');
-        galaxyGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        spaceGradient.addColorStop(0, 'rgba(5, 15, 30, 0.9)');
+        spaceGradient.addColorStop(0.5, 'rgba(2, 8, 20, 0.8)');
+        spaceGradient.addColorStop(1, 'rgba(0, 0, 5, 0.7)');
       } else {
-        galaxyGradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
-        galaxyGradient.addColorStop(1, 'rgba(245, 245, 245, 0)');
+        spaceGradient.addColorStop(0, 'rgba(220, 230, 255, 0.9)');
+        spaceGradient.addColorStop(0.5, 'rgba(200, 210, 240, 0.8)');
+        spaceGradient.addColorStop(1, 'rgba(180, 190, 220, 0.7)');
       }
       
-      ctx.fillStyle = galaxyGradient;
+      ctx.fillStyle = spaceGradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Draw galaxy center glow
-      const centerGradient = ctx.createRadialGradient(
-        centerX, centerY, 0,
-        centerX, centerY, 80
-      );
+      // Draw nebulae
+      for (const nebula of nebulae) {
+        // Update nebula angle very slowly
+        nebula.angle += nebula.speed;
+        
+        // Apply pulsing effect
+        nebula.pulsePhase += nebula.pulseSpeed;
+        const pulseFactor = 0.8 + 0.2 * Math.sin(nebula.pulsePhase);
+        
+        // Apply parallax effect (very subtle)
+        const parallaxX = mousePosition.x * (nebula.radius * 0.02);
+        const parallaxY = mousePosition.y * (nebula.radius * 0.02);
+        
+        const x = centerX + Math.cos(nebula.angle) * nebula.distance + parallaxX;
+        const y = centerY + Math.sin(nebula.angle) * nebula.distance + parallaxY;
+        
+        // Create nebula gradient
+        const nebulaGradient = ctx.createRadialGradient(
+          x, y, 0,
+          x, y, nebula.radius * pulseFactor
+        );
+        
+        nebulaGradient.addColorStop(0, `${nebula.color}40`); // Core
+        nebulaGradient.addColorStop(0.5, `${nebula.color}20`); // Middle
+        nebulaGradient.addColorStop(1, 'transparent'); // Edge
+        
+        ctx.fillStyle = nebulaGradient;
+        ctx.beginPath();
+        ctx.arc(x, y, nebula.radius * pulseFactor, 0, Math.PI * 2);
+        ctx.fill();
+      }
       
+      // Draw galaxy spiral arms (subtle background pattern)
+      const armCount = 3;
+      const armLength = Math.min(canvas.width, canvas.height) / 3;
+      const armWidth = 50;
+      const armTightness = 0.3;
+      
+      for (let arm = 0; arm < armCount; arm++) {
+        const armAngle = (arm / armCount) * Math.PI * 2;
+        
+        // Draw spiral arm
+        for (let t = 0; t < 1; t += 0.01) {
+          const spiralAngle = armAngle + t * Math.PI * 5; // Spiral rotation
+          const distance = t * armLength; // Increase distance as we go out
+          
+          const x = centerX + Math.cos(spiralAngle) * distance;
+          const y = centerY + Math.sin(spiralAngle) * distance;
+          
+          // Fade out as we go further
+          const opacity = 0.05 * (1 - t);
+          
+          // Get color based on position in arm
+          const categoryIndex = Math.floor(arm % SKILL_CATEGORIES.length);
+          const armColor = SKILL_CATEGORIES[categoryIndex].color;
+          
+          // Draw arm segment
+          ctx.fillStyle = `${armColor}${Math.floor(opacity * 255).toString(16).padStart(2, '0')}`;
+          ctx.beginPath();
+          ctx.arc(x, y, armWidth * (1 - t * 0.5), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      
+      // Draw galaxy center with enhanced glow
       const categoryColor = SKILL_CATEGORIES.find(c => c.id === activeCategory)?.color || '#00fff5';
       
-      centerGradient.addColorStop(0, `${categoryColor}40`);
-      centerGradient.addColorStop(1, 'transparent');
+      // Pulsing galaxy core
+      const coreSize = 60 + Math.sin(timestamp * 0.001) * 10;
       
-      ctx.fillStyle = centerGradient;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 80, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // Update and draw stars
-      for (const star of stars) {
-        // Only update angle if rotation is enabled
-        if (isRotating) {
-          star.angle += star.speed;
-        }
+      // Multi-layered core for more impressive effect
+      for (let i = 0; i < 3; i++) {
+        const centerGradient = ctx.createRadialGradient(
+          centerX, centerY, 0,
+          centerX, centerY, coreSize * (1 - i * 0.2)
+        );
         
-        // Calculate position with parallax effect
-        const parallaxX = mousePosition.x * (star.distance * 0.05);
-        const parallaxY = mousePosition.y * (star.distance * 0.05);
+        centerGradient.addColorStop(0, `${categoryColor}${90 - i * 20}`);
+        centerGradient.addColorStop(0.5, `${categoryColor}${40 - i * 10}`);
+        centerGradient.addColorStop(1, 'transparent');
+        
+        ctx.fillStyle = centerGradient;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, coreSize * (1 - i * 0.2), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // Animate center rays
+      const rayCount = 8;
+      const rayLength = 100 + Math.sin(timestamp * 0.0005) * 20;
+      
+      for (let i = 0; i < rayCount; i++) {
+        const rayAngle = (i / rayCount) * Math.PI * 2 + timestamp * 0.0003;
+        
+        const startX = centerX + Math.cos(rayAngle) * coreSize * 0.8;
+        const startY = centerY + Math.sin(rayAngle) * coreSize * 0.8;
+        
+        const endX = centerX + Math.cos(rayAngle) * rayLength;
+        const endY = centerY + Math.sin(rayAngle) * rayLength;
+        
+        // Create ray gradient
+        const rayGradient = ctx.createLinearGradient(startX, startY, endX, endY);
+        rayGradient.addColorStop(0, `${categoryColor}70`);
+        rayGradient.addColorStop(1, 'transparent');
+        
+        ctx.strokeStyle = rayGradient;
+        ctx.lineWidth = 5 + Math.sin(timestamp * 0.002 + i) * 2;
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
+      
+      // Check for shooting star creation
+      const shootingStar = createShootingStar();
+      if (shootingStar) {
+        // Draw shooting star
+        const dx = shootingStar.endX - shootingStar.startX;
+        const dy = shootingStar.endY - shootingStar.startY;
+        const angle = Math.atan2(dy, dx);
+        
+        const headX = shootingStar.startX + dx * shootingStar.progress;
+        const headY = shootingStar.startY + dy * shootingStar.progress;
+        
+        // Draw tail
+        const tailGradient = ctx.createLinearGradient(
+          headX, headY,
+          headX - Math.cos(angle) * shootingStar.length,
+          headY - Math.sin(angle) * shootingStar.length
+        );
+        
+        tailGradient.addColorStop(0, `${shootingStar.color}ff`);
+        tailGradient.addColorStop(1, 'transparent');
+        
+        ctx.strokeStyle = tailGradient;
+        ctx.lineWidth = shootingStar.width;
+        ctx.beginPath();
+        ctx.moveTo(headX, headY);
+        ctx.lineTo(
+          headX - Math.cos(angle) * shootingStar.length,
+          headY - Math.sin(angle) * shootingStar.length
+        );
+        ctx.stroke();
+        
+        // Draw head
+        ctx.fillStyle = `${shootingStar.color}ff`;
+        ctx.beginPath();
+        ctx.arc(headX, headY, shootingStar.width * 2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Update progress
+        shootingStar.progress += shootingStar.speed;
+      }
+      
+      // Update and draw stars with enhanced effects
+      for (const star of stars) {
+        // Update angle - always rotating
+        star.angle += star.speed;
+        
+        // Pulsing effect
+        star.pulsePhase += star.pulseSpeed;
+        const pulseFactor = 0.7 + 0.3 * Math.sin(star.pulsePhase);
+        
+        // Calculate position with reduced parallax effect
+        const parallaxX = mousePosition.x * (star.distance * 0.02); // Reduced from 0.05
+        const parallaxY = mousePosition.y * (star.distance * 0.02); // Reduced from 0.05
         
         star.x = centerX + Math.cos(star.angle) * star.distance + parallaxX;
         star.y = centerY + Math.sin(star.angle) * star.distance + parallaxY;
@@ -254,13 +496,38 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         // Draw star with higher opacity for active category
         ctx.globalAlpha = star.category === activeCategory ? star.opacity * 1.5 : star.opacity * 0.5;
         
+        // Draw star tails (for some stars)
+        if (star.tail) {
+          const tailAngle = star.angle - Math.PI; // Opposite to movement direction
+          
+          const tailGradient = ctx.createLinearGradient(
+            star.x, star.y,
+            star.x + Math.cos(tailAngle) * star.tailLength,
+            star.y + Math.sin(tailAngle) * star.tailLength
+          );
+          
+          tailGradient.addColorStop(0, star.color);
+          tailGradient.addColorStop(1, 'transparent');
+          
+          ctx.strokeStyle = tailGradient;
+          ctx.lineWidth = star.tailWidth * pulseFactor;
+          ctx.beginPath();
+          ctx.moveTo(star.x, star.y);
+          ctx.lineTo(
+            star.x + Math.cos(tailAngle) * star.tailLength,
+            star.y + Math.sin(tailAngle) * star.tailLength
+          );
+          ctx.stroke();
+        }
+        
+        // Draw star
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.radius * pulseFactor, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
         ctx.fill();
         
-        // Draw glow
-        const glowSize = star.radius * 5;
+        // Draw glow with pulsing effect
+        const glowSize = star.radius * (5 + pulseFactor * 3);
         const glow = ctx.createRadialGradient(
           star.x, star.y, 0,
           star.x, star.y, glowSize
@@ -269,7 +536,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         glow.addColorStop(0, `${star.color}80`);
         glow.addColorStop(1, 'transparent');
         
-        ctx.globalAlpha = star.category === activeCategory ? 0.4 : 0.2;
+        ctx.globalAlpha = (star.category === activeCategory ? 0.5 : 0.2) * pulseFactor;
         ctx.fillStyle = glow;
         ctx.beginPath();
         ctx.arc(star.x, star.y, glowSize, 0, Math.PI * 2);
@@ -293,8 +560,23 @@ const TechStackGalaxy = ({ fullPage = false }) => {
           const dy = star1.y - star2.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 100) {
-            ctx.globalAlpha = (1 - distance / 100) * 0.3;
+          // Increased connection distance for more connections
+          if (distance < 120) {
+            // Create connection gradient for more visual appeal
+            const connectionGradient = ctx.createLinearGradient(
+              star1.x, star1.y, star2.x, star2.y
+            );
+            
+            connectionGradient.addColorStop(0, `${categoryColor}50`);
+            connectionGradient.addColorStop(0.5, `${categoryColor}30`);
+            connectionGradient.addColorStop(1, `${categoryColor}50`);
+            
+            ctx.strokeStyle = connectionGradient;
+            
+            // Randomize opacity based on distance and time for shimmer effect
+            const opacity = (1 - distance / 120) * 0.7 * (0.7 + 0.3 * Math.sin(timestamp * 0.001 + i * j));
+            ctx.globalAlpha = opacity;
+            
             ctx.beginPath();
             ctx.moveTo(star1.x, star1.y);
             ctx.lineTo(star2.x, star2.y);
@@ -307,22 +589,23 @@ const TechStackGalaxy = ({ fullPage = false }) => {
     };
     
     // Initialize and start animation
+    createNebulae();
     createStars();
     
     let animationId;
-    const animate = () => {
-      renderGalaxy();
+    const animate = (timestamp) => {
+      renderGalaxy(timestamp);
       animationId = requestAnimationFrame(animate);
     };
     
-    animate();
+    animate(0);
     
     // Clean up
     return () => {
       window.removeEventListener('resize', setCanvasDimensions);
       cancelAnimationFrame(animationId);
     };
-  }, [theme, activeCategory, isRotating, mousePosition]);
+  }, [theme, activeCategory, mousePosition]);
   
   // Show skill details
   const handleSkillHover = (skill) => {
@@ -396,30 +679,29 @@ const TechStackGalaxy = ({ fullPage = false }) => {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
           >
-            {SKILL_CATEGORIES.map((category) => (
-              <motion.button 
-                key={category.id}
-                className={`${styles.categoryButton} ${activeCategory === category.id ? styles.active : ''}`}
-                onClick={() => setActiveCategory(category.id)}
-                variants={itemVariants}
-                style={{
-                  '--category-color': category.color
-                }}
-              >
-                <span className={styles.categoryIcon}>{category.icon}</span>
-                <span className={styles.categoryName}>{category.name}</span>
-              </motion.button>
-            ))}
+            {SKILL_CATEGORIES.map((category) => {
+              // Dynamically create the icon component
+              const IconComponent = category.iconComponent;
+              
+              return (
+                <motion.button 
+                  key={category.id}
+                  className={`${styles.categoryButton} ${activeCategory === category.id ? styles.active : ''}`}
+                  onClick={() => setActiveCategory(category.id)}
+                  variants={itemVariants}
+                  style={{
+                    '--category-color': category.color
+                  }}
+                >
+                  <span className={styles.categoryIcon}>
+                    <IconComponent size={28} color={activeCategory === category.id ? "#FFFFFF" : category.color} />
+                  </span>
+                  <span className={styles.categoryName}>{category.name}</span>
+                </motion.button>
+              );
+            })}
             
-            <motion.button 
-              className={styles.rotationToggle}
-              onClick={() => setIsRotating(!isRotating)}
-              variants={itemVariants}
-              aria-label={isRotating ? 'Pause rotation' : 'Resume rotation'}
-              title={isRotating ? 'Pause rotation' : 'Resume rotation'}
-            >
-              {isRotating ? '⏸' : '▶️'}
-            </motion.button>
+            {/* Rotation toggle button removed as requested */}
           </motion.div>
           
           <motion.div 
