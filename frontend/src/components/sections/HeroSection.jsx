@@ -274,7 +274,7 @@ const HeroSection = () => {
             className={styles.heroDescription} 
             variants={itemVariants}
           >
-            Welcome to my digital nexus. I craft secure systems, develop full-stack applications, and specialize in cybersecurity solutions. Navigate through my digital portfolio to discover my projects, skills, and experiences.
+            Welcome to my digital portfolio. I'm a Proactive Problem-Solver leveraging a powerful combination of cybersecurity acumen and full-stack development capabilities. Holds six CompTIA certifications, demonstrating mastery across diverse security domains. Thrives on tackling technical hurdles, designing innovative solutions, and implementing secure systems from the ground up..
           </motion.p>
           
           <motion.div 

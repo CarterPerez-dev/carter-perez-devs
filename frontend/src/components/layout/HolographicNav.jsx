@@ -7,7 +7,6 @@ import styles from './HolographicNav.module.css';
 
 const HolographicNav = () => {
   const { theme, toggleTheme } = useTheme();
-  const { audioEnabled, toggleAudio, playSound } = useAudio();
   const [isOpen, setIsOpen] = useState(false);
   const [menuHoveredItem, setMenuHoveredItem] = useState(null);
   const navRef = useRef(null);
@@ -96,22 +95,10 @@ const HolographicNav = () => {
             className={styles.themeToggle} 
             onClick={() => {
               toggleTheme();
-              playSound('click');
             }}
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
             {theme === 'dark' ? '☀' : '☾'}
-          </button>
-          
-          <button 
-            className={styles.audioToggle} 
-            onClick={() => {
-              toggleAudio();
-              playSound('click');
-            }}
-            aria-label={`${audioEnabled ? 'Disable' : 'Enable'} audio`}
-          >
-            {audioEnabled ? '♫' : '♪'}
           </button>
           
           <button 
