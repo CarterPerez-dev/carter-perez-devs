@@ -28,14 +28,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   </React.StrictMode>,
 )
 
-// Initialize particle effects - we'll make them adjust to FPS capability
 window.addEventListener('DOMContentLoaded', () => {
-  // Check for performance capability to adjust particle density
   const performanceTest = () => {
     let startTime = performance.now();
     let iterations = 10000000;
     
-    // Simple computational load test
     for (let i = 0; i < iterations; i++) {
       Math.sqrt(Math.random());
     }
@@ -43,7 +40,6 @@ window.addEventListener('DOMContentLoaded', () => {
     let endTime = performance.now();
     let duration = endTime - startTime;
     
-    // Set performance level in localStorage (1-5 scale)
     let performanceLevel = 5;
     
     if (duration > 500) performanceLevel = 1;
