@@ -349,7 +349,7 @@ Phone: 443-510-0866
 
 Social Links:
   • GitHub:   https://github.com/CarterPerez-dev
-  • LinkedIn: https://www.linkedin.com/in/carter-perez-ProxyAuthRequired/
+  • LinkedIn: https://www.linkedin.com/in/carterperez-dev/
 
 Preferred Contact Method: Email
 
@@ -376,12 +376,6 @@ GENERAL MANAGER | Jimmy John's
 - Ensured efficient workflows and high customer satisfaction
 - Maintained network and POS systems functionality
 - Implemented new inventory procedures to reduce waste
-
-GENERAL MANAGER | Jimmy John's
-2022 - 2022 | Annapolis, MD
-- Diagnosed Network & POS issues
-- Oversaw staff scheduling and training
-- Ensured compliance with company standards
 `;
     setHistory(prev => [...prev, { type: 'system', content: experienceMessage }]);
   };
@@ -396,12 +390,6 @@ University of Maryland Global Campus | 2024 - Present
 - Maintaining a 3.9 GPA while working full-time
 - Participating in cybersecurity research initiatives
 
-ASSOCIATE'S DEGREE IN CYBERSECURITY
-Anne Arundel Community College | 2022 - 2024
-- Graduated with honors (3.8 GPA)
-- Focused on network security and ethical hacking principles
-- Participated in capture-the-flag competitions
-- Assisted professors with lab setup for security courses
 
 SOUTH RIVER HIGH SCHOOL
 2018 - 2022

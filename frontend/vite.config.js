@@ -14,11 +14,21 @@ export default defineConfig({
       '@': path.resolve(process.cwd(), './src'), 
     },
   },
-  server: {
-    host: '0.0.0.0', 
-    port: 5173,    
-    strictPort: true, 
-    allowedHosts: ['localhost'], 
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+    sourcemap: false,
   },
-
 });
