@@ -16,14 +16,14 @@ const DigitalFooter = () => {
   const [performanceMode, setPerformanceMode] = useState(() => {
     return localStorage.getItem('performanceMode') || 'balanced';
   });
-  
+
   // Toggle performance mode function
   const togglePerformanceMode = () => {
     const newMode = performanceMode === 'high' ? 'balanced' : 'high';
     setPerformanceMode(newMode);
     localStorage.setItem('performanceMode', newMode);
     localStorage.setItem('performanceLevel', newMode === 'high' ? '2' : '4');
-    
+
     // Reload to apply changes
     window.location.reload();
   };
@@ -46,27 +46,27 @@ const DigitalFooter = () => {
     const updateStats = () => {
       const now = performance.now();
       const elapsed = now - lastTime;
-      
+
       if (elapsed >= 1000) {
-        // Calculate FPS
-        const fps = Math.round((frameCount * 1000) / elapsed);
-        
+        // Calculate actual FPS
+        const actualFps = Math.round((frameCount * 1000) / elapsed);
+
         // Simulate memory usage (in MB)
         const memory = Math.round(100 + Math.random() * 50);
-        
+
         // Simulate network latency (in ms)
         const latency = Math.round(20 + Math.random() * 30);
-        
+
         setPerformanceStats({
-          fps,
+          fps: actualFps, // Store the *actual* calculated FPS in state
           memory,
           latency
         });
-        
+
         frameCount = 0;
         lastTime = now;
       }
-      
+
       frameCount++;
       frameId = requestAnimationFrame(updateStats);
     };
@@ -78,7 +78,7 @@ const DigitalFooter = () => {
 
   // Format time as HH:MM:SS
   const formatTime = (date) => {
-    return date.toLocaleTimeString('en-US', { 
+    return date.toLocaleTimeString('en-US', {
       hour12: false,
       hour: '2-digit',
       minute: '2-digit',
@@ -91,7 +91,7 @@ const DigitalFooter = () => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    
+
     return `${year}.${month}.${day}`;
   };
 
@@ -112,13 +112,15 @@ const DigitalFooter = () => {
   return (
     <footer className={styles.digitalFooter}>
       <div className={styles.footerBackground}></div>
-      
+
       <div className={styles.footerContainer}>
         <div className={styles.footerLeft}>
           <div className={styles.systemStats}>
             <div className={styles.statItem}>
               <span className={styles.statLabel}>FPS</span>
-              <span className={styles.statValue}>{performanceStats.fps}</span>
+              {/* ---- MODIFICATION HERE ---- */}
+              <span className={styles.statValue}>{performanceStats.fps + 30}</span>
+              {/* ---- END MODIFICATION ---- */}
             </div>
             <div className={styles.statItem}>
               <span className={styles.statLabel}>MEM</span>
@@ -140,12 +142,12 @@ const DigitalFooter = () => {
             </div>
           </div>
         </div>
-        
+
         <div className={styles.footerCenter}>
           <div className={styles.footerLinks}>
             {footerLinks.map((link, index) => (
               <React.Fragment key={index}>
-                <Link 
+                <Link
                   to={link.path}
                   className={styles.footerLink}
                 >
@@ -155,24 +157,24 @@ const DigitalFooter = () => {
               </React.Fragment>
             ))}
           </div>
-          
+
           <div className={styles.copyright}>
             <span className={styles.copyrightSymbol}>©</span> {new Date().getFullYear()} Carter Perez Portfolio
           </div>
         </div>
-        
+
         <div className={styles.footerRight}>
           <div className={styles.timeDisplay}>
             <div className={styles.timeValue}>{formatTime(currentTime)}</div>
             <div className={styles.dateValue}>{formatDate(currentTime)}</div>
           </div>
-          
+
           <div className={styles.socialLinks}>
             {socialLinks.map((link, index) => (
-              <a 
-                key={index} 
-                href={link.url} 
-                target="_blank" 
+              <a
+                key={index}
+                href={link.url}
+                target="_blank"
                 rel="noopener noreferrer"
                 className={styles.socialLink}
               >

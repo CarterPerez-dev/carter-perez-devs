@@ -86,7 +86,7 @@ button:focus-visible {
   }
 }
 
-/* Small devices (portrait tablets and large phones, 600px and up) */
+
 @media only screen and (min-width: 600px) and (max-width: 767px) {
   body {
     font-size: 15px;
@@ -111,7 +111,7 @@ button:focus-visible {
   }
 }
 
-/* Medium devices (landscape tablets, 768px and up) */
+
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   body {
     font-size: 16px;
@@ -140,7 +140,7 @@ button:focus-visible {
   }
 }
 
-/* Large devices (laptops/desktops, 992px and up) */
+
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .container {
     width: 100%;
@@ -165,7 +165,7 @@ button:focus-visible {
   }
 }
 
-/* Extra large devices (large laptops and desktops, 1200px and up) */
+
 @media only screen and (min-width: 1200px) {
   .container {
     width: 100%;

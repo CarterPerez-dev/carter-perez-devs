@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
-import { useCyberCursor } from './hooks/useCyberCursor';
+
 
 // Contexts
 import { useTheme } from './contexts/ThemeContext'
@@ -64,7 +64,6 @@ function useTabVisibilityOptimizer() {
 
 function App() {
   useTabVisibilityOptimizer();
-  useCyberCursor(); 
   const location = useLocation()
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(true)
@@ -87,7 +86,15 @@ function App() {
 
   }, []); 
     
-  
+  useEffect(() => {
+    if (!isLoading) {
+        document.body.style.removeProperty('cursor'); 
+        document.body.style.cursor = 'auto'; 
+    }
+
+  }, [isLoading]);
+
+        
   if (isLoading) {
     return <CyberLoader />
   }

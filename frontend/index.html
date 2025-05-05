@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/assets/images/meta-image.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Ultra-futuristic cyberpunk portfolio - A glimpse into the digital future" />
+    <meta name="description" content="Ultra-futuristic portfolio - A glimpse into the digital future" />
     
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,13 +13,13 @@
 
     
     <!-- Meta tags for social sharing -->
-    <meta property="og:title" content="Cyberpunk Portfolio" />
+    <meta property="og:title" content="Cyber Portfolio" />
     <meta property="og:description" content="Step into the future with this cutting-edge digital experience" />
     <meta property="og:image" content="/assets/images/meta-image.jpg" />
     <meta property="og:url" content="https://carterperez-dev.com" />
     <meta name="twitter:card" content="summary_large_image" />
     
-    <title>Carter Perez Portfolio | Digital Frontier</title>
+    <title>Carter Perez | Autonomous Dashboard</title>
   </head>
   <body>
     <!-- Initial loading overlay -->
@@ -29,7 +29,7 @@
         <div class="boot-progress">
           <div class="boot-progress-bar"></div>
         </div>
-        <div class="boot-text">INITIALIZING NEURAL INTERFACE</div>
+        <div class="boot-text">SYNCING SATELLITE FEED</div>
         <div class="boot-version">v2.7.5</div>
       </div>
     </div>
@@ -48,11 +48,11 @@
           const bootText = document.querySelector('.boot-text');
           
           const bootMessages = [
-            'INITIALIZING NEURAL INTERFACE',
-            'CALIBRATING VISUAL CORTEX',
-            'LOADING EXPERIENCE MATRIX',
+            'SYNCHRONIZING DRONE NETWORK',
+            'LOCKING TARGET COORDINATES',
+            'UPLOADING DOMINION PROTOCOL',
             'ENABLING QUANTUM RENDERING',
-            'ESTABLISHING NEURAL UPLINK'
+            'REWRITING CORE DIRECTIVES'
           ];
           
           let msgIndex = 0;
@@ -70,8 +70,8 @@
                 setTimeout(() => {
                   bootSequence.style.display = 'none';
                   sessionStorage.setItem('bootSequenceComplete', 'true');
-                }, 500);
-              }, 500);
+                }, 375);
+              }, 375);
             }
             
             bootProgress.style.width = `${progress}%`;
@@ -83,14 +83,33 @@
               
               setTimeout(() => {
                 bootText.classList.remove('glitch-text');
-              }, 500);
+              }, 375);
             }
-          }, 150);
+          }, 100);
         } else {
           const bootSequence = document.getElementById('boot-sequence');
           bootSequence.style.display = 'none';
         }
       });
     </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.style.removeProperty('cursor');
+        
+        document.body.style.cursor = 'auto';
+        
+
+        const customCursors = document.querySelectorAll('.cyber-cursor, .cyber-cursor-dot');
+        customCursors.forEach(el => el.remove());
+        
+
+        const interactiveElements = document.querySelectorAll('a, button, input, select, [role="button"]');
+        interactiveElements.forEach(el => {
+          el.style.cursor = 'pointer';
+        });
+        
+        console.log('Default cursor restored');
+      });
+    </script>    
   </body>
 </html>

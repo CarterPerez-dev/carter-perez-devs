@@ -36,12 +36,11 @@ export const useDataStream = (
     lastFrameTime: 0
   });
   
-  // Parse CSS variable to RGB values
+
   const parseColor = useCallback((color) => {
-    // Handle CSS variables
+
     if (color.startsWith('var(')) {
-      // Since we can't access computed styles directly here,
-      // use predefined fallbacks for common variables
+
       if (color.includes('accent-cyan')) {
         return { r: 0, g: 255, b: 245 };
       } else if (color.includes('accent-blue')) {
@@ -129,10 +128,10 @@ export const useDataStream = (
       size: 1 + Math.random() * 3,
       speed: (0.5 + Math.random() * 1.5) * config.speed / 5,
       color: `rgba(${parsedColor.r}, ${parsedColor.g}, ${parsedColor.b}, ${0.3 + Math.random() * 0.7})`,
-      trail: [], // Store previous positions for trail effect
+      trail: [],
       trailLength: Math.floor(5 + Math.random() * 15),
-      pulsePhase: Math.random() * Math.PI * 2, // For pulsing mode
-      waveOffset: Math.random() * Math.PI * 2 // For wave mode
+      pulsePhase: Math.random() * Math.PI * 2, 
+      waveOffset: Math.random() * Math.PI * 2 
     };
   }, [parseColor]);
   

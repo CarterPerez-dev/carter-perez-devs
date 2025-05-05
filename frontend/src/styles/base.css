@@ -129,10 +129,6 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* Override default cursor with custom cyberpunk cursor */
-body {
-  cursor: none;
-}
 
 body::-webkit-scrollbar {
   width: 8px;
@@ -177,62 +173,6 @@ body::-webkit-scrollbar-thumb:hover {
   transition: none !important;
 }
 
-.cyber-cursor {
-  position: fixed;
-  width: 25px;
-  height: 25px;
-  border: 2px solid var(--accent-cyan);
-  border-radius: 50%;
-  background-color: rgba(0, 255, 245, 0.1);
-  pointer-events: none;
-  z-index: var(--z-top);
-  mix-blend-mode: overlay;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, border-color 0.2s, box-shadow 0.2s;
-  opacity: 1;
-  display: block !important;
-  will-change: transform;
-}
-
-.cyber-cursor.expand {
-  width: 25px;
-  height: 25px;
-  box-shadow: 0 0 10px var(--accent-magenta);
-  mix-blend-mode: normal;
-  opacity: 1;
-}
-
-.cyber-cursor-dot {
-  position: fixed;
-  width: 18px;
-  height: 1px;
-  background-color: var(--accent-cyan);
-  border-radius: 0;
-  pointer-events: none;
-  z-index: calc(var(--z-top) + 1);
-  transform: translate(-50%, -50%);
-  transition: background-color 0.2s;
-  display: block !important;
-  opacity: 1;
-  will-change: transform;
-}
-
-.cyber-cursor-dot::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: -7px;
-  width: 1px;
-  height: 15px;
-  background-color: var(--accent-cyan);
-  transform: translateX(-50%);
-  transition: background-color 0.2s;
-}
-
-.cyber-cursor.expand + .cyber-cursor-dot,
-.cyber-cursor.expand + .cyber-cursor-dot::after {
-  background-color: var(--accent-magenta);
-}
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
@@ -303,7 +243,7 @@ a:hover::after {
   transform-origin: bottom left;
 }
 
-/* Utility classes */
+
 .container {
   width: 100%;
   max-width: var(--container-lg);
