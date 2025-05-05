@@ -12,7 +12,7 @@ const TIMELINE_DATA = [
     title: 'System Integration Technician II',
     company: 'Sealing Technologies',
     location: 'Columbia, MD',
-    date: 'June 2024 - April 2025',
+    date: 'June 2024',
     description: 'Managed and optimized QA workflows for custom server builds, aligning with strict timelines and regulatory standards while maintaining computer hardware across the facility.',
     achievements: [
       'Consulted on assembly and logistics for $40M worth of servers, network switches, and cyber kits',
@@ -28,7 +28,7 @@ const TIMELINE_DATA = [
     title: "Master's Degree in Cybersecurity",
     company: 'University of Maryland Global Campus',
     location: 'Largo, MD',
-    date: '2024 - May 2027',
+    date: 'Sept 2027',
     description: 'Currently pursuing a master\'s degree in Cybersecurity with advanced studies in security strategies and threat management.',
     achievements: [
       'Maintaining a strong academic record while working full-time',
@@ -44,7 +44,7 @@ const TIMELINE_DATA = [
     title: 'CertGames.com',
     company: 'Full-Stack Project',
     location: 'Remote',
-    date: '2024 - Present',
+    date: 'Oct 2024',
     description: 'Developed full-stack cybersecurity platform using React/Redux frontend, Python/Flask backend, MongoDB database, Redis caching, Nginx, and targeted OpenAI capabilities for cybersecurity training.',
     achievements: [
       'Built platform serving 500+ active learners (100+ paying subscribers) within 2 months',
@@ -52,7 +52,7 @@ const TIMELINE_DATA = [
       'Developed 10+ interactive learning games and 15+ customizable themes',
       'Implemented real-time support system for enhanced user experience'
     ],
-    skills: ['React', 'Redux', 'Python', 'Flask', 'MongoDB', 'OpenAI Integration', 'Docker'],
+    skills: ['React', 'Redux', 'Python', 'Flask', 'MongoDB', 'OpenAI Integration', 'Docker' 'Redis', 'Nginx'],
     category: 'project'
   },
   {
@@ -60,7 +60,7 @@ const TIMELINE_DATA = [
     title: 'CertGames iOS App',
     company: 'Mobile Development',
     location: 'Remote',
-    date: '2024 - Present',
+    date: 'Jan 2025',
     description: 'Developed native iOS application for CompTIA certification practice using React Native, complementing the web platform and providing on-the-go learning experiences.',
     achievements: [
       'Published app on Apple App Store with positive user ratings',
@@ -68,7 +68,7 @@ const TIMELINE_DATA = [
       'Optimized for iOS devices with offline capabilities',
       'Designed intuitive mobile UI for certification practice'
     ],
-    skills: ['React Native', 'Mobile Development', 'iOS App Store', 'Cross-Platform Integration'],
+    skills: ['React Native', 'Typescript' 'Mobile Development', 'iOS App Store', 'Cross-Platform Integration'],
     category: 'project'
   },
   {
@@ -76,7 +76,7 @@ const TIMELINE_DATA = [
     title: 'Flask-Honeypot Python Package',
     company: 'Open Source Security Tool',
     location: 'Remote',
-    date: '2025 - Present',
+    date: 'Apr 2025',
     description: 'Created a sophisticated cybersecurity deception system published on PyPI that redirects 500+ common attack vectors to 20+ realistic-looking fake admin dashboards and portals.',
     achievements: [
       'Developed comprehensive attack detection for common penetration testing paths',
@@ -84,7 +84,7 @@ const TIMELINE_DATA = [
       'Built interactive admin dashboard for threat intelligence visualization',
       'Published as Python package with simplified integration for existing Flask apps'
     ],
-    skills: ['Python', 'Flask', 'Cybersecurity', 'Honeypot Development', 'PyPI Package'],
+    skills: ['Python', 'Flask', 'Cybersecurity', 'Honeypot Development', 'PyPI Package' 'React'],
     category: 'project'
   },
   {
@@ -92,7 +92,7 @@ const TIMELINE_DATA = [
     title: 'CompTIA Certification Path',
     company: 'CompTIA',
     location: 'Remote',
-    date: '2024',
+    date: 'May 2024',
     description: 'Completed comprehensive CompTIA certification path including A+, Network+, Security+, CySA+, PenTest+, and CASP+, establishing a strong foundation in cybersecurity principles and practices.',
     achievements: [
       'Earned six major CompTIA certifications in rapid succession',

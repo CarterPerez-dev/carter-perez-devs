@@ -215,7 +215,7 @@ const HeroSection = () => {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsLoaded(true);
-    }, 200);
+    }, 50);
     
     return () => clearTimeout(timeoutId);
   }, []);

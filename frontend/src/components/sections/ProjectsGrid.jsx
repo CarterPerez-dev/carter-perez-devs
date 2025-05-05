@@ -32,7 +32,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'A gamified platform for certification preparation. Follow structured roadmaps to learn, practice, and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.',
       image: certgames, 
       categories: ['cybersecurity', 'education'],
-      technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
+      technologies: ['React', 'Python', 'Flask', 'Docker', 'Git', 'MongoDB', 'Redis', 'Nginx', 'Apache', 'Apple/Google Oauth', 'Oracle/Cloudfare', 'OpenAI', 'Stripe'],
       link: 'https://certgames.com',
       featured: true
     },
@@ -42,7 +42,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.',
       image: flask,
       categories: ['cybersecurity'],
-      technologies: ['Python', 'Flask', 'Docker', 'SQLite'],
+      technologies: ['Python', 'Flask', 'React', 'Docker', 'Mongodb', 'PyPi', 'Nginx', 'Git'],
       link: 'https://github.com/CarterPerez-dev/flask-honeypot',
       featured: false
     },
@@ -52,7 +52,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'A futuristic themed portfolio website with interactive elements and holographic UI. Features include 3D elements, glitch effects, and a custom terminal interface.',
       image: cyber,
       categories: ['web dev'],
-      technologies: ['React', 'Three.js', 'CSS3', 'Framer Motion'],
+      technologies: ['React', 'Vite', 'CSS3', 'Python', 'Flask', 'Openai', 'Docker', 'Nginx', 'Git', 'AWS'],
       link: 'https://github.com/CarterPerez-dev/carter-perez-devs',
       featured: false
     },
@@ -62,7 +62,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'An AI-powered command line tool that assists with coding tasks. Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.',
       image: angela,
       categories: ['ai'],
-      technologies: ['Python', 'OpenAI API', 'TensorFlow', 'Click'],
+      technologies: ['Python', 'Gemini API', 'Node.js', 'Shell', 'Bash', 'Ubuntu', 'Git'],
       link: 'https://github.com/CarterPerez-dev/angela-cli',
       featured: false
     },
@@ -72,7 +72,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'Certifications have a unique way of shaping not only the knowledge we carry but also the way we approach challenges. As an Integration Technician at SealingTech, earning professional CompTIA certifications such as the A+, Network+, Security+, Network+, CySa+, Pentest+, and CASP+ have placed me on a learning path which has become the catalyst for personal….',
       image: blog1, 
       categories: ['blogs', 'cybersecurity'],
-      date: 'April 15, 2025',
+      date: 'Feb 15, 2025',
       link: 'https://www.sealingtech.com/2025/02/03/how-my-career-growth-led-to-enhancing-customer-experience/',
       featured: false,
       isBlog: true
@@ -83,7 +83,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'As a System Integration Technician at SealingTech, my team and I are responsible for building custom defense systems that are not only powerful but also tailored to the unique needs of our customers. From selecting the right hardware specifications to configuring the complex systems into a carry-on compliant Cyber-Fly-Away Kit, we focus on optimizing performance,…',
       image: blog2,
       categories: ['blogs', 'web dev'],
-      date: 'March 22, 2025',
+      date: 'Oct 2, 2024',
       link: 'https://www.sealingtech.com/2024/10/03/building-custom-solutions-with-quality-at-the-core/',
       featured: false,
       isBlog: true
@@ -94,7 +94,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       description: 'The CompTIA Security+ certification is one of the most sought-after entry-level cybersecurity certifications. With over 900,000 Security+ certified professionals worldwide, this certification validates the baseline skills necessary to perform core security functions and serves as a springboard for more advanced cybersecurity roles...',
       image: blog3, 
       categories: ['blogs', 'ai', 'education'],
-      date: 'February 8, 2025',
+      date: 'March 8, 2025',
       link: 'https://certgames.com/blog/comptia-security-plus-exam-tips',
       featured: false,
       isBlog: true

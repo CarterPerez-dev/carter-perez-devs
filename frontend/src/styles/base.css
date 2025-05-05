@@ -348,7 +348,7 @@ a:hover::after {
   border: 0;
 }
 
-/* Boot sequence styling */
+
 #boot-sequence {
   position: fixed;
   top: 0;
@@ -360,7 +360,7 @@ a:hover::after {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  transition: opacity 0.5s;
+  transition: opacity 0.4s;
 }
 
 .boot-content {
@@ -378,7 +378,7 @@ a:hover::after {
   border: 2px solid var(--accent-cyan);
   position: relative; 
   transform: rotate(45deg);
-  animation: spin3d 3s linear infinite; 
+  animation: spin3d 0.3s linear infinite; 
   backface-visibility: hidden;
   transform-style: preserve-3d;
 }
@@ -441,18 +441,15 @@ a:hover::after {
 
 .glitch-text {
   animation: glitch 0.5s linear;
-  /* Also force onto its own layer */
   transform: translateZ(0);
 }
 
 
 @keyframes spin3d {
   from {
-    /* Combine the base tilt with the start of the Y rotation */
     transform: rotate(45deg) rotateY(0deg);
   }
   to {
-    /* Combine the base tilt with the end of the Y rotation */
     transform: rotate(45deg) rotateY(360deg);
   }
 
@@ -460,9 +457,9 @@ a:hover::after {
 .boot-progress,
 .boot-text,
 .boot-version {
-  position: relative; /* Ensure they establish a stacking context if needed */
-  z-index: 1;       /* Ensure they are layered above default background */
-  transform: translateZ(0); /* Hardware acceleration trick */
+  position: relative; 
+  z-index: 1;      
+  transform: translateZ(0); 
 }
 
 @keyframes glitch {
