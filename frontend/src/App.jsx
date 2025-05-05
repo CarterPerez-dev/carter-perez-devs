@@ -31,7 +31,6 @@ function useTabVisibilityOptimizer() {
   useEffect(() => {
     let hidden, visibilityChange;
     
-    // Set the name of the hidden property and the change event for visibility
     if (typeof document.hidden !== "undefined") {
       hidden = "hidden";
       visibilityChange = "visibilitychange";
@@ -45,15 +44,12 @@ function useTabVisibilityOptimizer() {
     
     const handleVisibilityChange = () => {
       if (document[hidden]) {
-        // Tab is hidden, pause animations by adding a class to body
         document.body.classList.add('tab-hidden');
       } else {
-        // Tab is visible, resume animations
         document.body.classList.remove('tab-hidden');
       }
     };
     
-    // Handle page visibility change
     document.addEventListener(visibilityChange, handleVisibilityChange, false);
     
     return () => {
