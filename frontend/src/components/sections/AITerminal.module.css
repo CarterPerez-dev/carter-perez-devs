@@ -254,13 +254,20 @@
   align-items: center;
 }
 
+.inputText {
+  color: var(--accent-cyan);
+  display: inline;
+}
+
 .cursorBlink {
-  position: absolute;
-  right: 0;
+  display: inline-block;
+  position: relative;
   width: 8px;
   height: 1.2em;
   background-color: var(--accent-cyan);
   animation: cursorBlink 1s step-end infinite;
+  margin: 0;
+  vertical-align: middle;
 }
 
 @keyframes cursorBlink {
@@ -280,13 +287,6 @@
   width: 0;
   height: 0;
   z-index: -1;
-}
-
-.inputText {
-  color: var(--accent-cyan);
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
 }
 
 .hackProgressContainer {

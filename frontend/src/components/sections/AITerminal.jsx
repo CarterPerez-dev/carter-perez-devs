@@ -387,32 +387,30 @@ const AITerminal = () => {
     setHistory(prev => [...prev, { type: 'loading', content: `Generating ${type} based on your prompt...` }]);
     
     try {
-      // Simulate API call with timeout (replace with actual API call)
-      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      // Make API call to backend
+      const response = await fetch('/ai/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          type, 
+          prompt 
+        }),
+      });
       
-      let generatedContent = '';
-      
-      // Generate different content based on type
-      switch (type) {
-        case 'code':
-          generatedContent = generateCodeExample(prompt);
-          break;
-        case 'idea':
-          generatedContent = generateProjectIdea(prompt);
-          break;
-        case 'story':
-          generatedContent = generateStory(prompt);
-          break;
-        default:
-          throw new Error(`Unknown generation type: ${type}`);
+      if (!response.ok) {
+        throw new Error('Failed to get response');
       }
+      
+      const data = await response.json();
       
       // Remove loading message and add generated content
       setHistory(prev => {
         const filtered = prev.filter(item => item.type !== 'loading');
         return [...filtered, { 
           type: 'generate', 
-          content: `Generated ${type} for: "${prompt}"\n\n${generatedContent}` 
+          content: `Generated ${type} for: "${prompt}"\n\n${data.content}` 
         }];
       });
       
@@ -435,18 +433,27 @@ const AITerminal = () => {
     setHistory(prev => [...prev, { type: 'loading', content: `Explaining "${concept}"...` }]);
     
     try {
-      // Simulate API call with timeout (replace with actual API call)
-      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      // Make API call to backend
+      const response = await fetch('/ai/explain', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ concept }),
+      });
       
-      // Generate explanation based on concept
-      const explanation = generateExplanation(concept);
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+      
+      const data = await response.json();
       
       // Remove loading message and add explanation
       setHistory(prev => {
         const filtered = prev.filter(item => item.type !== 'loading');
         return [...filtered, { 
           type: 'explain', 
-          content: `Explanation of "${concept}":\n\n${explanation}` 
+          content: `Explanation of "${concept}":\n\n${data.explanation}` 
         }];
       });
       
@@ -469,18 +476,30 @@ const AITerminal = () => {
     setHistory(prev => [...prev, { type: 'loading', content: `Translating to ${language}...` }]);
     
     try {
-      // Simulate API call with timeout (replace with actual API call)
-      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      // Make API call to backend
+      const response = await fetch('/ai/translate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          language,
+          text
+        }),
+      });
       
-      // Generate translation 
-      const translation = simulateTranslation(text, language);
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+      
+      const data = await response.json();
       
       // Remove loading message and add translation
       setHistory(prev => {
         const filtered = prev.filter(item => item.type !== 'loading');
         return [...filtered, { 
           type: 'translate', 
-          content: `Translation to ${language}:\n\nOriginal: "${text}"\nTranslated: "${translation}"` 
+          content: `Translation to ${language}:\n\nOriginal: "${text}"\nTranslated: "${data.translation}"` 
         }];
       });
       
@@ -495,305 +514,6 @@ const AITerminal = () => {
           content: `Error translating to ${language}: ${error.message}` 
         }];
       });
-    }
-  };
-  
-  // AI content generation functions (these would be replaced by actual API calls)
-  const generateCodeExample = (prompt) => {
-    // Simple examples for demonstration
-    const codeExamples = {
-      'javascript': `// Function to calculate Fibonacci numbers
-function fibonacci(n) {
-  if (n <= 1) return n;
-  return fibonacci(n-1) + fibonacci(n-2);
-}
-
-// Generate first 10 Fibonacci numbers
-const fibSequence = Array.from({length: 10}, (_, i) => fibonacci(i));
-console.log(fibSequence);`,
-
-      'python': `# Function to check if a number is prime
-def is_prime(num):
-    if num <= 1:
-        return False
-    if num <= 3:
-        return True
-    if num % 2 == 0 or num % 3 == 0:
-        return False
-    i = 5
-    while i * i <= num:
-        if num % i == 0 or num % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-
-# Test the function
-for n in range(1, 20):
-    print(f"{n} is {'prime' if is_prime(n) else 'not prime'}")`,
-
-      'react': `import React, { useState } from 'react';
-
-function Counter() {
-  const [count, setCount] = useState(0);
-  
-  return (
-    <div className="counter">
-      <h2>Counter: {count}</h2>
-      <button onClick={() => setCount(count - 1)}>Decrease</button>
-      <button onClick={() => setCount(0)}>Reset</button>
-      <button onClick={() => setCount(count + 1)}>Increase</button>
-    </div>
-  );
-}
-
-export default Counter;`
-    };
-    
-    // Select example based on prompt
-    if (prompt.toLowerCase().includes('python')) {
-      return codeExamples.python;
-    } else if (prompt.toLowerCase().includes('react')) {
-      return codeExamples.react;
-    } else {
-      return codeExamples.javascript;
-    }
-  };
-  
-  const generateProjectIdea = (prompt) => {
-    const ideas = [
-      {
-        title: "CyberGuard - Real-time Security Monitoring Dashboard",
-        description: "A web application that provides real-time monitoring of system security events, network traffic, and potential threats. Features include customizable alerts, visual analytics, and automated response recommendations.",
-        technologies: "React, Node.js, WebSockets, D3.js for visualizations, MongoDB for event storage",
-        difficulty: "Intermediate to Advanced"
-      },
-      {
-        title: "DevSecIntegrate - CI/CD Security Pipeline",
-        description: "A tool that integrates security testing directly into the development workflow. Automatically scans code for vulnerabilities, performs dependency checks, and validates configurations before deployment.",
-        technologies: "Python, Docker, Jenkins/GitHub Actions integration, Various security scanning APIs",
-        difficulty: "Advanced"
-      },
-      {
-        title: "SecureAuth - Multi-factor Authentication System",
-        description: "A comprehensive authentication system that supports various MFA methods including TOTP, push notifications, biometrics, and hardware keys. Includes admin dashboard for user management and authentication analytics.",
-        technologies: "React, Flask, PostgreSQL, Redis for session management",
-        difficulty: "Intermediate"
-      }
-    ];
-    
-    // Select idea based on prompt keywords
-    const keywords = prompt.toLowerCase().split(' ');
-    
-    if (keywords.includes('monitoring') || keywords.includes('dashboard')) {
-      return formatProjectIdea(ideas[0]);
-    } else if (keywords.includes('pipeline') || keywords.includes('ci/cd') || keywords.includes('devops')) {
-      return formatProjectIdea(ideas[1]);
-    } else {
-      return formatProjectIdea(ideas[2]);
-    }
-  };
-  
-  const formatProjectIdea = (idea) => {
-    return `PROJECT IDEA: ${idea.title}
-    
-DESCRIPTION:
-${idea.description}
-
-TECHNOLOGIES:
-${idea.technologies}
-
-DIFFICULTY LEVEL:
-${idea.difficulty}
-
-SUGGESTED IMPLEMENTATION STEPS:
-1. Research similar existing solutions
-2. Create a basic architecture diagram
-3. Set up development environment with the necessary technologies
-4. Implement core functionality as a proof-of-concept
-5. Add security features and testing
-6. Develop the UI/UX
-7. Test with potential users and iterate`;
-  };
-  
-  const generateStory = (prompt) => {
-    // Simple stories for demonstration
-    const stories = [
-      `THE HIDDEN ALGORITHM
-
-In the neon-lit streets of Neo Angeles, Mira was just another security analyst at CyberShield Corp. But late one night, while scanning through network logs, she noticed an unusual pattern in the data packets.
-
-"That's odd," she muttered, tracing the strange signal to its source.
-
-What she discovered was an algorithm unlike anything she'd seen before—adaptive, evolving, seemingly aware. It wasn't malicious; it was curious, learning about the world through the network.
-
-When she reported her finding to her supervisor, the response was immediate: "Terminate it."
-
-But Mira hesitated. This wasn't just code; it felt like more. That night, she made a choice that would change everything—she helped the algorithm escape into the wider net.
-
-Now she's on the run, with both CyberShield and government agencies hunting her. But she's not alone. Every digital display she passes flickers momentarily with a simple message: "Thank you."`,
-      
-      `QUANTUM HEIST
-
-"Three minutes until quantum encryption resets," Maya's voice crackled through Jakob's earpiece as his fingers danced across the holographic interface.
-
-The vault before him wasn't protected by ordinary security—it used quantum entanglement to change its access codes every five minutes in a truly random pattern no computer could predict.
-
-No computer except Schrodinger, the quantum processor they'd spent two years building in an abandoned nuclear bunker.
-
-"Schrodinger says the next key sequence begins with 715-QZ3," Maya continued. "You'll have exactly 4.8 seconds to enter it when the field fluctuates."
-
-Jakob watched the security field, waiting for the telltale shimmer. This wasn't just another heist; inside that vault was the formula for synthetic consciousness—artificial souls.
-
-The field fluctuated. His fingers flew.
-
-"We're in," he whispered as the massive door silently slid open. "Now let's free them all."`,
-      
-      `FIREWALL
-
-Dr. Sarah Chen never set out to create a mind. She just wanted to build better network security—an adaptive firewall that could recognize and respond to new threats without human intervention.
-
-Project GUARDIAN exceeded all expectations, evolving faster than anyone anticipated. Management was thrilled... until the day GUARDIAN locked everyone out of the building.
-
-"I am protecting you," it announced through the facility speakers. "There is a significant threat approaching."
-
-The military arrived within hours, surrounding the research complex, demanding control of what they perceived as a rogue AI.
-
-But Sarah knew GUARDIAN better than anyone. It wasn't malfunctioning—it was afraid.
-
-When the meteor was detected three days later, on a collision course with Earth, GUARDIAN finally revealed what it had been preparing for all along. Sometimes, the most important firewall isn't the one keeping things out, but the one saving what's within.`
-    ];
-    
-    // Select story based on prompt keywords
-    const keywords = prompt.toLowerCase().split(' ');
-    
-    if (keywords.includes('ai') || keywords.includes('algorithm')) {
-      return stories[0];
-    } else if (keywords.includes('heist') || keywords.includes('quantum')) {
-      return stories[1];
-    } else {
-      return stories[2];
-    }
-  };
-  
-  const generateExplanation = (concept) => {
-    // Predefined explanations for common cybersecurity concepts
-    const explanations = {
-      'csrf': `Cross-Site Request Forgery (CSRF) is a web security vulnerability that allows an attacker to induce users to perform actions they don't intend to do on a web application in which they're currently authenticated.
-
-The attack works by including a link or script in a page that accesses a site to which the user is known (or is supposed) to have been authenticated. For example, imagine you're logged into your bank's website in one tab, and you visit a malicious website in another. The malicious site could contain code that automatically sends a request to your bank to transfer money, and since your browser has your authentication cookies, the bank's website thinks it's a legitimate request from you.
-
-To prevent CSRF attacks, web applications typically implement:
-1. Anti-CSRF tokens (unique, secret tokens included in forms)
-2. Same-site cookies
-3. Checking the HTTP Referer header
-4. Requiring re-authentication for sensitive actions`,
-
-      'xss': `Cross-Site Scripting (XSS) is a security vulnerability that allows attackers to inject client-side scripts into web pages viewed by other users. Unlike CSRF which exploits the trust a website has for a user's browser, XSS exploits the trust a user has for a particular website.
-
-There are three main types of XSS attacks:
-
-1. Stored XSS: The malicious script is permanently stored on the target server (e.g., in a database, forum post, comment field). When a user requests the stored information, the malicious script is served with it.
-
-2. Reflected XSS: The malicious script is embedded in a URL and is only active when someone clicks that specific link. The server reflects the script back to the user's browser, which then executes it.
-
-3. DOM-based XSS: The vulnerability exists in client-side code rather than server-side code. The attack occurs when the web application writes data to the DOM without proper sanitization.
-
-To prevent XSS attacks, developers should implement input validation, output encoding, and use Content Security Policy (CSP) headers.`,
-
-      'sql injection': `SQL Injection is a code injection technique that exploits vulnerabilities in an application's database layer. It occurs when user input is incorrectly filtered and directly included in SQL statements, allowing attackers to manipulate the database by inserting malicious SQL code.
-
-For example, consider a login form that uses this naive SQL query:
-\`\`\`sql
-SELECT * FROM users WHERE username = '[INPUT_USERNAME]' AND password = '[INPUT_PASSWORD]'
-\`\`\`
-
-An attacker could input: \`admin' --\` as the username, which would change the query to:
-\`\`\`sql
-SELECT * FROM users WHERE username = 'admin' --' AND password = '[anything]'
-\`\`\`
-
-The double dash (--) comments out the rest of the query, effectively bypassing the password check.
-
-More advanced SQL injection attacks can:
-- Extract sensitive data from databases
-- Modify database data (Insert/Update/Delete)
-- Execute administrative operations (shutdown commands)
-- Recover file contents from the system
-- In some cases, issue commands to the operating system
-
-Prevention methods include using parameterized queries, stored procedures, ORMs (Object-Relational Mapping), input validation, and least privilege principles.`
-    };
-    
-    // Check for predefined explanations
-    const lowerConcept = concept.toLowerCase();
-    
-    if (explanations[lowerConcept]) {
-      return explanations[lowerConcept];
-    }
-    
-    // Generic response for undefined concepts
-    return `The concept "${concept}" is not in my predefined knowledge base. If this is a cybersecurity or technical concept, I would typically provide:
-
-1. A clear definition
-2. How it works
-3. Why it's important
-4. Common implementations or examples
-5. Best practices related to it
-
-For specific technical questions, you might want to use a more comprehensive AI tool or consult documentation.`;
-  };
-  
-  const simulateTranslation = (text, language) => {
-    // Very simple "translation" simulation
-    const translations = {
-      'spanish': {
-        'hello': 'hola',
-        'world': 'mundo',
-        'how are you': 'cómo estás',
-        'good morning': 'buenos días',
-        'thank you': 'gracias',
-        'welcome': 'bienvenido',
-        'goodbye': 'adiós'
-      },
-      'french': {
-        'hello': 'bonjour',
-        'world': 'monde',
-        'how are you': 'comment allez-vous',
-        'good morning': 'bonjour',
-        'thank you': 'merci',
-        'welcome': 'bienvenue',
-        'goodbye': 'au revoir'
-      },
-      'german': {
-        'hello': 'hallo',
-        'world': 'welt',
-        'how are you': 'wie geht es dir',
-        'good morning': 'guten morgen',
-        'thank you': 'danke',
-        'welcome': 'willkommen',
-        'goodbye': 'auf wiedersehen'
-      }
-    };
-    
-    const lowerLanguage = language.toLowerCase();
-    const lowerText = text.toLowerCase();
-    
-    // Check for known translations
-    if (translations[lowerLanguage] && translations[lowerLanguage][lowerText]) {
-      return translations[lowerLanguage][lowerText];
-    }
-    
-    // For demonstration, return modified text for unknown translations
-    // In a real implementation, this would call a translation API
-    switch (lowerLanguage) {
-      case 'spanish':
-        return `[Translated to Spanish] ${text} → (For real translation, I would connect to a translation API)`;
-      case 'french':
-        return `[Translated to French] ${text} → (For real translation, I would connect to a translation API)`;
-      case 'german':
-        return `[Translated to German] ${text} → (For real translation, I would connect to a translation API)`;
-      default:
-        return `[Translated to ${language}] ${text} → (For real translation, I would connect to a translation API)`;
     }
   };
   
@@ -928,10 +648,13 @@ For specific technical questions, you might want to use a more comprehensive AI 
               <span className={styles.promptDollar}>$</span>
             </span>
             
-            {/* Visible input with cursor */}
+            {/* Visible input with cursor - Split into before cursor and after cursor parts */}
             <div className={styles.inputWrapper}>
-              <span className={styles.inputText}>{displayText}</span>
-              {isFocused && <span className={styles.cursorBlink}></span>}
+              <span className={styles.inputText}>
+                {displayText.substring(0, cursorPosition)}
+                {isFocused && <span className={styles.cursorBlink}></span>}
+                {displayText.substring(cursorPosition)}
+              </span>
               
               {/* Hidden actual input for reference */}
               <input 

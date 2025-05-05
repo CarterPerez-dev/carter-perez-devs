@@ -8,7 +8,7 @@ import styles from './ProjectsGrid.module.css';
 
 // Import images properly
 import certgames from './images/ios.png';
-import flask from './images/11.webp';
+import flask from './images/11.png';
 import blog2 from './images/14.png';
 import blog3 from './images/15.png';
 import blog1 from './images/4.png';
