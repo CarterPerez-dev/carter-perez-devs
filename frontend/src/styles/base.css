@@ -181,12 +181,15 @@ body::-webkit-scrollbar-thumb:hover {
   position: fixed;
   width: 25px;
   height: 25px;
+  border: 2px solid var(--accent-cyan); /* Add a visible border */
+  border-radius: 50%; /* Make it circular */
+  background-color: rgba(0, 255, 245, 0.1); /* Add a subtle background */
   pointer-events: none;
   z-index: var(--z-top);
-  mix-blend-mode: overlay; /* Softer blend */
+  mix-blend-mode: overlay;
   transform: translate(-50%, -50%);
   transition: width 0.2s, height 0.2s, border-color 0.2s, box-shadow 0.2s;
-  opacity: 0.8; /* Slightly transparent */
+  opacity: 0.8;
 }
 
 .cyber-cursor.expand {
