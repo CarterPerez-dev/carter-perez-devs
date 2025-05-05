@@ -348,7 +348,7 @@ const AITerminal = () => {
     
     try {
       // Make API call to backend
-      const response = await fetch('/portfolio/ask_about_me', {
+      const response = await fetch('/api/portfolio/ask_about_me', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -388,7 +388,7 @@ const AITerminal = () => {
     
     try {
       // Make API call to backend
-      const response = await fetch('/ai/generate', {
+      const response = await fetch('/api/ai/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -477,7 +477,7 @@ const AITerminal = () => {
     
     try {
       // Make API call to backend
-      const response = await fetch('/ai/translate', {
+      const response = await fetch('/api/ai/translate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

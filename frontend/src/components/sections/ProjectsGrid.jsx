@@ -12,7 +12,7 @@ import flask from './images/11.png';
 import blog2 from './images/14.png';
 import blog3 from './images/15.png';
 import blog1 from './images/4.png';
-import cyber from './images/5.webp';
+import cyber from './images/5.png';
 import angela from './images/8.png';
 
 const ProjectsGrid = ({ fullPage = false }) => {

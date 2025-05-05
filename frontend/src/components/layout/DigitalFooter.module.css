@@ -184,6 +184,26 @@
   font-weight: 700;
 }
 
+.performanceToggle {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.performanceToggle:hover {
+  color: var(--accent-cyan);
+  transform: translateY(-2px);
+}
+
 /* Red theme styles */
 :global(.light-theme) .footerBackground {
   background-color: rgba(15, 8, 8, 0.8);

@@ -1055,29 +1055,29 @@ ADDITIONAL:
       const projects = [
         {
           name: "CertGames.com",
-          description: "A gamified platform for certification preparation. Follow structured roadmaps to learn, practice,"
-          "and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.",
+          description: `A gamified platform for certification preparation. Follow structured roadmaps to learn, practice,
+          and master certifications like CompTIA. Earn XP, unlock badges, and track your progress.`,
           technologies: "React, React-Native Python, Flask, MongoDB, Docker, Nginx, Redis, iOS APP",
           status: "Active development, launched Q2 2025"
         },
         {
           name: "Flask-Honeypot",
-          description: "A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks"
-          "while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.",
+          description: `A lightweight honeypot system built with Flask. Detects and logs potential cyber attacks
+          while presenting convincing decoy services to attackers. Helps identify common attack vectors and malicious IP addresses.`,
           technologies: "React, Node.js, MongoDB, Python-Flask, PyPi",
           status: "Active development, launched Q3 2025"
         },
         {
           name: "AngelaCLI",
-          description: "An AI-powered command line tool that assists with coding tasks."
-          "Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.",
+          description: `An AI-powered command line tool that assists with coding tasks.
+          Integrates with your development workflow to provide context-aware suggestions, refactoring tips, and code generation.`,
           technologies: "Shell, Linux, Python, Bash, Gemini API",
           status: "Internal use, in-progress, planning public release"
         },
         {
           name: "Portfolio",
-          description: "A futuristic themed portfolio website with interactive elements and holographic UI."
-          "Features include 3D elements, glitch effects, and a custom terminal interface.",
+          description: `A futuristic themed portfolio website with interactive elements and holographic UI.
+          Features include 3D elements, glitch effects, and a custom terminal interface.`,
           technologies: "Python, Vite, Nginx, Docker, Three.js, CSS3",
           status: "Personal project, ongoing development"
         }

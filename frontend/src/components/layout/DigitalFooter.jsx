@@ -14,6 +14,22 @@ const DigitalFooter = () => {
     latency: 0
   });
 
+  // Performance mode state
+  const [performanceMode, setPerformanceMode] = useState(() => {
+    return localStorage.getItem('performanceMode') || 'balanced';
+  });
+  
+  // Toggle performance mode function
+  const togglePerformanceMode = () => {
+    const newMode = performanceMode === 'high' ? 'balanced' : 'high';
+    setPerformanceMode(newMode);
+    localStorage.setItem('performanceMode', newMode);
+    localStorage.setItem('performanceLevel', newMode === 'high' ? '2' : '4');
+    
+    // Reload to apply changes
+    window.location.reload();
+  };
+
   // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
@@ -86,7 +102,6 @@ const DigitalFooter = () => {
     { text: 'Home', path: '/' },
     { text: 'Projects', path: '/projects' },
     { text: 'Contact', path: '/contact' },
-    { text: 'Privacy', path: '/privacy' }
   ];
 
   // Social links
@@ -144,6 +159,14 @@ const DigitalFooter = () => {
             <div className={styles.timeValue}>{formatTime(currentTime)}</div>
             <div className={styles.dateValue}>{formatDate(currentTime)}</div>
           </div>
+          
+          <button
+            className={styles.performanceToggle}
+            onClick={togglePerformanceMode}
+            title={`Performance Mode: ${performanceMode === 'high' ? 'High Performance' : 'Balanced'}`}
+          >
+            {performanceMode === 'high' ? '⚡' : '🔋'}
+          </button>
           
           <div className={styles.socialLinks}>
             {socialLinks.map((link, index) => (

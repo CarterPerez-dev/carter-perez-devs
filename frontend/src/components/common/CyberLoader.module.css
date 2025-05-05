@@ -17,7 +17,7 @@
   height: 100%;
 }
 
-.cyberLoaderContent { /* Renamed from cyber-loader-content */
+.cyberLoaderContent { 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,31 +46,10 @@
   pointer-events: none;
 }
 
-.cyberLoading { /* Renamed from cyber-loading */
-  /* Add styles for .cyber-loading if they existed, otherwise it might be handled by JS/other CSS */
-  /* Example: */
-  /* position: relative; */
-  /* width: 50px; */
-  /* height: 50px; */
-  /* margin-bottom: 1rem; */
-}
-
-.cyberLoading div {
-  /* Add styles for .cyber-loading div if they existed */
-  /* Example: */
-  /* position: absolute; */
-  /* width: 100%; */
-  /* height: 100%; */
-  /* border: 2px solid transparent; */
-  /* border-top-color: var(--accent-cyan); */
-  /* border-radius: 50%; */
-  /* animation: spin 1s linear infinite; */
-}
-
-/* @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } */
 
 
-.cyberLoaderText { /* Renamed from cyber-loader-text */
+
+.cyberLoaderText { 
   font-family: var(--font-mono);
   font-size: 1rem;
   color: var(--accent-cyan);
@@ -79,12 +58,12 @@
   letter-spacing: 1px;
 }
 
-.cyberLoaderProgressContainer { /* Renamed from cyber-loader-progress-container */
+.cyberLoaderProgressContainer { 
   width: 100%;
   margin-bottom: 1rem;
 }
 
-.cyberLoaderProgressBar { /* Renamed from cyber-loader-progress-bar */
+.cyberLoaderProgressBar { 
   width: 100%;
   height: 4px;
   background-color: rgba(255, 255, 255, 0.1);
@@ -93,14 +72,14 @@
   margin-bottom: 0.5rem;
 }
 
-.cyberLoaderProgressFill { /* Renamed from cyber-loader-progress-fill */
+.cyberLoaderProgressFill { 
   height: 100%;
   background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
   border-radius: 2px;
   transition: width 0.2s ease;
 }
 
-.cyberLoaderProgressText { /* Renamed from cyber-loader-progress-text */
+.cyberLoaderProgressText {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--text-secondary);
@@ -140,15 +119,3 @@
   50% { opacity: 0.3; }
 }
 
-/* Theme specific adjustments - Using :global() for theme class on body */
-:global(.light-theme) .cyberLoaderContent {
-  background-color: rgba(245, 245, 245, 0.9);
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 20px rgba(77, 77, 255, 0.3);
-}
-
-:global(.light-theme) .cyberLoaderContent::before {
-  background-image:
-    linear-gradient(rgba(77, 77, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(77, 77, 255, 0.1) 1px, transparent 1px);
-}

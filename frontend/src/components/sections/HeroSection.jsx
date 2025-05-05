@@ -215,7 +215,7 @@ const HeroSection = () => {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsLoaded(true);
-    }, 800);
+    }, 200);
     
     return () => clearTimeout(timeoutId);
   }, []);
@@ -290,11 +290,11 @@ const HeroSection = () => {
             </Link>
             
             <Link 
-              to="/contact" 
+              to="/terminal" 
               className="cyber-button cyber-button--magenta"
               onClick={() => playSound('click')}
             >
-              CONNECT
+              TERMINAL
             </Link>
           </motion.div>
         </div>

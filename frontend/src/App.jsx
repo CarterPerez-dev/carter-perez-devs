@@ -24,7 +24,45 @@ const AITerminal = lazy(() => import('./components/sections/AITerminal'))
 const ContactPortal = lazy(() => import('./components/sections/ContactPortal'))
 const ResumeHologram = lazy(() => import('./components/sections/ResumeHologram'))
 
+
+function useTabVisibilityOptimizer() {
+  useEffect(() => {
+    let hidden, visibilityChange;
+    
+    // Set the name of the hidden property and the change event for visibility
+    if (typeof document.hidden !== "undefined") {
+      hidden = "hidden";
+      visibilityChange = "visibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+      hidden = "msHidden";
+      visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+      hidden = "webkitHidden";
+      visibilityChange = "webkitvisibilitychange";
+    }
+    
+    const handleVisibilityChange = () => {
+      if (document[hidden]) {
+        // Tab is hidden, pause animations by adding a class to body
+        document.body.classList.add('tab-hidden');
+      } else {
+        // Tab is visible, resume animations
+        document.body.classList.remove('tab-hidden');
+      }
+    };
+    
+    // Handle page visibility change
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
+    
+    return () => {
+      document.removeEventListener(visibilityChange, handleVisibilityChange);
+    };
+  }, []);
+}
+
+
 function App() {
+  useTabVisibilityOptimizer();
   const location = useLocation()
   const { theme } = useTheme()
   const { initializeAudio } = useAudio()

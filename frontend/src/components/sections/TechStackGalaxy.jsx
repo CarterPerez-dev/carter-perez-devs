@@ -244,7 +244,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
       // Update and draw particles
       for (const p of particles) {
         // --- Slowdown on Hover ---
-        const speedMultiplier = isHoveringCanvas ? 0.1 : 22.0; 
+        const speedMultiplier = isHoveringCanvas ? 0.1 : 28.0; 
         const effectiveSpeed = p.baseSpeed * speedMultiplier;
 
         if (isRotating) {

@@ -41,49 +41,54 @@
     <!-- Boot sequence simulation -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        const bootSequence = document.getElementById('boot-sequence');
-        const bootProgress = document.querySelector('.boot-progress-bar');
-        const bootText = document.querySelector('.boot-text');
-        
-        const bootMessages = [
-          'INITIALIZING NEURAL INTERFACE',
-          'CALIBRATING VISUAL CORTEX',
-          'LOADING EXPERIENCE MATRIX',
-          'ENABLING QUANTUM RENDERING',
-          'ESTABLISHING NEURAL UPLINK'
-        ];
-        
-        let msgIndex = 0;
-        let progress = 0;
-        
-        // Simulate boot progress
-        const bootInterval = setInterval(() => {
-          progress += Math.random() * 5 + 1;
+        if (!sessionStorage.getItem('bootSequenceComplete')) {
+          const bootSequence = document.getElementById('boot-sequence');
+          const bootProgress = document.querySelector('.boot-progress-bar');
+          const bootText = document.querySelector('.boot-text');
           
-          if (progress >= 100) {
-            progress = 100;
-            clearInterval(bootInterval);
+          const bootMessages = [
+            'INITIALIZING NEURAL INTERFACE',
+            'CALIBRATING VISUAL CORTEX',
+            'LOADING EXPERIENCE MATRIX',
+            'ENABLING QUANTUM RENDERING',
+            'ESTABLISHING NEURAL UPLINK'
+          ];
+          
+          let msgIndex = 0;
+          let progress = 0;
+          
+          const bootInterval = setInterval(() => {
+            progress += Math.random() * 5 + 1;
             
-            setTimeout(() => {
-              bootSequence.style.opacity = 0;
+            if (progress >= 100) {
+              progress = 100;
+              clearInterval(bootInterval);
+              
               setTimeout(() => {
-                bootSequence.style.display = 'none';
+                bootSequence.style.opacity = 0;
+                setTimeout(() => {
+                  bootSequence.style.display = 'none';
+                  sessionStorage.setItem('bootSequenceComplete', 'true');
+                }, 500);
               }, 500);
-            }, 500);
-          }
-          
-          bootProgress.style.width = `${progress}%`;
-          
-          if (progress > (msgIndex + 1) * 20) {
-            msgIndex = Math.min(msgIndex + 1, bootMessages.length - 1);
-            bootText.innerHTML = bootMessages[msgIndex];
-            bootText.classList.add('glitch-text');
+            }
             
-            setTimeout(() => {
-              bootText.classList.remove('glitch-text');
-            }, 500);
-          }
-        }, 150);
+            bootProgress.style.width = `${progress}%`;
+            
+            if (progress > (msgIndex + 1) * 20) {
+              msgIndex = Math.min(msgIndex + 1, bootMessages.length - 1);
+              bootText.innerHTML = bootMessages[msgIndex];
+              bootText.classList.add('glitch-text');
+              
+              setTimeout(() => {
+                bootText.classList.remove('glitch-text');
+              }, 500);
+            }
+          }, 150);
+        } else {
+          const bootSequence = document.getElementById('boot-sequence');
+          bootSequence.style.display = 'none';
+        }
       });
     </script>
   </body>
