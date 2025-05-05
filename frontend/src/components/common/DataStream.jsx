@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useDataStream } from '../../hooks/useDataStream';
-import styles from './DataStream.module.css';
+import styles from './css/DataStream.module.css';
 
 const DataStream = ({
   width = '100%',

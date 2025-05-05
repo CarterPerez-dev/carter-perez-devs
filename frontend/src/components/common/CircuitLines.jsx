@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '../../contexts/ThemeContext';
-import styles from './CircuitLines.module.css';
+import styles from './css/CircuitLines.module.css';
 
 const CircuitLines = ({
   color = 'auto',

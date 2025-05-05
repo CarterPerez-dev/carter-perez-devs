@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useHolographicEffect } from '../../hooks/useHolographicEffect';
-import styles from './HolographicCard.module.css';
+import styles from './css/HolographicCard.module.css';
 
 const HolographicCard = ({
   children,

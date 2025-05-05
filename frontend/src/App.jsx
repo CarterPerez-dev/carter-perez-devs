@@ -12,6 +12,7 @@ import HolographicNav from './components/layout/HolographicNav'
 import DigitalFooter from './components/layout/DigitalFooter'
 import AmbientBackground from './components/layout/AmbientBackground'
 import CyberLoader from './components/common/CyberLoader'
+import './utils/cursor-enforcer.js';
 
 
 // Eager loaded components

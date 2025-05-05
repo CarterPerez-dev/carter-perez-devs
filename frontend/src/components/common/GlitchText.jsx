@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useGlitch } from '../../hooks/useGlitch';
-import styles from './GlitchText.module.css';
+import styles from './css/GlitchText.module.css';
 
 const GlitchText = ({
   text,

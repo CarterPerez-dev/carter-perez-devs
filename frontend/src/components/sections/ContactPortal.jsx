@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import styles from './ContactPortal.module.css';
+import styles from './css/ContactPortal.module.css';
 
 const ContactPortal = () => {
   const { theme } = useTheme();
@@ -436,7 +436,7 @@ const ContactPortal = () => {
                 </div>
                 
                 <div className={styles.infoSection}>
-                  <h3 className={styles.infoSectionTitle}>Neural Bandwidth</h3>
+                  <h3 className={styles.infoSectionTitle}>Bandwidth</h3>
                   <p className={styles.infoText}>
                     <a href="mailto:CarterPerez-dev@gmail.com" className={styles.infoLink}>
                       CarterPerez-dev@gmail.com
@@ -450,7 +450,7 @@ const ContactPortal = () => {
                 </div>
                 
                 <div className={styles.infoSection}>
-                  <h3 className={styles.infoSectionTitle}>Digital Nexus Points</h3>
+                  <h3 className={styles.infoSectionTitle}>Digital Access Points</h3>
                   <div className={styles.socialLinks}>
                     <a 
                       href="https://github.com/CarterPerez-dev" 

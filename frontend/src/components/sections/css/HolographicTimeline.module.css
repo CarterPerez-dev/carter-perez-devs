@@ -163,14 +163,11 @@
 /* Timeline cards */
 .timelineCard {
   position: relative;
-  background-color: rgba(10, 10, 10, 0.7);
+  background-color: rgba(10, 10, 10, 0.5);
   border: 1px solid rgba(0, 255, 245, 0.4);
   border-radius: var(--border-radius-md);
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  cursor: none;
+  transition: all 0.2s ease;
 }
 
 .timelineCard::before {

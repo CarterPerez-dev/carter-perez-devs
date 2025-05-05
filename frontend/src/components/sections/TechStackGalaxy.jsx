@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 // Import react-icons
 import { FaLock, FaDesktop, FaCog, FaSyncAlt, FaDatabase, FaGlobe, FaPause, FaPlay, FaShieldAlt, FaCloudversify } from 'react-icons/fa'; 
 import { useTheme } from '../../contexts/ThemeContext'; 
-import styles from './TechStackGalaxy.module.css';
+import styles from './css/TechStackGalaxy.module.css';
 
 // Skill categories with React Icons and potentially brighter colors
 const SKILL_CATEGORIES = [
@@ -244,7 +244,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
       // Update and draw particles
       for (const p of particles) {
         // --- Slowdown on Hover ---
-        const speedMultiplier = isHoveringCanvas ? 0.1 : 28.0; 
+        const speedMultiplier = isHoveringCanvas ? 0.1 : 32.0; 
         const effectiveSpeed = p.baseSpeed * speedMultiplier;
 
         if (isRotating) {
@@ -258,7 +258,7 @@ const TechStackGalaxy = ({ fullPage = false }) => {
         p.y = currentCenterY + Math.sin(p.angle) * p.distance + parallaxY;
 
         // Draw particle
-        ctx.globalAlpha = p.category === activeCategory ? p.opacity : p.opacity * 0.7; // Active category stands out more
+        ctx.globalAlpha = p.category === activeCategory ? p.opacity : p.opacity * 0.8; // Active category stands out more
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;

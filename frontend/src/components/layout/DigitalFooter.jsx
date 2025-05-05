@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import styles from './DigitalFooter.module.css';
+import styles from './css/DigitalFooter.module.css';
 
 const DigitalFooter = () => {
   const { theme } = useTheme();

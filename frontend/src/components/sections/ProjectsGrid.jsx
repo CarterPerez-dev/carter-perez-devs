@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import styles from './ProjectsGrid.module.css';
+import styles from './css/ProjectsGrid.module.css';
 
 
 const ProjectsGrid = ({ fullPage = false }) => {

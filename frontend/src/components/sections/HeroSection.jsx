@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import styles from './HeroSection.module.css';
+import styles from './css/HeroSection.module.css';
 
 const HeroSection = () => {
   const canvasRef = useRef(null);
@@ -10,7 +10,7 @@ const HeroSection = () => {
   
   // Typewriter effect for subtitle
   const [subtitle, setSubtitle] = useState('');
-  const fullSubtitle = 'CYBERSECURITY SPECIALIST | SYSTEM INTEGRATOR | FULL-STACK DEVELOPER';
+  const fullSubtitle = 'CYBERSECURITY SPECIALIST | DEVELOPER';
   
   // Holographic cube animation
   useEffect(() => {
@@ -254,10 +254,10 @@ const HeroSection = () => {
           <motion.h1 
             className={styles.heroTitle} 
             variants={itemVariants}
-            data-text="NEURAL INTERFACE"
+            data-text="AUTONOMOUS DASHBOARD"
           >
-            <span className={styles.titleMain}>NEURAL</span>
-            <span className={styles.titleAccent}>INTERFACE</span>
+            <span className={styles.titleMain}>AUTONOMOUS</span>
+            <span className={styles.titleAccent}>DASHBOARD</span>
           </motion.h1>
           
           <motion.div 

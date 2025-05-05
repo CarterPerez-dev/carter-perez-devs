@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import styles from './HolographicNav.module.css';
+import styles from './css/HolographicNav.module.css';
 
 const HolographicNav = () => {
   const { theme, toggleTheme } = useTheme();
@@ -66,7 +66,7 @@ const HolographicNav = () => {
       x: 0,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2,
+        delayChildren: 0.1,
       },
     },
   };
@@ -86,9 +86,9 @@ const HolographicNav = () => {
               <div className={styles.logoSymbol}>C</div>
               <div className={styles.logoText}>PORTFOLIO</div>
             </div>
-          </Link> {/* Closed Link here */}
+          </Link> 
         </div>
-        {/* --- END FIX --- */}
+
   
         <div className={styles.navControls}>
           <button

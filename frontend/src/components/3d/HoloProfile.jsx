@@ -2,10 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Canvas } from '@react-three/fiber';
-import styles from './HoloProfile.module.css';
+import styles from './css/HoloProfile.module.css';
 
-// Import the HoloProfileScene component (unchanged)
-import HoloProfileScene from './HoloProfileScene'; // This would be in a separate file
+
+
 
 const HoloProfile = ({
   imageUrl = '/assets/profile.png',

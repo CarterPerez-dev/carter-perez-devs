@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 // Removed useAudio import
-import styles from './HolographicTimeline.module.css';
+import styles from './css/HolographicTimeline.module.css';
 
 
 // Timeline data
@@ -108,7 +108,7 @@ const TIMELINE_DATA = [
     title: 'General Manager',
     company: "Jimmy John's",
     location: 'Severna Park, MD',
-    date: 'December 2022 - July 2024',
+    date: 'December 2022',
     description: 'Supervised 10+ staff members, optimizing task delegation and daily procedures for smooth restaurant operations while handling technical systems management.',
     achievements: [
       'Diagnosed and repaired POS systems and networks across five stores',

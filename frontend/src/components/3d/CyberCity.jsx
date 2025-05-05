@@ -2,10 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Canvas } from '@react-three/fiber';
-import styles from './CyberCity.module.css';
+import styles from './css/CyberCity.module.css';
 
-// Import the CityScene component (unchanged)
-import CityScene from './CityScene'; // This would be in a separate file
+
+import CityScene from './CityScene'; 
 
 // Main CyberCity component
 const CyberCity = ({

@@ -13,7 +13,7 @@ ai_bp = Blueprint('ai_bp', __name__)
 assistant = AIAssistant()
 
 @ai_bp.route('/ask_about_me', methods=['POST'])
-@limiter.limit("10 per minute")  s
+@limiter.limit("10 per minute")  
 def ask_about_me():
     """
     POST /ask_about_me

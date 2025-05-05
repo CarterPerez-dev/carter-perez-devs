@@ -70,14 +70,14 @@
 }
 
 .titleAccent::before {
-  content: 'INTERFACE';
+  content: 'DASHBOARD';
   position: absolute;
   top: 0;
   left: 0;
   color: var(--accent-magenta);
   filter: blur(4px);
   opacity: 0.7;
-  animation: titleGlitch 5s infinite alternate;
+  animation: titleGlitch 6s infinite alternate;
 }
 
 .heroSubtitle {

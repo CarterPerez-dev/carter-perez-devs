@@ -1,0 +1,73 @@
+/* global-cursor-fix.css - Load this file LAST to ensure it overrides everything */
+
+/* Force cursor visibility site-wide with maximum specificity */
+html body *,
+html body * *,
+html body * * *,
+html body * * * *,
+html body * * * * *,
+html body * * * * * * {
+  cursor: auto !important;
+}
+
+/* Force pointer cursor on all interactive elements with maximum specificity */
+html body a,
+html body button,
+html body input[type="button"],
+html body input[type="submit"],
+html body input[type="reset"],
+html body select,
+html body [role="button"],
+html body .neon-button,
+html body .cyber-button,
+html body .holographic-button,
+html body .neon-link,
+html body .menu-toggle,
+html body .themeToggle,
+html body .audioToggle,
+html body .performanceToggle,
+html body .categoryButton,
+html body .timelineCard,
+html body .menuLink,
+html body .closeButton,
+html body .socialLink,
+html body .footerLink,
+html body .logoLink,
+html body label[for],
+html body .menu-item,
+html body .neon-border,
+html body .neon-text,
+html body .glitch-text,
+html body .cyber-card,
+html body .data-panel,
+html body .holographic {
+  cursor: pointer !important;
+}
+
+
+.cyber-cursor,
+.cyber-cursor-dot,
+.custom-cursor,
+.cursor-follower,
+#cursor,
+#cursor-dot,
+.cursor-dot,
+.cursor-inner,
+.cursor-outer {
+  display: none !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+
+*:hover,
+*:active,
+*:focus {
+  cursor: inherit !important;
+}
+
+
+@keyframes * {
+  from, to { cursor: inherit !important; }
+}

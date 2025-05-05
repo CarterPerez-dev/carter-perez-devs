@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import styles from './ResumeHologram.module.css';
+import styles from './css/ResumeHologram.module.css';
 import { FaUserSecret, FaGithub, FaPhone, FaBriefcase, FaGraduationCap, FaLinux, FaCode, FaTrophy } from 'react-icons/fa'; 
 
 

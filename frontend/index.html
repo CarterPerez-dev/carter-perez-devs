@@ -93,23 +93,69 @@
       });
     </script>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        document.body.style.removeProperty('cursor');
-        
-        document.body.style.cursor = 'auto';
+      (function() {
+        function fixCursors() {
+          document.documentElement.style.setProperty('cursor', 'auto', 'important');
+          document.body.style.setProperty('cursor', 'auto', 'important');
+          
+
+          var allElements = document.querySelectorAll('*');
+          for (var i = 0; i < allElements.length; i++) {
+            var computedStyle = getComputedStyle(allElements[i]);
+            if (computedStyle.cursor === 'none') {
+              allElements[i].style.setProperty('cursor', 'auto', 'important');
+            }
+          }
+          
+
+          var interactiveSelectors = [
+            'a', 'button', 'input[type="button"]', 'input[type="submit"]', 
+            'input[type="reset"]', 'select', '[role="button"]', '.cyber-button',
+            '.neon-button', '.holographic-button', '.neon-link', '.menu-toggle',
+            '.themeToggle', '.audioToggle', '.performanceToggle', '.categoryButton',
+            '.timelineCard', '.menuLink', '.closeButton', '.socialLink', '.footerLink'
+          ];
+          
+          var interactiveElements = document.querySelectorAll(interactiveSelectors.join(', '));
+          for (var j = 0; j < interactiveElements.length; j++) {
+            interactiveElements[j].style.setProperty('cursor', 'pointer', 'important');
+          }
+          
+
+          var customCursors = document.querySelectorAll('.cyber-cursor, .cyber-cursor-dot');
+          for (var k = 0; k < customCursors.length; k++) {
+            if (customCursors[k]) {
+              customCursors[k].parentNode.removeChild(customCursors[k]);
+            }
+          }
+        }
         
 
-        const customCursors = document.querySelectorAll('.cyber-cursor, .cyber-cursor-dot');
-        customCursors.forEach(el => el.remove());
+        fixCursors();
         
 
-        const interactiveElements = document.querySelectorAll('a, button, input, select, [role="button"]');
-        interactiveElements.forEach(el => {
-          el.style.cursor = 'pointer';
-        });
+        document.addEventListener('DOMContentLoaded', fixCursors);
         
-        console.log('Default cursor restored');
-      });
-    </script>    
+
+        window.addEventListener('load', fixCursors);
+        
+
+        setInterval(fixCursors, 3000);
+        
+
+        if (typeof MutationObserver !== 'undefined') {
+          var observer = new MutationObserver(function(mutations) {
+            fixCursors();
+          });
+          
+          observer.observe(document.body, { 
+            childList: true, 
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class']
+          });
+        }
+      })();
+    </script>  
   </body>
 </html>

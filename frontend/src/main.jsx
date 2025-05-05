@@ -11,6 +11,8 @@ import './styles/animations.css'
 import './styles/glitch.css'
 import './styles/responsive.css'
 import './styles/cursor-fix.css'
+import './styles/global-cursor-fix.css';
+
 
 
 // Theme context setup

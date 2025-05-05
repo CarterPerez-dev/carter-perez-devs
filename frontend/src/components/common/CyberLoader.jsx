@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // Removed useTheme import as it's not directly used for styling here anymore
-import styles from './CyberLoader.module.css'; // Import the CSS module
+import styles from './css/CyberLoader.module.css'; 
 
 const CyberLoader = ({ message = 'LOADING NEURAL INTERFACE', fullScreen = true }) => {
   // Removed theme context hook

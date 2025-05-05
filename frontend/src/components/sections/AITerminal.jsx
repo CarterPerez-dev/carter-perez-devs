@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import TerminalCommands from '../../utils/terminalCommands';
-import styles from './AITerminal.module.css';
+import styles from './css/AITerminal.module.css';
 import { debounce } from '../../utils/performance';
 
 // Terminal welcome message

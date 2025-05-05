@@ -212,7 +212,7 @@
   position: relative;
   padding: 0.5rem 1.5rem;
   background-color: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--neon-cyan);
+  border: 1px solid var(--accent-cyan) !important;
   color: var(--neon-cyan);
   font-family: var(--font-mono);
   font-size: 0.9rem;
@@ -275,7 +275,7 @@
 }
 
 .neon-button-blue {
-  border-color: var(--neon-blue);
+  border-color: var(--neon-blue); 
   color: var(--neon-blue);
 }
 
