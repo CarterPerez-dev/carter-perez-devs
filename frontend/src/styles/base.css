@@ -367,7 +367,6 @@ a:hover::after {
   width: 80%;
   max-width: 500px;
   text-align: center;
-  perspective: 800px;
 }
 
 .boot-logo {
@@ -377,8 +376,7 @@ a:hover::after {
   border: 2px solid var(--accent-cyan);
   position: relative;
   transform: rotate(45deg);
-  transform-style: preserve-3d; 
-  animation: spin3d 4s linear infinite;
+}
 
 .boot-logo::before,
 .boot-logo::after {
@@ -440,14 +438,6 @@ a:hover::after {
   animation: glitch 0.5s linear;
 }
 
-@keyframes spin3d {
-  from {
-    transform: rotate(45deg) rotateX(0deg);
-  }
-  to {
-    transform: rotate(45deg) rotateX(360deg);
-  }
-} 
 
 @keyframes glitch {
   0% {

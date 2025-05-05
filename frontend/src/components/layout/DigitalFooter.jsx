@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useAudio } from '../../contexts/AudioContext';
@@ -130,6 +130,16 @@ const DigitalFooter = () => {
               <span className={styles.statLabel}>NET</span>
               <span className={styles.statValue}>{performanceStats.latency}ms</span>
             </div>
+            <div className={styles.statItem}>
+              <span className={styles.statLabel}>PERFORMANCE ENHANCER</span>
+              <button
+                className={styles.performanceToggle}
+                onClick={togglePerformanceMode}
+                title={`Performance Mode: ${performanceMode === 'high' ? 'High Performance' : 'Balanced'}`}
+              >
+                {performanceMode === 'high' ? '⚡' : '🔋'}
+              </button>
+            </div>
           </div>
         </div>
         
@@ -159,14 +169,6 @@ const DigitalFooter = () => {
             <div className={styles.timeValue}>{formatTime(currentTime)}</div>
             <div className={styles.dateValue}>{formatDate(currentTime)}</div>
           </div>
-          
-          <button
-            className={styles.performanceToggle}
-            onClick={togglePerformanceMode}
-            title={`Performance Mode: ${performanceMode === 'high' ? 'High Performance' : 'Balanced'}`}
-          >
-            {performanceMode === 'high' ? '⚡' : '🔋'}
-          </button>
           
           <div className={styles.socialLinks}>
             {socialLinks.map((link, index) => (
