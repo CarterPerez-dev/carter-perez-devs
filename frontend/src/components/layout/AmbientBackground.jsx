@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { throttle, getPerformanceLevel } from '../../utils/performance';
 
 const AmbientBackground = () => {
   const canvasRef = useRef(null);
   const { theme } = useTheme();
   const [performanceLevel, setPerformanceLevel] = useState(() => {
-    return parseInt(localStorage.getItem('performanceLevel') || '3', 10);
+    return getPerformanceLevel();
   });
   const requestRef = useRef(null);
   const previousTimeRef = useRef(0);
@@ -17,29 +18,22 @@ const AmbientBackground = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // Handle resize - with debounce
-    let resizeTimeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }, 250);
-    };
+    // Handle resize - with throttle
+    const handleResize = throttle(() => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }, 250);
     
     window.addEventListener('resize', handleResize);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Colors based on theme - making them more visible (less transparent)
-    const primaryColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.8)' : 'rgba(77, 77, 255, 0.8)';
-    const secondaryColor = theme === 'dark' ? 'rgba(255, 61, 61, 0.8)' : 'rgba(255, 61, 61, 0.8)';
-    const bgColor = theme === 'dark' ? 'rgba(5, 5, 5, 0.85)' : 'rgba(245, 245, 245, 0.85)';
+    // Colors based on theme
     const gridColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.2)' : 'rgba(77, 77, 255, 0.2)';
     
     // Create grid lines - REDUCED number of lines
     const gridLines = [];
-    const gridSize = performanceLevel > 1 ? 80 : 120; // DOUBLED grid cell size (fewer lines)
+    const gridSize = performanceLevel > 1 ? 80 : 120; // Larger grid cells = fewer lines
     const cols = Math.ceil(canvas.width / gridSize) + 1; // Add one extra for smooth scrolling
     const rows = Math.ceil(canvas.height / gridSize);
     
@@ -67,26 +61,8 @@ const AmbientBackground = () => {
       });
     }
     
-    // Create moving particles - REDUCED count by 50%
-    const particleCount = Math.min(50, performanceLevel * 15); // Reduced from 30 to 15
-    const particles = [];
-    
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1.5,
-        speedX: (Math.random() - 0.5) * 0.8,
-        speedY: (Math.random() - 0.5) * 0.4,
-        color: Math.random() > 0.8 ? secondaryColor : primaryColor,
-        pulseRate: 0.01 + Math.random() * 0.02,
-        pulseOffset: Math.random() * Math.PI * 2,
-        connections: []
-      });
-    }
-    
     // Animation parameters
-    const gridSpeed = 0.3; // REDUCED from 0.5
+    const gridSpeed = 0.3; // Reduced from 0.5
     let offset = 0;
     
     const render = (timestamp) => {
@@ -97,8 +73,9 @@ const AmbientBackground = () => {
       if (elapsed > 1000 / fpsLimit) {
         previousTimeRef.current = timestamp;
         
-        // Clear canvas with slight opacity for trail effect
-        ctx.fillStyle = bgColor;
+        // Clear canvas with background color
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = theme === 'dark' ? 'rgba(5, 5, 5, 0.85)' : 'rgba(15, 8, 8, 0.85)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         // Update grid offset
@@ -107,7 +84,7 @@ const AmbientBackground = () => {
           offset = 0;
         }
         
-        // Draw grid lines - increased opacity
+        // Draw grid lines
         ctx.strokeStyle = gridColor;
         ctx.lineWidth = 1;
         
@@ -137,94 +114,37 @@ const AmbientBackground = () => {
             ctx.stroke();
           }
         }
-        
-        // Reset particle connections
-        particles.forEach(particle => {
-          particle.connections = [];
-        });
-        
-        // Update particles
-        for (const particle of particles) {
-          // Update position
-          particle.x += particle.speedX;
-          particle.y += particle.speedY;
-          
-          // Pulse effect
-          particle.pulseOffset += particle.pulseRate;
-          const pulseFactor = 0.7 + Math.sin(particle.pulseOffset) * 0.3;
-          
-          // Wrap around edges
-          if (particle.x < 0) particle.x = canvas.width;
-          if (particle.x > canvas.width) particle.x = 0;
-          if (particle.y < 0) particle.y = canvas.height;
-          if (particle.y > canvas.height) particle.y = 0;
-          
-          // Draw particle
-          ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.size * pulseFactor, 0, Math.PI * 2);
-          ctx.fillStyle = particle.color;
-          ctx.fill();
-          
-          // Add glow effect to particles
-          ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
-          const glowColor = particle.color.replace('0.8)', '0.2)');
-          ctx.fillStyle = glowColor;
-          ctx.fill();
-          
-          // Only check connections if performance level allows
-          // REDUCED maximum connection distance for better performance
-          if (performanceLevel > 1) {
-            // Calculate distance to nearby particles - ONLY CHECK 8 NEAREST
-            const NEARBY_CHECK = 8;
-            const nearbyParticles = particles
-              .filter(p => p !== particle)
-              .slice(0, NEARBY_CHECK);
-            
-            for (const otherParticle of nearbyParticles) {
-              // Skip if already connected
-              if (particle.connections.includes(otherParticle) || 
-                  otherParticle.connections.includes(particle)) {
-                continue;
-              }
-              
-              const dx = particle.x - otherParticle.x;
-              const dy = particle.y - otherParticle.y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-              
-              if (distance < 80) { // REDUCED from 120
-                particle.connections.push(otherParticle);
-                
-                // Draw connection
-                ctx.beginPath();
-                ctx.moveTo(particle.x, particle.y);
-                ctx.lineTo(otherParticle.x, otherParticle.y);
-                
-                // Fade opacity based on distance, but higher base opacity
-                const opacity = 0.2 + (1 - distance / 80) * 0.4;
-                ctx.strokeStyle = theme === 'dark' 
-                  ? `rgba(0, 255, 245, ${opacity})` 
-                  : `rgba(77, 77, 255, ${opacity})`;
-                ctx.lineWidth = 1.5; // Thicker lines
-                ctx.stroke();
-              }
-            }
-          }
-        }
       }
       
       requestRef.current = requestAnimationFrame(render);
     };
     
+    // Only run animation when tab is visible
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (requestRef.current) {
+          cancelAnimationFrame(requestRef.current);
+          requestRef.current = null;
+        }
+      } else {
+        if (!requestRef.current) {
+          requestRef.current = requestAnimationFrame(render);
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Start animation
     requestRef.current = requestAnimationFrame(render);
     
     // Clean up
     return () => {
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
-      clearTimeout(resizeTimeout);
     };
   }, [theme, performanceLevel]);
 
@@ -235,7 +155,8 @@ const AmbientBackground = () => {
     width: '100%',
     height: '100%',
     zIndex: -10,
-    pointerEvents: 'none'
+    pointerEvents: 'none',
+    willChange: 'transform'
   };
 
   return (
@@ -247,4 +168,4 @@ const AmbientBackground = () => {
   );
 };
 
-export default AmbientBackground;
+export default React.memo(AmbientBackground);

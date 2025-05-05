@@ -1,4 +1,4 @@
-/* AITerminal.module.css */
+/* AITerminal.module.css - Optimized version */
 .terminalSection {
   padding: var(--space-xxl) 0;
   min-height: 100vh;
@@ -42,6 +42,7 @@
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 245, 0.3);
   display: flex;
   flex-direction: column;
+  will-change: transform, opacity;
 }
 
 .terminalHeader {
@@ -93,6 +94,7 @@
   font-size: 0.9rem;
   line-height: 1.4;
   color: var(--text-primary);
+  will-change: transform;
 }
 
 .terminalWindow::-webkit-scrollbar {
@@ -268,6 +270,7 @@
   animation: cursorBlink 1s step-end infinite;
   margin: 0;
   vertical-align: middle;
+  will-change: opacity;
 }
 
 @keyframes cursorBlink {
@@ -287,58 +290,6 @@
   width: 0;
   height: 0;
   z-index: -1;
-}
-
-.hackProgressContainer {
-  padding: var(--space-sm) var(--space-md);
-  background-color: rgba(0, 0, 0, 0.5);
-  border-top: 1px solid rgba(255, 61, 61, 0.2);
-}
-
-.hackProgressLabel {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--space-xs);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--accent-magenta);
-}
-
-.hackProgressPercent {
-  font-weight: bold;
-}
-
-.hackProgressBar {
-  height: 6px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.hackProgressFill {
-  height: 100%;
-  background-color: var(--accent-magenta);
-  border-radius: 3px;
-  transition: width 0.3s ease-out;
-}
-
-.matrixOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  z-index: 100;
-  overflow: hidden;
-}
-
-.matrixChar {
-  position: absolute;
-  color: var(--accent-green);
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  text-shadow: 0 0 5px var(--accent-green);
 }
 
 /* Man page styling */
@@ -485,11 +436,6 @@
   100% {
     content: "";
   }
-}
-
-@keyframes typingCursor {
-  from, to { border-color: transparent }
-  50% { border-color: var(--accent-cyan); }
 }
 
 /* Media queries */

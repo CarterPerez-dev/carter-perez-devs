@@ -367,6 +367,8 @@ a:hover::after {
   width: 80%;
   max-width: 500px;
   text-align: center;
+  perspective: 800px;
+  transform-style: preserve-3d; 
 }
 
 .boot-logo {
@@ -374,8 +376,11 @@ a:hover::after {
   height: 100px;
   margin: 0 auto var(--space-xl);
   border: 2px solid var(--accent-cyan);
-  position: relative;
+  position: relative; 
   transform: rotate(45deg);
+  animation: spin3d 3s linear infinite; 
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 .boot-logo::before,
@@ -436,26 +441,35 @@ a:hover::after {
 
 .glitch-text {
   animation: glitch 0.5s linear;
+  /* Also force onto its own layer */
+  transform: translateZ(0);
 }
 
 
+@keyframes spin3d {
+  from {
+    /* Combine the base tilt with the start of the Y rotation */
+    transform: rotate(45deg) rotateY(0deg);
+  }
+  to {
+    /* Combine the base tilt with the end of the Y rotation */
+    transform: rotate(45deg) rotateY(360deg);
+  }
+
+
+.boot-progress,
+.boot-text,
+.boot-version {
+  position: relative; /* Ensure they establish a stacking context if needed */
+  z-index: 1;       /* Ensure they are layered above default background */
+  transform: translateZ(0); /* Hardware acceleration trick */
+}
+
 @keyframes glitch {
-  0% {
-    transform: translate(0);
-  }
-  20% {
-    transform: translate(-2px, 2px);
-  }
-  40% {
-    transform: translate(-2px, -2px);
-  }
-  60% {
-    transform: translate(2px, 2px);
-  }
-  80% {
-    transform: translate(2px, -2px);
-  }
-  100% {
-    transform: translate(0);
-  }
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
 }

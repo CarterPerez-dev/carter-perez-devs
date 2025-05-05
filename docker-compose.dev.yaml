@@ -1,0 +1,42 @@
+# docker-compose.prod.yaml
+services:
+  frontend:
+    container_name: frontend_dev_service
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    networks:
+      - portfolio_network
+    restart: always
+     
+  backend:
+    container_name: backend_service
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    networks:
+      - portfolio_network
+    restart: always
+
+  nginx:
+    container_name: nginx_proxy
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites-enabled/reverse_proxy_dev.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - portfolio_network
+    restart: unless-stopped
+
+networks:
+  portfolio_network:
+    driver: bridge

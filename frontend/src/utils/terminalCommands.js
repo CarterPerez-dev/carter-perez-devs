@@ -44,9 +44,6 @@ class TerminalCommands {
       grep: this.grepCommand.bind(this),
       neofetch: this.neofetchCommand.bind(this),
       
-      // Visual effects
-      matrix: this.matrixCommand.bind(this),
-      hack: this.hackCommand.bind(this),
       
       // Portfolio specific
       about: this.aboutCommand.bind(this),
@@ -363,7 +360,7 @@ ${manPage.options.map(opt => `  ${opt.flag.padEnd(20)} ${opt.description}`).join
       'File System': ['ls', 'cd', 'pwd', 'cat', 'mkdir', 'touch', 'rm', 'rmdir'],
       'System': ['date', 'time', 'whoami', 'hostname', 'echo', 'uname', 'history'],
       'Utilities': ['man', 'find', 'grep', 'neofetch'],
-      'Visual': ['matrix', 'hack', 'theme', 'quote'],
+      'Visual': ['theme', 'quote'],
       'Portfolio': ['about', 'skills', 'projects', 'contact', 'experience', 'education',
       'certifications', 'resume', 'github', 'linkedin'],
       'AI Features': ['ask', 'generate', 'explain', 'translate'],
@@ -956,27 +953,10 @@ Type 'help [command]' or 'man [command]' for more information about a specific c
     }
   }
 
-  matrixCommand() {
-    return {
-      type: 'matrix',
-      content: 'Starting Matrix effect. Press any key to exit.'
-    };
-  }
 
-  hackCommand(args) {
-    if (args.length === 0) {
-      return {
-        type: 'error',
-        content: 'hack: missing target operand'
-      };
-    }
 
-    const target = args[0];
-    return {
-      type: 'hack',
-      content: target
-    };
-  }
+
+
 
   // Portfolio-specific commands
   aboutCommand() {

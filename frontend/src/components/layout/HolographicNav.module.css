@@ -76,7 +76,6 @@
 }
 
 .themeToggle,
-.audioToggle,
 .menuToggle {
   background: transparent;
   border: none;
@@ -141,7 +140,8 @@
   border-left: 1px solid var(--accent-cyan);
   border-bottom: 1px solid var(--accent-cyan);
   max-height: calc(100vh - var(--header-height));
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
   backdrop-filter: blur(10px);
 }
 
@@ -223,8 +223,7 @@
   pointer-events: none;
 }
 
-/* Light theme styles */
-/* Red theme styles */
+
 :global(.light-theme) .navContainer {
   background-color: rgba(15, 8, 8, 0.8);
   border-bottom: 1px solid var(--accent-cyan);

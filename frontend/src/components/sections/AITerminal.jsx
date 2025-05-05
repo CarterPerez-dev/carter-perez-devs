@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import TerminalCommands from '../../utils/terminalCommands';
 import styles from './AITerminal.module.css';
+import { debounce } from '../../utils/performance';
 
 // Terminal welcome message
 const WELCOME_MESSAGE = `
@@ -38,6 +39,56 @@ Type 'help' to see all available commands.
 [System] Connection established. Neural interface ready.
 `;
 
+// Maximum number of history items to render
+const MAX_VISIBLE_HISTORY = 50;
+
+// Memoized terminal output component for better performance
+const TerminalEntry = memo(({ entry }) => {
+  // Only render HTML content if it's explicitly marked as HTML
+  const renderOutput = (content, isHTML) => {
+    if (!isHTML) {
+      return content;
+    }
+    
+    // Using dangerouslySetInnerHTML for demonstration
+    // In a production environment, use a proper HTML sanitizer
+    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+  };
+
+  if (entry.type === 'user') {
+    return (
+      <div className={`${styles.terminalEntry} ${styles.terminalUser}`}>
+        <span className={styles.terminalPrompt}>
+          <span className={styles.promptUser}>user</span>
+          <span className={styles.promptAt}>@</span>
+          <span className={styles.promptHost}>neural-terminal</span>
+          <span className={styles.promptColon}>:</span>
+          <span className={styles.promptPath}>~</span>
+          <span className={styles.promptDollar}>$</span>
+        </span>
+        <span className={styles.terminalCommand}>{entry.content}</span>
+      </div>
+    );
+  } else if (entry.type === 'loading') {
+    return (
+      <div className={`${styles.terminalEntry} ${styles.terminalLoading}`}>
+        <span>{entry.content}</span>
+        <span className={styles.loadingDots}>...</span>
+      </div>
+    );
+  } else {
+    return (
+      <div className={`${styles.terminalEntry} ${styles[`terminal${entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}`]}`}>
+        <pre className={styles.terminalOutput}>
+          {entry.isHTML ? renderOutput(entry.content, true) : entry.content}
+        </pre>
+      </div>
+    );
+  }
+});
+
+TerminalEntry.displayName = 'TerminalEntry';
+
 const AITerminal = () => {
   const { theme, toggleTheme } = useTheme();
   const [input, setInput] = useState('');
@@ -46,10 +97,6 @@ const AITerminal = () => {
     { type: 'system', content: WELCOME_MESSAGE, isHTML: false }
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showHackProgress, setShowHackProgress] = useState(false);
-  const [hackProgress, setHackProgress] = useState(0);
-  const [showMatrix, setShowMatrix] = useState(false);
-  const [matrixCharacters, setMatrixCharacters] = useState([]);
   const [isFocused, setIsFocused] = useState(true);
   const [cursorPosition, setCursorPosition] = useState(0);
   
@@ -60,6 +107,19 @@ const AITerminal = () => {
   
   // Terminal command processor
   const terminalCommands = useRef(new TerminalCommands()).current;
+  
+  // Create visible history slice for better performance
+  const visibleHistory = history.slice(-MAX_VISIBLE_HISTORY);
+  
+  // Debounced input handler to reduce render frequency
+  const debouncedInputChange = useCallback(
+    debounce((newInput, newCursorPos) => {
+      setInput(newInput);
+      setDisplayText(newInput);
+      setCursorPosition(newCursorPos);
+    }, 16), // Approximately 60fps
+    []
+  );
   
   // Maintain input focus and cursor position
   useEffect(() => {
@@ -72,17 +132,13 @@ const AITerminal = () => {
         e.preventDefault();
         const prevCommand = terminalCommands.getPreviousCommand();
         if (prevCommand !== null) {
-          setInput(prevCommand);
-          setDisplayText(prevCommand);
-          setCursorPosition(prevCommand.length);
+          debouncedInputChange(prevCommand, prevCommand.length);
         }
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         const nextCommand = terminalCommands.getNextCommand();
         if (nextCommand !== null) {
-          setInput(nextCommand);
-          setDisplayText(nextCommand);
-          setCursorPosition(nextCommand.length);
+          debouncedInputChange(nextCommand, nextCommand.length);
         }
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
@@ -104,16 +160,13 @@ const AITerminal = () => {
         e.preventDefault();
         if (cursorPosition > 0) {
           const newInput = input.substring(0, cursorPosition - 1) + input.substring(cursorPosition);
-          setInput(newInput);
-          setDisplayText(newInput);
-          setCursorPosition(cursorPosition - 1);
+          debouncedInputChange(newInput, cursorPosition - 1);
         }
       } else if (e.key === 'Delete') {
         e.preventDefault();
         if (cursorPosition < input.length) {
           const newInput = input.substring(0, cursorPosition) + input.substring(cursorPosition + 1);
-          setInput(newInput);
-          setDisplayText(newInput);
+          debouncedInputChange(newInput, cursorPosition);
         }
       } else if (e.key === 'Enter') {
         e.preventDefault();
@@ -122,9 +175,7 @@ const AITerminal = () => {
         // Regular character input
         e.preventDefault();
         const newInput = input.substring(0, cursorPosition) + e.key + input.substring(cursorPosition);
-        setInput(newInput);
-        setDisplayText(newInput);
-        setCursorPosition(cursorPosition + 1);
+        debouncedInputChange(newInput, cursorPosition + 1);
       }
     };
     
@@ -133,7 +184,7 @@ const AITerminal = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [input, cursorPosition, isFocused, terminalCommands]);
+  }, [input, cursorPosition, isFocused, terminalCommands, debouncedInputChange]);
   
   // Focus terminal on click
   useEffect(() => {
@@ -169,6 +220,8 @@ const AITerminal = () => {
     // Add user input to history
     const userInput = input.trim();
     setHistory(prev => [...prev, { type: 'user', content: userInput }]);
+    
+    // Reset input state in a single batch
     setInput('');
     setDisplayText('');
     setCursorPosition(0);
@@ -178,7 +231,7 @@ const AITerminal = () => {
   }, [input]);
   
   // Process terminal commands
-  const processCommand = async (command) => {
+  const processCommand = useCallback(async (command) => {
     // Simulate processing time
     setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 300));
@@ -202,17 +255,6 @@ const AITerminal = () => {
         setTimeout(() => {
           window.location.href = '/';
         }, 1500);
-        break;
-      
-      case 'matrix':
-        // Start matrix effect
-        startMatrix();
-        setHistory(prev => [...prev, { type: 'system', content: result.content }]);
-        break;
-      
-      case 'hack':
-        // Start hack simulation
-        startHack(result.content);
         break;
       
       case 'theme':
@@ -263,86 +305,10 @@ const AITerminal = () => {
           isHTML: result.isHTML 
         }]);
     }
-  };
-  
-  // Matrix effect handlers
-  const startMatrix = () => {
-    setShowMatrix(true);
-    
-    // Generate initial matrix characters
-    const chars = [];
-    const columns = Math.floor(window.innerWidth / 20);
-    
-    for (let i = 0; i < columns; i++) {
-      chars.push({
-        x: i * 20,
-        y: Math.floor(Math.random() * -100),
-        speed: Math.random() * 10 + 5,
-        value: getRandomMatrixChar()
-      });
-    }
-    
-    setMatrixCharacters(chars);
-  };
-  
-  const getRandomMatrixChar = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-    return chars.charAt(Math.floor(Math.random() * chars.length));
-  };
-  
-  // Hack simulation
-  const startHack = (target) => {
-    setShowHackProgress(true);
-    setHackProgress(0);
-    
-    const hackMessages = [
-      `Initiating hack on ${target}...`,
-      `Scanning ${target} for vulnerabilities...`,
-      `Vulnerabilities found. Exploiting entry points...`,
-      `Bypassing security protocols...`,
-      `Injecting payload into ${target}...`,
-      `Establishing backdoor connection...`,
-      `Extracting data from ${target}...`,
-      `Covering tracks and removing logs...`,
-      `Hack successful. Access granted to ${target}.`
-    ];
-    
-    // Add initial message
-    setHistory(prev => [...prev, { type: 'system', content: hackMessages[0] }]);
-    
-    // Progress simulation
-    let currentMessage = 1;
-    const intervalId = setInterval(() => {
-      setHackProgress(prev => {
-        const newProgress = prev + (Math.random() * 5) + 2;
-        
-        // Add new message at certain progress points
-        if (currentMessage < hackMessages.length && newProgress >= (currentMessage * 100) / hackMessages.length) {
-          setHistory(prev => [...prev, { type: 'system', content: hackMessages[currentMessage] }]);
-          currentMessage++;
-        }
-        
-        // Complete hack
-        if (newProgress >= 100) {
-          clearInterval(intervalId);
-          setTimeout(() => {
-            setShowHackProgress(false);
-            
-            // Add completion message if not already added
-            if (currentMessage < hackMessages.length) {
-              setHistory(prev => [...prev, { type: 'system', content: hackMessages[hackMessages.length - 1] }]);
-            }
-          }, 500);
-          return 100;
-        }
-        
-        return newProgress;
-      });
-    }, 300);
-  };
+  }, [theme, toggleTheme]);
   
   // AI command handlers
-  const handleAskCommand = async (question) => {
+  const handleAskCommand = useCallback(async (question) => {
     // Show loading
     setHistory(prev => [...prev, { type: 'loading', content: 'Processing your question...' }]);
     
@@ -362,7 +328,7 @@ const AITerminal = () => {
       
       const data = await response.json();
       
-      // Remove loading message and add AI response
+      // Remove loading message and add AI response in a single update
       setHistory(prev => {
         const filtered = prev.filter(item => item.type !== 'loading');
         return [...filtered, { type: 'ai', content: data.answer }];
@@ -380,9 +346,9 @@ const AITerminal = () => {
         }];
       });
     }
-  };
+  }, []);
   
-  const handleGenerateCommand = async ({ type, prompt }) => {
+  const handleGenerateCommand = useCallback(async ({ type, prompt }) => {
     // Show loading
     setHistory(prev => [...prev, { type: 'loading', content: `Generating ${type} based on your prompt...` }]);
     
@@ -426,15 +392,15 @@ const AITerminal = () => {
         }];
       });
     }
-  };
+  }, []);
   
-  const handleExplainCommand = async (concept) => {
+  const handleExplainCommand = useCallback(async (concept) => {
     // Show loading
     setHistory(prev => [...prev, { type: 'loading', content: `Explaining "${concept}"...` }]);
     
     try {
       // Make API call to backend
-      const response = await fetch('/ai/explain', {
+      const response = await fetch('/api/ai/explain', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -469,9 +435,9 @@ const AITerminal = () => {
         }];
       });
     }
-  };
+  }, []);
   
-  const handleTranslateCommand = async ({ language, text }) => {
+  const handleTranslateCommand = useCallback(async ({ language, text }) => {
     // Show loading
     setHistory(prev => [...prev, { type: 'loading', content: `Translating to ${language}...` }]);
     
@@ -515,62 +481,8 @@ const AITerminal = () => {
         }];
       });
     }
-  };
-  
-  // Handle matrix animation
-  useEffect(() => {
-    if (!showMatrix) return;
-    
-    const animateMatrix = () => {
-      setMatrixCharacters(prevChars => {
-        return prevChars.map(char => {
-          // Update y position
-          let y = char.y + char.speed;
-          
-          // Reset if off-screen
-          if (y > window.innerHeight) {
-            y = Math.random() * -100;
-          }
-          
-          // Occasionally change character
-          const newChar = Math.random() > 0.9 ? getRandomMatrixChar() : char.value;
-          
-          return {
-            ...char,
-            y,
-            value: newChar
-          };
-        });
-      });
-    };
-    
-    const intervalId = setInterval(animateMatrix, 100);
-    
-    // Exit matrix mode on any keypress
-    const handleKeyPress = () => {
-      setShowMatrix(false);
-      setHistory(prev => [...prev, { type: 'system', content: 'Matrix mode deactivated.' }]);
-    };
-    
-    window.addEventListener('keydown', handleKeyPress);
-    
-    return () => {
-      clearInterval(intervalId);
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [showMatrix]);
-  
-  // Create custom HTML component renderer
-  const renderOutput = (content, isHTML) => {
-    if (!isHTML) {
-      return content;
-    }
-    
-    // Using dangerouslySetInnerHTML for demonstration
-    // In a production environment, use a proper HTML sanitizer
-    return <div dangerouslySetInnerHTML={{ __html: content }} />;
-  };
-  
+  }, []);
+
   return (
     <section className={styles.terminalSection} id="terminal">
       <div className="container">
@@ -600,34 +512,8 @@ const AITerminal = () => {
           </div>
           
           <div className={styles.terminalWindow} ref={historyRef}>
-            {history.map((entry, index) => (
-              <div 
-                key={index} 
-                className={`${styles.terminalEntry} ${styles[`terminal${entry.type.charAt(0).toUpperCase() + entry.type.slice(1)}`]}`}
-              >
-                {entry.type === 'user' ? (
-                  <>
-                    <span className={styles.terminalPrompt}>
-                      <span className={styles.promptUser}>user</span>
-                      <span className={styles.promptAt}>@</span>
-                      <span className={styles.promptHost}>neural-terminal</span>
-                      <span className={styles.promptColon}>:</span>
-                      <span className={styles.promptPath}>~</span>
-                      <span className={styles.promptDollar}>$</span>
-                    </span>
-                    <span className={styles.terminalCommand}>{entry.content}</span>
-                  </>
-                ) : entry.type === 'loading' ? (
-                  <div className={styles.terminalLoading}>
-                    <span>{entry.content}</span>
-                    <span className={styles.loadingDots}>...</span>
-                  </div>
-                ) : (
-                  <pre className={styles.terminalOutput}>
-                    {entry.isHTML ? renderOutput(entry.content, true) : entry.content}
-                  </pre>
-                )}
-              </div>
+            {visibleHistory.map((entry, index) => (
+              <TerminalEntry key={`${entry.type}-${index}`} entry={entry} />
             ))}
             
             {isLoading && (
@@ -667,42 +553,10 @@ const AITerminal = () => {
               />
             </div>
           </div>
-          
-          {showHackProgress && (
-            <div className={styles.hackProgressContainer}>
-              <div className={styles.hackProgressLabel}>
-                <span>HACK PROGRESS:</span>
-                <span className={styles.hackProgressPercent}>{Math.floor(hackProgress)}%</span>
-              </div>
-              <div className={styles.hackProgressBar}>
-                <div 
-                  className={styles.hackProgressFill}
-                  style={{ width: `${hackProgress}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
         </motion.div>
-        
-        {showMatrix && (
-          <div className={styles.matrixOverlay}>
-            {matrixCharacters.map((char, index) => (
-              <div 
-                key={index}
-                className={styles.matrixChar}
-                style={{
-                  left: `${char.x}px`,
-                  top: `${char.y}px`
-                }}
-              >
-                {char.value}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );
 };
 
-export default AITerminal;
+export default memo(AITerminal);

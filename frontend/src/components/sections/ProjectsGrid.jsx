@@ -7,13 +7,13 @@ import { useAudio } from '../../contexts/AudioContext';
 import styles from './ProjectsGrid.module.css';
 
 // Import images properly
-import certgames from './images/ios.png';
-import flask from './images/11.png';
-import blog2 from './images/14.png';
-import blog3 from './images/15.png';
+import certgames from './images/ios.webp';
+import flask from './images/11.webp';
+import blog2 from './images/14.webp';
+import blog3 from './images/15.webp';
 import blog1 from './images/4.png';
-import cyber from './images/5.png';
-import angela from './images/8.png';
+import cyber from './images/5.webp';
+import angela from './images/8.webp';
 
 const ProjectsGrid = ({ fullPage = false }) => {
   const { theme } = useTheme();
