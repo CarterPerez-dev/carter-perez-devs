@@ -151,6 +151,7 @@
   font-size: 0.9rem;
 }
 
+/* Different types of terminal output */
 .terminalSystem .terminalOutput {
   color: var(--text-secondary);
 }
@@ -161,6 +162,58 @@
 
 .terminalError .terminalOutput {
   color: #ff5f56;
+}
+
+.terminalWarning .terminalOutput {
+  color: #ffbd2e;
+}
+
+.terminalSuccess .terminalOutput {
+  color: #28c940;
+}
+
+.terminalCode .terminalOutput {
+  color: var(--text-primary);
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: var(--space-sm);
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.terminalMarkdown .terminalOutput {
+  color: var(--text-primary);
+}
+
+.terminalHelp .terminalOutput,
+.terminalManPage .terminalOutput {
+  color: #ffbd2e;
+}
+
+.terminalAbout .terminalOutput,
+.terminalSkills .terminalOutput,
+.terminalProjects .terminalOutput,
+.terminalProject .terminalOutput,
+.terminalContact .terminalOutput,
+.terminalExperience .terminalOutput,
+.terminalEducation .terminalOutput,
+.terminalCertifications .terminalOutput,
+.terminalResume .terminalOutput {
+  color: var(--accent-cyan);
+}
+
+.terminalNeofetch .terminalOutput {
+  color: var(--accent-green);
+}
+
+.terminalLink .terminalOutput {
+  color: #4d94ff;
+  text-decoration: underline;
+}
+
+.terminalQuote .terminalOutput {
+  color: var(--accent-purple);
+  font-style: italic;
+  border-left: 3px solid var(--accent-purple);
+  padding-left: var(--space-sm);
 }
 
 .terminalLoading {
@@ -191,6 +244,49 @@
   font-family: var(--font-mono);
   font-size: 0.9rem;
   caret-color: var(--accent-cyan);
+}
+
+/* Blinking cursor for terminal input */
+.inputWrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cursorBlink {
+  position: absolute;
+  right: 0;
+  width: 8px;
+  height: 1.2em;
+  background-color: var(--accent-cyan);
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.inputHidden {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: -1;
+}
+
+.inputText {
+  color: var(--accent-cyan);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .hackProgressContainer {
@@ -245,7 +341,135 @@
   text-shadow: 0 0 5px var(--accent-green);
 }
 
+/* Man page styling */
+.man-page {
+  color: var(--text-primary);
+  padding: var(--space-md);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: var(--border-radius-sm);
+}
 
+.man-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  font-weight: bold;
+}
+
+.man-title {
+  color: var(--accent-cyan);
+}
+
+.man-section {
+  color: var(--accent-magenta);
+}
+
+.man-name h2,
+.man-synopsis h2,
+.man-description h2,
+.man-options h2 {
+  color: var(--accent-cyan);
+  margin-bottom: var(--space-sm);
+  font-size: 1rem;
+}
+
+.man-cmd {
+  color: var(--accent-green);
+  font-weight: bold;
+}
+
+.man-option {
+  margin-bottom: var(--space-sm);
+}
+
+.man-flag {
+  color: var(--accent-yellow);
+  font-weight: bold;
+}
+
+.man-desc {
+  margin-left: var(--space-md);
+  color: var(--text-secondary);
+}
+
+.man-footer {
+  margin-top: var(--space-lg);
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* File system styling */
+.terminal-dir {
+  color: var(--accent-blue);
+  font-weight: bold;
+}
+
+.terminal-exec {
+  color: var(--accent-green);
+  font-weight: bold;
+}
+
+.terminal-file {
+  color: var(--text-primary);
+}
+
+.terminal-special-file {
+  color: var(--accent-cyan);
+}
+
+.terminal-code-file {
+  color: var(--accent-magenta);
+}
+
+/* Code syntax highlighting */
+.syntaxKeyword {
+  color: #cf6a4c; /* orange */
+}
+
+.syntaxString {
+  color: #8f9d6a; /* green */
+}
+
+.syntaxComment {
+  color: #5f5a60; /* gray */
+  font-style: italic;
+}
+
+.syntaxNumber {
+  color: #9b859d; /* purple */
+}
+
+.syntaxFunction {
+  color: #7587a6; /* blue */
+}
+
+.syntaxProperty {
+  color: #cda869; /* gold */
+}
+
+/* Generate command result styling */
+.generateResult {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid var(--accent-cyan);
+  padding: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.translateResult {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid var(--accent-purple);
+  padding: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.explainResult {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-left: 3px solid var(--accent-yellow);
+  padding: var(--space-sm);
+  margin-top: var(--space-sm);
+}
 
 /* Animations */
 @keyframes loadingDots {
@@ -261,6 +485,11 @@
   100% {
     content: "";
   }
+}
+
+@keyframes typingCursor {
+  from, to { border-color: transparent }
+  50% { border-color: var(--accent-cyan); }
 }
 
 /* Media queries */

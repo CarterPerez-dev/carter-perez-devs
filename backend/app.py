@@ -7,6 +7,7 @@ import os
 import logging
 from flask import request, jsonify
 from routes.portfolio import portfolio_bp
+from routes.ai import ai_bp
 
 
 load_dotenv()
@@ -25,15 +26,13 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 app.register_blueprint(portfolio_bp, url_prefix='/portfolio')
+app.register_blueprint(ai_bp, url_prefix='/ai')
 
 @app.before_request
 def log_request_info():
     logger.info(f"Handling request to {request.path} with method {request.method}")
     
     
- 
-
-
 @socketio.on('connect')
 def handle_connect():
     logger.info('Client connected')

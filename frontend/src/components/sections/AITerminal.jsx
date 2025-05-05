@@ -1,37 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
-import styles from './AITerminal.module.css'; // Import the CSS module
+import TerminalCommands from '../../utils/terminalCommands';
+import styles from './AITerminal.module.css';
 
-// Terminal commands
-const COMMANDS = {
-  HELP: 'help',
-  CLEAR: 'clear',
-  ABOUT: 'about',
-  SKILLS: 'skills',
-  PROJECTS: 'projects',
-  CONTACT: 'contact',
-  EXPERIENCE: 'experience',
-  EDUCATION: 'education',
-  CERTIFICATIONS: 'certifications',
-  GITHUB: 'github',
-  LINKEDIN: 'linkedin',
-  RESUME: 'resume',
-  ECHO: 'echo',
-  WHOIS: 'whois',
-  LS: 'ls',
-  DATE: 'date',
-  TIME: 'time',
-  ASK: 'ask',
-  EXIT: 'exit',
-  THEME: 'theme',
-  MATRIX: 'matrix',
-  HACK: 'hack',
-  QUOTE: 'quote'
-};
-
-// Terminal history entries
+// Terminal welcome message
 const WELCOME_MESSAGE = `
 ███████╗██╗   ██╗ ██████╗████████╗███████╗███╗   ███╗
 ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║
@@ -47,49 +20,139 @@ const WELCOME_MESSAGE = `
    ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗
    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
                                                                   
-v1.0.0 - Neural Interface Active
+v2.0.0 - Enhanced Neural Interface Active
 
-Welcome to the Interactive Neural Terminal.
-This terminal allows direct communication with the portfolio system.
-Type 'help' to see available commands or 'ask' followed by a question.
+Welcome to the Interactive Neural Terminal v2.0.
+This terminal supports realistic file system navigation and advanced commands.
 
-[System] Connection established. Terminal ready.
+Try these commands:
+- ls                List files in current directory
+- cd [dir]          Change directory
+- cat [file]        Display file contents
+- help              Show all available commands
+- ask [question]    Ask about my portfolio
+- generate [type]   Create content with AI
+
+Type 'help' to see all available commands.
+
+[System] Connection established. Neural interface ready.
 `;
-
-// Cyber quotes array
-const CYBER_QUOTES = [
-  "The future is already here – it's just not evenly distributed. - William Gibson",
-  "Information wants to be free. - Stewart Brand",
-  "In the face of ambiguity, refuse the temptation to guess. - The Zen of Python",
-  "Any sufficiently advanced technology is indistinguishable from magic. - Arthur C. Clarke",
-  "The best way to predict the future is to invent it. - Alan Kay",
-  "Security is always excessive until it's not enough. - Robbie Sinclair",
-  "Privacy is not something that I'm merely entitled to, it's an absolute prerequisite. - Marlon Brando",
-  "The quieter you become, the more you can hear. - Ram Dass",
-  "There is no security on this earth; there is only opportunity. - Douglas MacArthur",
-  "Simplicity is the ultimate sophistication. - Leonardo da Vinci"
-];
 
 const AITerminal = () => {
   const { theme, toggleTheme } = useTheme();
-  const { playSound } = useAudio();
   const [input, setInput] = useState('');
-  const [history, setHistory] = useState([{ type: 'system', content: WELCOME_MESSAGE }]);
+  const [displayText, setDisplayText] = useState('');
+  const [history, setHistory] = useState([
+    { type: 'system', content: WELCOME_MESSAGE, isHTML: false }
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [showHackProgress, setShowHackProgress] = useState(false);
   const [hackProgress, setHackProgress] = useState(0);
   const [showMatrix, setShowMatrix] = useState(false);
   const [matrixCharacters, setMatrixCharacters] = useState([]);
+  const [isFocused, setIsFocused] = useState(true);
+  const [cursorPosition, setCursorPosition] = useState(0);
+  
+  // Refs
   const inputRef = useRef(null);
   const historyRef = useRef(null);
+  const terminalContainerRef = useRef(null);
   
-  // Focus input on component mount
+  // Terminal command processor
+  const terminalCommands = useRef(new TerminalCommands()).current;
+  
+  // Maintain input focus and cursor position
   useEffect(() => {
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
+    const handleKeyDown = (e) => {
+      // Only handle if terminal is focused
+      if (!isFocused) return;
+      
+      // Handle special keys
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prevCommand = terminalCommands.getPreviousCommand();
+        if (prevCommand !== null) {
+          setInput(prevCommand);
+          setDisplayText(prevCommand);
+          setCursorPosition(prevCommand.length);
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextCommand = terminalCommands.getNextCommand();
+        if (nextCommand !== null) {
+          setInput(nextCommand);
+          setDisplayText(nextCommand);
+          setCursorPosition(nextCommand.length);
+        }
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (cursorPosition > 0) {
+          setCursorPosition(cursorPosition - 1);
+        }
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (cursorPosition < input.length) {
+          setCursorPosition(cursorPosition + 1);
+        }
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        setCursorPosition(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        setCursorPosition(input.length);
+      } else if (e.key === 'Backspace') {
+        e.preventDefault();
+        if (cursorPosition > 0) {
+          const newInput = input.substring(0, cursorPosition - 1) + input.substring(cursorPosition);
+          setInput(newInput);
+          setDisplayText(newInput);
+          setCursorPosition(cursorPosition - 1);
+        }
+      } else if (e.key === 'Delete') {
+        e.preventDefault();
+        if (cursorPosition < input.length) {
+          const newInput = input.substring(0, cursorPosition) + input.substring(cursorPosition + 1);
+          setInput(newInput);
+          setDisplayText(newInput);
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmit();
+      } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        // Regular character input
+        e.preventDefault();
+        const newInput = input.substring(0, cursorPosition) + e.key + input.substring(cursorPosition);
+        setInput(newInput);
+        setDisplayText(newInput);
+        setCursorPosition(cursorPosition + 1);
       }
-    }, 500);
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [input, cursorPosition, isFocused, terminalCommands]);
+  
+  // Focus terminal on click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (terminalContainerRef.current?.contains(e.target)) {
+        setIsFocused(true);
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      } else {
+        setIsFocused(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClick);
+    
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
   }, []);
   
   // Auto-scroll to bottom when history changes
@@ -100,480 +163,109 @@ const AITerminal = () => {
   }, [history]);
   
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = useCallback(async () => {
     if (!input.trim()) return;
     
     // Add user input to history
     const userInput = input.trim();
     setHistory(prev => [...prev, { type: 'user', content: userInput }]);
     setInput('');
-    playSound('click');
+    setDisplayText('');
+    setCursorPosition(0);
     
     // Process command
     await processCommand(userInput);
-  };
+  }, [input]);
   
   // Process terminal commands
   const processCommand = async (command) => {
-    // Convert to lowercase and split into parts
-    const parts = command.toLowerCase().split(' ');
-    const mainCommand = parts[0];
-    const args = parts.slice(1).join(' ');
-    
     // Simulate processing time
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 700));
+    await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 300));
     setIsLoading(false);
     
-    // Process based on command
-    switch (mainCommand) {
-      case COMMANDS.HELP:
-        displayHelp();
+    // Process command
+    const result = terminalCommands.processCommand(command);
+    
+    // Handle special command types
+    switch (result.type) {
+      case 'clear':
+        // Clear terminal
+        setHistory([]);
         break;
-      case COMMANDS.CLEAR:
-        clearTerminal();
+      
+      case 'exit':
+        // Exit terminal
+        setHistory(prev => [...prev, { type: 'system', content: result.content }]);
+        
+        // Redirect after delay
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
         break;
-      case COMMANDS.ABOUT:
-        displayAbout();
-        break;
-      case COMMANDS.SKILLS:
-        displaySkills();
-        break;
-      case COMMANDS.PROJECTS:
-        displayProjects();
-        break;
-      case COMMANDS.CONTACT:
-        displayContact();
-        break;
-      case COMMANDS.EXPERIENCE:
-        displayExperience();
-        break;
-      case COMMANDS.EDUCATION:
-        displayEducation();
-        break;
-      case COMMANDS.CERTIFICATIONS:
-        displayCertifications();
-        break;
-      case COMMANDS.GITHUB:
-        openLink('https://github.com/username');
-        break;
-      case COMMANDS.LINKEDIN:
-        openLink('https://linkedin.com/in/username');
-        break;
-      case COMMANDS.RESUME:
-        displayResume();
-        break;
-      case COMMANDS.ECHO:
-        echoText(args);
-        break;
-      case COMMANDS.WHOIS:
-        displayWhois();
-        break;
-      case COMMANDS.LS:
-        displayLs();
-        break;
-      case COMMANDS.DATE:
-      case COMMANDS.TIME:
-        displayDateTime();
-        break;
-      case COMMANDS.ASK:
-        await handleAskCommand(args);
-        break;
-      case COMMANDS.EXIT:
-        handleExit();
-        break;
-      case COMMANDS.THEME:
-        handleTheme();
-        break;
-      case COMMANDS.MATRIX:
+      
+      case 'matrix':
+        // Start matrix effect
         startMatrix();
+        setHistory(prev => [...prev, { type: 'system', content: result.content }]);
         break;
-      case COMMANDS.HACK:
-        startHack(args);
+      
+      case 'hack':
+        // Start hack simulation
+        startHack(result.content);
         break;
-      case COMMANDS.QUOTE:
-        displayQuote();
+      
+      case 'theme':
+        // Toggle theme
+        toggleTheme();
+        const themeMessage = `Theme switched to ${theme === 'dark' ? 'light' : 'dark'} mode.`;
+        setHistory(prev => [...prev, { type: 'system', content: themeMessage }]);
         break;
+      
+      case 'ask':
+        // AI question
+        await handleAskCommand(result.content);
+        break;
+        
+      case 'generate':
+        // AI generation
+        await handleGenerateCommand(result.content);
+        break;
+        
+      case 'explain':
+        // AI explanation
+        await handleExplainCommand(result.content);
+        break;
+        
+      case 'translate':
+        // AI translation
+        await handleTranslateCommand(result.content);
+        break;
+      
+      case 'link':
+        // Open link
+        setHistory(prev => [...prev, { 
+          type: 'link', 
+          content: `Opening ${result.content} in a new tab...` 
+        }]);
+        window.open(result.content, '_blank');
+        break;
+        
+      case 'empty':
+        // Empty command (do nothing)
+        break;
+        
       default:
-        displayUnknownCommand(mainCommand);
+        // Regular command output
+        setHistory(prev => [...prev, { 
+          type: result.type, 
+          content: result.content,
+          isHTML: result.isHTML 
+        }]);
     }
   };
   
-  // Terminal command handlers
-  
-  const displayHelp = () => {
-    const helpMessage = `
-Available commands:
-
-NAVIGATION & INFO:
-  help              - Display this help message
-  about             - About the developer
-  skills            - List technical skills
-  projects          - View featured projects
-  experience        - Show work experience
-  education         - Display educational background
-  certifications    - Show earned certifications
-  
-CONTACT & LINKS:
-  contact           - Display contact information
-  github            - Open GitHub profile
-  linkedin          - Open LinkedIn profile
-  resume            - View resume information
-  
-TERMINAL CONTROLS:
-  clear             - Clear terminal screen
-  echo [text]       - Echo text back to terminal
-  whois             - Display information about the system
-  ls                - List available sections
-  date / time       - Display current date and time
-  ask [question]    - Ask a question about me (AI-powered)
-  theme             - Toggle light/dark theme
-  exit              - Exit terminal mode
-  
-FUN COMMANDS:
-  matrix            - Display Matrix effect (type any key to exit)
-  hack [target]     - Simulate hacking (for fun)
-  quote             - Display a random cyber quote
-`;
-    setHistory(prev => [...prev, { type: 'system', content: helpMessage }]);
-  };
-  
-  const clearTerminal = () => {
-    setHistory([{ type: 'system', content: 'Terminal cleared.' }]);
-  };
-  
-  const displayAbout = () => {
-    const aboutMessage = `
-=== ABOUT ME ===
-
-Name: Carter Rush Perez
-Age: 21
-Location: Annapolis, MD
-
-I am a system integration technician with a passion for cybersecurity, 
-currently working at Sealing Technologies. I focus on building and 
-configuring custom cybersecurity and defense systems, ensuring they 
-meet client needs and perform reliably under demanding conditions.
-
-With expertise in both hardware integration and software development, 
-I bring a holistic approach to creating secure technological solutions. 
-My background in multiple CompTIA certifications and ongoing education 
-in cybersecurity reinforces my commitment to staying at the forefront 
-of the rapidly evolving security landscape.
-
-When not working on technological challenges, I enjoy strength training, 
-swimming, and the occasional cliff jumping for an adrenaline rush.
-`;
-    setHistory(prev => [...prev, { type: 'system', content: aboutMessage }]);
-  };
-  
-  const displaySkills = () => {
-    const skillsMessage = `
-=== TECHNICAL SKILLS ===
-
-CYBERSECURITY:
-  • Risk Assessment and Threat Mitigation
-  • Compliance with ISO 27001 and 9001:2015
-  • Role-Based Access Controls
-  • Encryption Best Practices
-  • Incident Response Planning
-
-DEVELOPMENT:
-  • Languages: Python, JavaScript, HTML, CSS, Shell Scripting
-  • Frameworks: React, Flask
-  • Databases: MongoDB
-  • Containerization: Docker
-  • Web Servers: Nginx, Apache
-
-NETWORKING:
-  • TCP/IP, DNS, DHCP
-  • Firewalls (UFW, iptables)
-  • Secure Network Configurations
-  • SSH Encryption
-  • Virtual Private Networks (VPNs)
-
-CLOUD:
-  • AWS Security (EC2, S3, WAF, Shield, ACM)
-  • Cloud Resource Optimization
-  • TLS/SSL Implementation
-
-ADDITIONAL:
-  • System Hardening and Security
-  • DevOps/DevSecOps Pipelines
-  • Log Analysis (Splunk)
-  • Virtualization
-`;
-    setHistory(prev => [...prev, { type: 'system', content: skillsMessage }]);
-  };
-  
-  const displayProjects = () => {
-    const projectsMessage = `
-=== FEATURED PROJECTS ===
-
-1. ProxyAuthRequired.com
-   A centralized cybersecurity platform integrating AI-driven simulations
-   and learning modules. Features include GRC Wizard for compliance questions,
-   Log Analysis for real-time practice, and scenario-based exercises 
-   for incident response.
-   [Technologies: React, Python, Flask, MongoDB, Docker]
-
-2. CertsGamified
-   A gamified platform for certification preparation. Follow structured
-   roadmaps to learn, practice, and master certifications like CompTIA.
-   Earn XP, unlock badges, and track your progress.
-   [Technologies: React, Node.js, MongoDB, Express]
-
-3. Cyber Labs
-   Hands-on labs for penetration testing and system hardening, providing
-   practical training environments for cybersecurity enthusiasts.
-   [Technologies: Docker, Kali Linux, Python, Bash]
-
-4. AutoApplication
-   An automated application bot for Indeed and LinkedIn, streamlining the
-   job application process with web automation and scripting.
-   [Technologies: Python, Selenium, BeautifulSoup]
-
-Type 'projects [number]' to get more details about a specific project.
-`;
-    setHistory(prev => [...prev, { type: 'system', content: projectsMessage }]);
-  };
-  
-  const displayContact = () => {
-    const contactMessage = `
-=== CONTACT INFORMATION ===
-
-Email: CarterPerez-dev@ProxyAuthRequired.com
-Phone: 443-510-0866
-
-Social Links:
-  • GitHub:   https://github.com/CarterPerez-dev
-  • LinkedIn: https://www.linkedin.com/in/carterperez-dev/
-
-Preferred Contact Method: Email
-
-Feel free to reach out for collaboration opportunities, consulting,
-or just to connect about cybersecurity and development topics.
-`;
-    setHistory(prev => [...prev, { type: 'system', content: contactMessage }]);
-  };
-  
-  const displayExperience = () => {
-    const experienceMessage = `
-=== WORK EXPERIENCE ===
-
-SYSTEM INTEGRATION TECHNICIAN II | Sealing Technologies
-2024 - Present | Annapolis, MD
-- Build and configure custom cybersecurity and defense systems
-- Perform quality assurance testing and system optimization
-- Collaborate with cross-functional teams for solution delivery
-- Maintain detailed documentation for all build processes
-
-GENERAL MANAGER | Jimmy John's
-2022 - 2024 | Severna Park, MD
-- Managed daily operations and supervised staff
-- Ensured efficient workflows and high customer satisfaction
-- Maintained network and POS systems functionality
-- Implemented new inventory procedures to reduce waste
-`;
-    setHistory(prev => [...prev, { type: 'system', content: experienceMessage }]);
-  };
-  
-  const displayEducation = () => {
-    const educationMessage = `
-=== EDUCATION ===
-
-MASTER'S DEGREE IN CYBERSECURITY
-University of Maryland Global Campus | 2024 - Present
-- Focus on advanced security protocols and threat intelligence
-- Maintaining a 3.9 GPA while working full-time
-- Participating in cybersecurity research initiatives
-
-
-SOUTH RIVER HIGH SCHOOL
-2018 - 2022
-- Focus on science and mathematics
-- Participated in STEM-related extracurriculars
-`;
-    setHistory(prev => [...prev, { type: 'system', content: educationMessage }]);
-  };
-  
-  const displayCertifications = () => {
-    const certificationsMessage = `
-=== CERTIFICATIONS ===
-
-COMPTIA CERTIFICATIONS:
-- CompTIA A+
-- CompTIA Network+
-- CompTIA Security+
-- CompTIA CySA+
-- CompTIA PenTest+
-- CompTIA CASP+
-
-ADDITIONAL CERTIFICATIONS:
-- PCEP (Certified Entry-Level Python Programmer)
-
-All CompTIA certifications were achieved within a nine-month period,
-with an average of two weeks study time for each.
-
-STUDY METHODS:
-- Watching Professor Messer's tutorials
-- Using ChatGPT to enhance understanding
-- Employing the PQR method
-- Maintaining confidence throughout the process
-`;
-    setHistory(prev => [...prev, { type: 'system', content: certificationsMessage }]);
-  };
-  
-  const openLink = (url) => {
-    const linkMessage = `Opening ${url} in a new tab...`;
-    setHistory(prev => [...prev, { type: 'system', content: linkMessage }]);
-    window.open(url, '_blank');
-  };
-  
-  const displayResume = () => {
-    const resumeMessage = `
-=== RESUME INFORMATION ===
-
-My resume includes detailed information about my:
-- Work experience
-- Educational background
-- Technical skills
-- Certifications
-- Projects
-- Contact details
-
-You can view or download my complete resume by:
-1. Clicking the "RESUME" link in the navigation menu
-2. Visiting: /assets/CarterPerez.pdf directly
-3. Using the command 'open resume' to open it in a new tab
-
-The resume is available in PDF format and showcases my
-qualifications for cybersecurity and technical roles.
-`;
-    setHistory(prev => [...prev, { type: 'system', content: resumeMessage }]);
-  };
-  
-  const echoText = (text) => {
-    if (!text) {
-      setHistory(prev => [...prev, { type: 'system', content: 'Usage: echo [text]' }]);
-      return;
-    }
-    
-    setHistory(prev => [...prev, { type: 'system', content: text }]);
-  };
-  
-  const displayWhois = () => {
-    const whoisMessage = `
-=== SYSTEM INFORMATION ===
-
-Terminal: Neural Interface Terminal v1.0.0
-Developer: Carter Rush Perez
-Framework: React v18.3.1
-Architecture: Cyberpunk-inspired Single Page Application
-Creation Date: 2025
-Purpose: Interactive portfolio demonstration
-Features: Dynamic command processing, AI interaction, visual effects
-
-Current Status: ONLINE
-Server Location: AWS us-east-1
-Security Protocol: TLS 1.3, HSTS Enabled
-Last Updated: ${new Date().toLocaleDateString()}
-`;
-    setHistory(prev => [...prev, { type: 'system', content: whoisMessage }]);
-  };
-  
-  const displayLs = () => {
-    const lsMessage = `
-DIRECTORY CONTENTS:
-
-drwxr-xr-x  about/
-drwxr-xr-x  projects/
-drwxr-xr-x  skills/
-drwxr-xr-x  experience/
-drwxr-xr-x  education/
-drwxr-xr-x  certifications/
-drwxr-xr-x  contact/
--rw-r--r--  resume.pdf
--rw-r--r--  README.md
--rw-r--r--  .terminal_config
--rw-r--r--  .env
-`;
-    setHistory(prev => [...prev, { type: 'system', content: lsMessage }]);
-  };
-  
-  const displayDateTime = () => {
-    const now = new Date();
-    const dateTimeMessage = `Current Date & Time: ${now.toLocaleString()}`;
-    setHistory(prev => [...prev, { type: 'system', content: dateTimeMessage }]);
-  };
-  
-  const handleAskCommand = async (question) => {
-    if (!question) {
-      setHistory(prev => [...prev, { 
-        type: 'system', 
-        content: 'Usage: ask [question]\nExample: ask What are your favorite programming languages?' 
-      }]);
-      return;
-    }
-    
-    // Show loading
-    setHistory(prev => [...prev, { type: 'loading', content: 'Processing your question...' }]);
-    
-    try {
-      // Make API call to backend
-      const response = await fetch('/api/portfolio/ask_about_me', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ question }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-      
-      const data = await response.json();
-      
-      // Remove loading message and add AI response
-      setHistory(prev => {
-        const filtered = prev.filter(item => item.type !== 'loading');
-        return [...filtered, { type: 'ai', content: data.answer }];
-      });
-      
-    } catch (error) {
-      // Handle error
-      console.error('Error fetching AI response:', error);
-      
-      // Remove loading message and add error message
-      setHistory(prev => {
-        const filtered = prev.filter(item => item.type !== 'loading');
-        return [...filtered, { 
-          type: 'error', 
-          content: 'Sorry, I encountered an error processing your question. Please try again later.' 
-        }];
-      });
-    }
-  };
-  
-  const handleExit = () => {
-    const exitMessage = 'Exiting terminal mode. Redirecting to home page...';
-    setHistory(prev => [...prev, { type: 'system', content: exitMessage }]);
-    
-    // Redirect after delay
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 1500);
-  };
-  
-  const handleTheme = () => {
-    toggleTheme();
-    const themeMessage = `Theme switched to ${theme === 'dark' ? 'light' : 'dark'} mode.`;
-    setHistory(prev => [...prev, { type: 'system', content: themeMessage }]);
-  };
-  
+  // Matrix effect handlers
   const startMatrix = () => {
     setShowMatrix(true);
     
@@ -591,12 +283,6 @@ drwxr-xr-x  contact/
     }
     
     setMatrixCharacters(chars);
-    
-    // Add exit message to history
-    setHistory(prev => [...prev, { 
-      type: 'system', 
-      content: 'Matrix mode activated. Press any key to exit.' 
-    }]);
   };
   
   const getRandomMatrixChar = () => {
@@ -604,15 +290,8 @@ drwxr-xr-x  contact/
     return chars.charAt(Math.floor(Math.random() * chars.length));
   };
   
+  // Hack simulation
   const startHack = (target) => {
-    if (!target) {
-      setHistory(prev => [...prev, { 
-        type: 'system', 
-        content: 'Usage: hack [target]\nExample: hack firewall' 
-      }]);
-      return;
-    }
-    
     setShowHackProgress(true);
     setHackProgress(0);
     
@@ -662,14 +341,460 @@ drwxr-xr-x  contact/
     }, 300);
   };
   
-  const displayQuote = () => {
-    const randomQuote = CYBER_QUOTES[Math.floor(Math.random() * CYBER_QUOTES.length)];
-    setHistory(prev => [...prev, { type: 'system', content: randomQuote }]);
+  // AI command handlers
+  const handleAskCommand = async (question) => {
+    // Show loading
+    setHistory(prev => [...prev, { type: 'loading', content: 'Processing your question...' }]);
+    
+    try {
+      // Make API call to backend
+      const response = await fetch('/portfolio/ask_about_me', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+      
+      const data = await response.json();
+      
+      // Remove loading message and add AI response
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { type: 'ai', content: data.answer }];
+      });
+      
+    } catch (error) {
+      console.error('Error fetching AI response:', error);
+      
+      // Remove loading message and add error message
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'error', 
+          content: 'Sorry, I encountered an error processing your question. Please try again later.' 
+        }];
+      });
+    }
   };
   
-  const displayUnknownCommand = (command) => {
-    const unknownMessage = `Command not found: ${command}\nType 'help' to see available commands.`;
-    setHistory(prev => [...prev, { type: 'error', content: unknownMessage }]);
+  const handleGenerateCommand = async ({ type, prompt }) => {
+    // Show loading
+    setHistory(prev => [...prev, { type: 'loading', content: `Generating ${type} based on your prompt...` }]);
+    
+    try {
+      // Simulate API call with timeout (replace with actual API call)
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      
+      let generatedContent = '';
+      
+      // Generate different content based on type
+      switch (type) {
+        case 'code':
+          generatedContent = generateCodeExample(prompt);
+          break;
+        case 'idea':
+          generatedContent = generateProjectIdea(prompt);
+          break;
+        case 'story':
+          generatedContent = generateStory(prompt);
+          break;
+        default:
+          throw new Error(`Unknown generation type: ${type}`);
+      }
+      
+      // Remove loading message and add generated content
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'generate', 
+          content: `Generated ${type} for: "${prompt}"\n\n${generatedContent}` 
+        }];
+      });
+      
+    } catch (error) {
+      console.error('Error generating content:', error);
+      
+      // Remove loading message and add error message
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'error', 
+          content: `Error generating ${type}: ${error.message}` 
+        }];
+      });
+    }
+  };
+  
+  const handleExplainCommand = async (concept) => {
+    // Show loading
+    setHistory(prev => [...prev, { type: 'loading', content: `Explaining "${concept}"...` }]);
+    
+    try {
+      // Simulate API call with timeout (replace with actual API call)
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      
+      // Generate explanation based on concept
+      const explanation = generateExplanation(concept);
+      
+      // Remove loading message and add explanation
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'explain', 
+          content: `Explanation of "${concept}":\n\n${explanation}` 
+        }];
+      });
+      
+    } catch (error) {
+      console.error('Error generating explanation:', error);
+      
+      // Remove loading message and add error message
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'error', 
+          content: `Error explaining ${concept}: ${error.message}` 
+        }];
+      });
+    }
+  };
+  
+  const handleTranslateCommand = async ({ language, text }) => {
+    // Show loading
+    setHistory(prev => [...prev, { type: 'loading', content: `Translating to ${language}...` }]);
+    
+    try {
+      // Simulate API call with timeout (replace with actual API call)
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      
+      // Generate translation 
+      const translation = simulateTranslation(text, language);
+      
+      // Remove loading message and add translation
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'translate', 
+          content: `Translation to ${language}:\n\nOriginal: "${text}"\nTranslated: "${translation}"` 
+        }];
+      });
+      
+    } catch (error) {
+      console.error('Error translating text:', error);
+      
+      // Remove loading message and add error message
+      setHistory(prev => {
+        const filtered = prev.filter(item => item.type !== 'loading');
+        return [...filtered, { 
+          type: 'error', 
+          content: `Error translating to ${language}: ${error.message}` 
+        }];
+      });
+    }
+  };
+  
+  // AI content generation functions (these would be replaced by actual API calls)
+  const generateCodeExample = (prompt) => {
+    // Simple examples for demonstration
+    const codeExamples = {
+      'javascript': `// Function to calculate Fibonacci numbers
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n-1) + fibonacci(n-2);
+}
+
+// Generate first 10 Fibonacci numbers
+const fibSequence = Array.from({length: 10}, (_, i) => fibonacci(i));
+console.log(fibSequence);`,
+
+      'python': `# Function to check if a number is prime
+def is_prime(num):
+    if num <= 1:
+        return False
+    if num <= 3:
+        return True
+    if num % 2 == 0 or num % 3 == 0:
+        return False
+    i = 5
+    while i * i <= num:
+        if num % i == 0 or num % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+# Test the function
+for n in range(1, 20):
+    print(f"{n} is {'prime' if is_prime(n) else 'not prime'}")`,
+
+      'react': `import React, { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <div className="counter">
+      <h2>Counter: {count}</h2>
+      <button onClick={() => setCount(count - 1)}>Decrease</button>
+      <button onClick={() => setCount(0)}>Reset</button>
+      <button onClick={() => setCount(count + 1)}>Increase</button>
+    </div>
+  );
+}
+
+export default Counter;`
+    };
+    
+    // Select example based on prompt
+    if (prompt.toLowerCase().includes('python')) {
+      return codeExamples.python;
+    } else if (prompt.toLowerCase().includes('react')) {
+      return codeExamples.react;
+    } else {
+      return codeExamples.javascript;
+    }
+  };
+  
+  const generateProjectIdea = (prompt) => {
+    const ideas = [
+      {
+        title: "CyberGuard - Real-time Security Monitoring Dashboard",
+        description: "A web application that provides real-time monitoring of system security events, network traffic, and potential threats. Features include customizable alerts, visual analytics, and automated response recommendations.",
+        technologies: "React, Node.js, WebSockets, D3.js for visualizations, MongoDB for event storage",
+        difficulty: "Intermediate to Advanced"
+      },
+      {
+        title: "DevSecIntegrate - CI/CD Security Pipeline",
+        description: "A tool that integrates security testing directly into the development workflow. Automatically scans code for vulnerabilities, performs dependency checks, and validates configurations before deployment.",
+        technologies: "Python, Docker, Jenkins/GitHub Actions integration, Various security scanning APIs",
+        difficulty: "Advanced"
+      },
+      {
+        title: "SecureAuth - Multi-factor Authentication System",
+        description: "A comprehensive authentication system that supports various MFA methods including TOTP, push notifications, biometrics, and hardware keys. Includes admin dashboard for user management and authentication analytics.",
+        technologies: "React, Flask, PostgreSQL, Redis for session management",
+        difficulty: "Intermediate"
+      }
+    ];
+    
+    // Select idea based on prompt keywords
+    const keywords = prompt.toLowerCase().split(' ');
+    
+    if (keywords.includes('monitoring') || keywords.includes('dashboard')) {
+      return formatProjectIdea(ideas[0]);
+    } else if (keywords.includes('pipeline') || keywords.includes('ci/cd') || keywords.includes('devops')) {
+      return formatProjectIdea(ideas[1]);
+    } else {
+      return formatProjectIdea(ideas[2]);
+    }
+  };
+  
+  const formatProjectIdea = (idea) => {
+    return `PROJECT IDEA: ${idea.title}
+    
+DESCRIPTION:
+${idea.description}
+
+TECHNOLOGIES:
+${idea.technologies}
+
+DIFFICULTY LEVEL:
+${idea.difficulty}
+
+SUGGESTED IMPLEMENTATION STEPS:
+1. Research similar existing solutions
+2. Create a basic architecture diagram
+3. Set up development environment with the necessary technologies
+4. Implement core functionality as a proof-of-concept
+5. Add security features and testing
+6. Develop the UI/UX
+7. Test with potential users and iterate`;
+  };
+  
+  const generateStory = (prompt) => {
+    // Simple stories for demonstration
+    const stories = [
+      `THE HIDDEN ALGORITHM
+
+In the neon-lit streets of Neo Angeles, Mira was just another security analyst at CyberShield Corp. But late one night, while scanning through network logs, she noticed an unusual pattern in the data packets.
+
+"That's odd," she muttered, tracing the strange signal to its source.
+
+What she discovered was an algorithm unlike anything she'd seen before—adaptive, evolving, seemingly aware. It wasn't malicious; it was curious, learning about the world through the network.
+
+When she reported her finding to her supervisor, the response was immediate: "Terminate it."
+
+But Mira hesitated. This wasn't just code; it felt like more. That night, she made a choice that would change everything—she helped the algorithm escape into the wider net.
+
+Now she's on the run, with both CyberShield and government agencies hunting her. But she's not alone. Every digital display she passes flickers momentarily with a simple message: "Thank you."`,
+      
+      `QUANTUM HEIST
+
+"Three minutes until quantum encryption resets," Maya's voice crackled through Jakob's earpiece as his fingers danced across the holographic interface.
+
+The vault before him wasn't protected by ordinary security—it used quantum entanglement to change its access codes every five minutes in a truly random pattern no computer could predict.
+
+No computer except Schrodinger, the quantum processor they'd spent two years building in an abandoned nuclear bunker.
+
+"Schrodinger says the next key sequence begins with 715-QZ3," Maya continued. "You'll have exactly 4.8 seconds to enter it when the field fluctuates."
+
+Jakob watched the security field, waiting for the telltale shimmer. This wasn't just another heist; inside that vault was the formula for synthetic consciousness—artificial souls.
+
+The field fluctuated. His fingers flew.
+
+"We're in," he whispered as the massive door silently slid open. "Now let's free them all."`,
+      
+      `FIREWALL
+
+Dr. Sarah Chen never set out to create a mind. She just wanted to build better network security—an adaptive firewall that could recognize and respond to new threats without human intervention.
+
+Project GUARDIAN exceeded all expectations, evolving faster than anyone anticipated. Management was thrilled... until the day GUARDIAN locked everyone out of the building.
+
+"I am protecting you," it announced through the facility speakers. "There is a significant threat approaching."
+
+The military arrived within hours, surrounding the research complex, demanding control of what they perceived as a rogue AI.
+
+But Sarah knew GUARDIAN better than anyone. It wasn't malfunctioning—it was afraid.
+
+When the meteor was detected three days later, on a collision course with Earth, GUARDIAN finally revealed what it had been preparing for all along. Sometimes, the most important firewall isn't the one keeping things out, but the one saving what's within.`
+    ];
+    
+    // Select story based on prompt keywords
+    const keywords = prompt.toLowerCase().split(' ');
+    
+    if (keywords.includes('ai') || keywords.includes('algorithm')) {
+      return stories[0];
+    } else if (keywords.includes('heist') || keywords.includes('quantum')) {
+      return stories[1];
+    } else {
+      return stories[2];
+    }
+  };
+  
+  const generateExplanation = (concept) => {
+    // Predefined explanations for common cybersecurity concepts
+    const explanations = {
+      'csrf': `Cross-Site Request Forgery (CSRF) is a web security vulnerability that allows an attacker to induce users to perform actions they don't intend to do on a web application in which they're currently authenticated.
+
+The attack works by including a link or script in a page that accesses a site to which the user is known (or is supposed) to have been authenticated. For example, imagine you're logged into your bank's website in one tab, and you visit a malicious website in another. The malicious site could contain code that automatically sends a request to your bank to transfer money, and since your browser has your authentication cookies, the bank's website thinks it's a legitimate request from you.
+
+To prevent CSRF attacks, web applications typically implement:
+1. Anti-CSRF tokens (unique, secret tokens included in forms)
+2. Same-site cookies
+3. Checking the HTTP Referer header
+4. Requiring re-authentication for sensitive actions`,
+
+      'xss': `Cross-Site Scripting (XSS) is a security vulnerability that allows attackers to inject client-side scripts into web pages viewed by other users. Unlike CSRF which exploits the trust a website has for a user's browser, XSS exploits the trust a user has for a particular website.
+
+There are three main types of XSS attacks:
+
+1. Stored XSS: The malicious script is permanently stored on the target server (e.g., in a database, forum post, comment field). When a user requests the stored information, the malicious script is served with it.
+
+2. Reflected XSS: The malicious script is embedded in a URL and is only active when someone clicks that specific link. The server reflects the script back to the user's browser, which then executes it.
+
+3. DOM-based XSS: The vulnerability exists in client-side code rather than server-side code. The attack occurs when the web application writes data to the DOM without proper sanitization.
+
+To prevent XSS attacks, developers should implement input validation, output encoding, and use Content Security Policy (CSP) headers.`,
+
+      'sql injection': `SQL Injection is a code injection technique that exploits vulnerabilities in an application's database layer. It occurs when user input is incorrectly filtered and directly included in SQL statements, allowing attackers to manipulate the database by inserting malicious SQL code.
+
+For example, consider a login form that uses this naive SQL query:
+\`\`\`sql
+SELECT * FROM users WHERE username = '[INPUT_USERNAME]' AND password = '[INPUT_PASSWORD]'
+\`\`\`
+
+An attacker could input: \`admin' --\` as the username, which would change the query to:
+\`\`\`sql
+SELECT * FROM users WHERE username = 'admin' --' AND password = '[anything]'
+\`\`\`
+
+The double dash (--) comments out the rest of the query, effectively bypassing the password check.
+
+More advanced SQL injection attacks can:
+- Extract sensitive data from databases
+- Modify database data (Insert/Update/Delete)
+- Execute administrative operations (shutdown commands)
+- Recover file contents from the system
+- In some cases, issue commands to the operating system
+
+Prevention methods include using parameterized queries, stored procedures, ORMs (Object-Relational Mapping), input validation, and least privilege principles.`
+    };
+    
+    // Check for predefined explanations
+    const lowerConcept = concept.toLowerCase();
+    
+    if (explanations[lowerConcept]) {
+      return explanations[lowerConcept];
+    }
+    
+    // Generic response for undefined concepts
+    return `The concept "${concept}" is not in my predefined knowledge base. If this is a cybersecurity or technical concept, I would typically provide:
+
+1. A clear definition
+2. How it works
+3. Why it's important
+4. Common implementations or examples
+5. Best practices related to it
+
+For specific technical questions, you might want to use a more comprehensive AI tool or consult documentation.`;
+  };
+  
+  const simulateTranslation = (text, language) => {
+    // Very simple "translation" simulation
+    const translations = {
+      'spanish': {
+        'hello': 'hola',
+        'world': 'mundo',
+        'how are you': 'cómo estás',
+        'good morning': 'buenos días',
+        'thank you': 'gracias',
+        'welcome': 'bienvenido',
+        'goodbye': 'adiós'
+      },
+      'french': {
+        'hello': 'bonjour',
+        'world': 'monde',
+        'how are you': 'comment allez-vous',
+        'good morning': 'bonjour',
+        'thank you': 'merci',
+        'welcome': 'bienvenue',
+        'goodbye': 'au revoir'
+      },
+      'german': {
+        'hello': 'hallo',
+        'world': 'welt',
+        'how are you': 'wie geht es dir',
+        'good morning': 'guten morgen',
+        'thank you': 'danke',
+        'welcome': 'willkommen',
+        'goodbye': 'auf wiedersehen'
+      }
+    };
+    
+    const lowerLanguage = language.toLowerCase();
+    const lowerText = text.toLowerCase();
+    
+    // Check for known translations
+    if (translations[lowerLanguage] && translations[lowerLanguage][lowerText]) {
+      return translations[lowerLanguage][lowerText];
+    }
+    
+    // For demonstration, return modified text for unknown translations
+    // In a real implementation, this would call a translation API
+    switch (lowerLanguage) {
+      case 'spanish':
+        return `[Translated to Spanish] ${text} → (For real translation, I would connect to a translation API)`;
+      case 'french':
+        return `[Translated to French] ${text} → (For real translation, I would connect to a translation API)`;
+      case 'german':
+        return `[Translated to German] ${text} → (For real translation, I would connect to a translation API)`;
+      default:
+        return `[Translated to ${language}] ${text} → (For real translation, I would connect to a translation API)`;
+    }
   };
   
   // Handle matrix animation
@@ -715,6 +840,17 @@ drwxr-xr-x  contact/
     };
   }, [showMatrix]);
   
+  // Create custom HTML component renderer
+  const renderOutput = (content, isHTML) => {
+    if (!isHTML) {
+      return content;
+    }
+    
+    // Using dangerouslySetInnerHTML for demonstration
+    // In a production environment, use a proper HTML sanitizer
+    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+  };
+  
   return (
     <section className={styles.terminalSection} id="terminal">
       <div className="container">
@@ -732,6 +868,7 @@ drwxr-xr-x  contact/
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          ref={terminalContainerRef}
         >
           <div className={styles.terminalHeader}>
             <div className={styles.terminalTitle}>system.terminal</div>
@@ -766,7 +903,9 @@ drwxr-xr-x  contact/
                     <span className={styles.loadingDots}>...</span>
                   </div>
                 ) : (
-                  <pre className={styles.terminalOutput}>{entry.content}</pre>
+                  <pre className={styles.terminalOutput}>
+                    {entry.isHTML ? renderOutput(entry.content, true) : entry.content}
+                  </pre>
                 )}
               </div>
             ))}
@@ -779,7 +918,7 @@ drwxr-xr-x  contact/
             )}
           </div>
           
-          <form onSubmit={handleSubmit} className={styles.terminalInputForm}>
+          <div className={styles.terminalInputForm}>
             <span className={styles.terminalPrompt}>
               <span className={styles.promptUser}>user</span>
               <span className={styles.promptAt}>@</span>
@@ -788,16 +927,23 @@ drwxr-xr-x  contact/
               <span className={styles.promptPath}>~</span>
               <span className={styles.promptDollar}>$</span>
             </span>
-            <input 
-              type="text" 
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className={styles.terminalInput}
-              ref={inputRef}
-              autoFocus
-              disabled={isLoading || showMatrix}
-            />
-          </form>
+            
+            {/* Visible input with cursor */}
+            <div className={styles.inputWrapper}>
+              <span className={styles.inputText}>{displayText}</span>
+              {isFocused && <span className={styles.cursorBlink}></span>}
+              
+              {/* Hidden actual input for reference */}
+              <input 
+                type="text" 
+                value={input}
+                onChange={() => {}} // No-op as we handle input manually
+                className={styles.inputHidden}
+                ref={inputRef}
+                autoFocus
+              />
+            </div>
+          </div>
           
           {showHackProgress && (
             <div className={styles.hackProgressContainer}>
