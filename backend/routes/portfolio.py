@@ -42,3 +42,4 @@ def ask_about_me():
         logger.error(f"Error generating answer: {str(e)}")
         return jsonify({"error": "Failed to generate answer."}), 500
 
+

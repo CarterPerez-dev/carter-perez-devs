@@ -23,7 +23,7 @@ const ProjectsGrid = ({ fullPage = false }) => {
       image: '/assets/images/ios.webp', 
       categories: ['cybersecurity', 'education'],
       technologies: ['React', 'Python', 'Flask', 'Docker', 'Git', 'MongoDB', 'Redis', 'Nginx', 'Apache', 'Apple/Google Oauth', 'Oracle/Cloudfare', 'OpenAI', 'Stripe'],
-      link: 'https://certgames.com',
+      link: 'https://github.com/CarterPerez-dev/CertGames-Core',
       featured: true
     },
     {

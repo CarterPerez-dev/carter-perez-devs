@@ -195,7 +195,7 @@ const RESUME_SECTIONS = [
         name: 'CertGames.com',
         description: 'A gamified platform for certification preparation with 500+ active learners (100+ paying subscribers) in just 2 months. Features comprehensive content including 13k+ questions, 10+ learning games, 15+ themes, and real-time support to make cybersecurity education accessible and engaging.',
         technologies: ['React', 'Redux', 'Python/Flask', 'MongoDB', 'Redis', 'OpenAI'],
-        link: 'https://certgames.com',
+        link: 'https://github.com/CarterPerez-dev/CertGames-Core',
         featured: false
       },
       {
