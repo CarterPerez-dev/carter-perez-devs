@@ -1,19 +1,26 @@
-import React, { useEffect, useRef, useState, memo } from 'react';
+// frontend/src/components/layout/AmbientBackground.jsx
+import React, { useEffect, useRef, memo } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
-import { throttle } from '../../utils/performance';
 
-// Use memo to prevent unnecessary re-renders
+// Use memo to prevent unnecessary re-renders completely
 const AmbientBackground = memo(() => {
   const canvasRef = useRef(null);
   const { theme } = useTheme();
-  const [performanceLevel, setPerformanceLevel] = useState(() => {
-    // Retrieve from localStorage or compute based on device capability
-    const savedLevel = localStorage.getItem('performanceLevel');
-    return savedLevel ? parseInt(savedLevel) : 3;
-  });
   const requestRef = useRef(null);
   const previousTimeRef = useRef(0);
-  const fpsLimit = 20; // Further reduced FPS limit for background
+  const gridRef = useRef({
+    offset: 0,
+    cols: 0,
+    rows: 0,
+    size: 0,
+    color: ''
+  });
+
+  // Get performance level from localStorage (set in main.jsx)
+  const getPerformanceLevel = () => {
+    const level = localStorage.getItem('performanceLevel');
+    return level ? parseInt(level) : 3; // Default to medium
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -21,97 +28,127 @@ const AmbientBackground = memo(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // Super throttled resize handler
-    const handleResize = throttle(() => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }, 500); // Increase throttle time for better performance
+    // Fixed 300ms debounce for resize - even more performant
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Only update if dimensions actually changed by a significant amount
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+        
+        if (Math.abs(canvas.width - newWidth * window.devicePixelRatio) > 10 ||
+            Math.abs(canvas.height - newHeight * window.devicePixelRatio) > 10) {
+          canvas.width = newWidth * window.devicePixelRatio;
+          canvas.height = newHeight * window.devicePixelRatio;
+          ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+          setupGrid();
+        }
+      }, 300);
+    };
     
     window.addEventListener('resize', handleResize);
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    
+    // Initial setup
+    canvas.width = window.innerWidth * window.devicePixelRatio;
+    canvas.height = window.innerHeight * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     
     // Colors based on theme
     const gridColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.15)' : 'rgba(77, 77, 255, 0.15)';
     
-    // Create grid lines - DRASTICALLY REDUCED number of lines
-    const gridSize = performanceLevel > 2 ? 160 : 240; // Even larger grid cells = much fewer lines
-    
-    // Cache grid calculation instead of recalculating each frame
-    const prepareGrid = () => {
-      const cols = Math.ceil(canvas.width / gridSize) + 1;
-      const rows = Math.ceil(canvas.height / gridSize);
+    // Setup grid based on performance level
+    const setupGrid = () => {
+      const performanceLevel = getPerformanceLevel();
       
-      return { cols, rows };
+      // Grid size inversely proportional to performance level (larger grid = fewer lines)
+      const baseSize = 160;
+      const gridSize = baseSize + (5 - performanceLevel) * 40; // Larger grid for lower performance
+      
+      // Precalculate grid data
+      const cols = Math.ceil(canvas.width / gridSize / window.devicePixelRatio) + 1;
+      const rows = Math.ceil(canvas.height / gridSize / window.devicePixelRatio) + 1;
+      
+      // Cache the grid data
+      gridRef.current = {
+        size: gridSize,
+        cols,
+        rows,
+        color: gridColor,
+        // Adjust speed based on performance level
+        speed: 0.15 / (5 - Math.min(performanceLevel, 4)),
+        // Draw every nth line based on performance level
+        lineInterval: 6 - performanceLevel,
+        offset: 0
+      };
     };
     
-    const { cols, rows } = prepareGrid();
+    setupGrid();
     
-    // Animation parameters - reduce speed further
-    const gridSpeed = 0.15; // Reduced significantly from original 0.5
-    let offset = 0;
-    
-    // Modified render with significant optimizations
-    const render = (timestamp) => {
-      // Calculate time difference & limit FPS
+    // Optimized draw function
+    const draw = (timestamp) => {
+      // Don't calculate time difference on first frame
       if (!previousTimeRef.current) previousTimeRef.current = timestamp;
       const elapsed = timestamp - previousTimeRef.current;
       
-      if (elapsed > 1000 / fpsLimit) {
+
+      if (elapsed > 66) {
         previousTimeRef.current = timestamp;
         
-        // Clear canvas with background color - only once per frame
+        const grid = gridRef.current;
+        
+        // Clear canvas with faster method
         ctx.fillStyle = theme === 'dark' ? 'rgba(5, 5, 5, 0.9)' : 'rgba(15, 8, 8, 0.9)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
         
-        // Update grid offset more slowly
-        offset += gridSpeed;
-        if (offset >= gridSize) {
-          offset = 0;
-        }
+        // Update grid offset at reduced speed
+        grid.offset = (grid.offset + grid.speed * elapsed) % grid.size;
         
-        // Draw grid lines
-        ctx.strokeStyle = gridColor;
-        ctx.lineWidth = 0.5; // Thinner lines for better performance
+        // Draw grid with much fewer lines
+        ctx.strokeStyle = grid.color;
+        ctx.lineWidth = 0.5;
         
-        // Draw reduced horizontal lines - only every 2nd line
-        for (let y = 0; y <= rows; y += 2) {
-          const yPos = y * gridSize;
-          // Only draw lines that would be visible
-          if (yPos >= 0 && yPos <= canvas.height) {
+        // Draw far fewer horizontal lines - every nth line
+        for (let y = 0; y < grid.rows; y += grid.lineInterval) {
+          const yPos = y * grid.size;
+          // Only draw lines in viewport
+          if (yPos >= 0 && yPos <= canvas.height / window.devicePixelRatio) {
             ctx.beginPath();
             ctx.moveTo(0, yPos);
-            ctx.lineTo(canvas.width, yPos);
+            ctx.lineTo(canvas.width / window.devicePixelRatio, yPos);
             ctx.stroke();
           }
         }
         
-        // Draw reduced vertical lines - only every 2nd line with scrolling effect
-        for (let x = 0; x <= cols; x += 2) {
-          const xPos = x * gridSize - offset;
-          // Only draw lines that would be visible
-          if (xPos >= 0 && xPos <= canvas.width) {
+        // Draw far fewer vertical lines with scrolling effect
+        for (let x = 0; x < grid.cols; x += grid.lineInterval) {
+          const xPos = x * grid.size - grid.offset;
+          // Only draw lines in viewport
+          if (xPos >= -grid.size && xPos <= canvas.width / window.devicePixelRatio + grid.size) {
             ctx.beginPath();
             ctx.moveTo(xPos, 0);
-            ctx.lineTo(xPos, canvas.height);
+            ctx.lineTo(xPos, canvas.height / window.devicePixelRatio);
             ctx.stroke();
           }
         }
       }
       
-      requestRef.current = requestAnimationFrame(render);
+      requestRef.current = requestAnimationFrame(draw);
     };
     
-    // Only run animation when tab is visible
+    // Visibility API handler
     const handleVisibilityChange = () => {
       if (document.hidden) {
+        // Cancel animation when tab not visible
         if (requestRef.current) {
           cancelAnimationFrame(requestRef.current);
           requestRef.current = null;
         }
       } else {
+        // Resume animation when tab visible again
         if (!requestRef.current) {
-          requestRef.current = requestAnimationFrame(render);
+          previousTimeRef.current = 0; // Reset time delta
+          requestRef.current = requestAnimationFrame(draw);
         }
       }
     };
@@ -119,7 +156,7 @@ const AmbientBackground = memo(() => {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
     // Start animation
-    requestRef.current = requestAnimationFrame(render);
+    requestRef.current = requestAnimationFrame(draw);
     
     // Clean up
     return () => {
@@ -129,8 +166,10 @@ const AmbientBackground = memo(() => {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [theme, performanceLevel]);
+  }, [theme]);
 
+  // Use inline styles with will-change only on the transform property
+  // This gives a hint to the browser about what will animate
   const canvasStyle = {
     position: 'fixed',
     top: 0,
@@ -139,7 +178,8 @@ const AmbientBackground = memo(() => {
     height: '100%',
     zIndex: -10,
     pointerEvents: 'none',
-    willChange: 'transform' // Hint for browser optimization
+    willChange: 'transform', // Only hint for transform changes
+    opacity: 0.8 // Slightly transparent to improve contrast
   };
 
   return (
@@ -147,29 +187,10 @@ const AmbientBackground = memo(() => {
       ref={canvasRef}
       className="ambient-background"
       style={canvasStyle}
-      aria-hidden="true" // Add for accessibility
+      aria-hidden="true"
     />
   );
 });
-
-// Helper functions moved outside component for better memory usage
-function getDensityValue(density) {
-  switch (density) {
-    case 'low': return 20;
-    case 'medium': return 50;
-    case 'high': return 80;
-    default: return parseInt(density, 10) || 50;
-  }
-}
-
-function getSpeedValue(speed) {
-  switch (speed) {
-    case 'slow': return 1;
-    case 'medium': return 5;
-    case 'fast': return 10;
-    default: return parseInt(speed, 10) || 5;
-  }
-}
 
 // Add display name for debugging
 AmbientBackground.displayName = 'AmbientBackground';

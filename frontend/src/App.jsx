@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense, lazy } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { useCyberCursor } from './hooks/useCyberCursor';
 
 // Contexts
 import { useTheme } from './contexts/ThemeContext'
@@ -63,6 +64,7 @@ function useTabVisibilityOptimizer() {
 
 function App() {
   useTabVisibilityOptimizer();
+  useCyberCursor(); 
   const location = useLocation()
   const { theme } = useTheme()
   const [isLoading, setIsLoading] = useState(true)
@@ -85,125 +87,6 @@ function App() {
 
   }, []); 
     
-  
-  // Custom cursor effect
-  useEffect(() => {
-    if (window.matchMedia('(pointer: coarse)').matches) {
-      return; 
-    }
-    
-    const cursor = document.createElement('div');
-    cursor.className = 'cyber-cursor';
-    document.body.appendChild(cursor);
-    
-    const cursorDot = document.createElement('div');
-    cursorDot.className = 'cyber-cursor-dot';
-    document.body.appendChild(cursorDot);
-    
-    // Throttle function to limit execution frequency
-    const throttle = (func, limit) => {
-      let lastFunc;
-      let lastRan;
-      return function() {
-        const context = this;
-        const args = arguments;
-        if (!lastRan) {
-          func.apply(context, args);
-          lastRan = Date.now();
-        } else {
-          clearTimeout(lastFunc);
-          lastFunc = setTimeout(function() {
-            if ((Date.now() - lastRan) >= limit) {
-              func.apply(context, args);
-              lastRan = Date.now();
-            }
-          }, limit - (Date.now() - lastRan));
-        }
-      };
-    };
-    
-    // Use requestAnimationFrame for smoother cursor movement
-    let cursorX = 0;
-    let cursorY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    
-    // Throttled mouse move event
-    const handleMouseMove = throttle((e) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
-    }, 5); // Update target position every 5ms
-    
-    // Animation frame for cursor movement
-    const updateCursorPosition = () => {
-      // Smooth interpolation
-      cursorX += (targetX - cursorX) * 0.2;
-      cursorY += (targetY - cursorY) * 0.2;
-      
-      // Apply transform using hardware acceleration (translateX/Y)
-      cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-      cursorDot.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
-      
-      requestAnimationFrame(updateCursorPosition);
-    };
-    
-    // Start animation loop
-    let animationFrame = requestAnimationFrame(updateCursorPosition);
-    
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    
-    // Use event delegation for hover effects instead of adding listeners to each element
-    const handleMouseOver = (e) => {
-      let target = e.target;
-      // Check if target or its parents match the selector
-      const isInteractive = target.closest('a, button, input, select, textarea, [role="button"]');
-      
-      if (isInteractive) {
-        cursor.classList.add('expand');
-      }
-    };
-    
-    const handleMouseOut = (e) => {
-      let target = e.target;
-      const isInteractive = target.closest('a, button, input, select, textarea, [role="button"]');
-      
-      if (isInteractive) {
-        cursor.classList.remove('expand');
-      }
-    };
-    
-    // Use event delegation instead of querying and attaching to each element
-    document.body.addEventListener('mouseover', handleMouseOver, { passive: true });
-    document.body.addEventListener('mouseout', handleMouseOut, { passive: true });
-    
-    // Handle visibility changes
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(animationFrame);
-      } else {
-        animationFrame = requestAnimationFrame(updateCursorPosition);
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.body.removeEventListener('mouseover', handleMouseOver);
-      document.body.removeEventListener('mouseout', handleMouseOut);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      
-      cancelAnimationFrame(animationFrame);
-      
-      if (cursor && cursor.parentNode) {
-        document.body.removeChild(cursor);
-      }
-      
-      if (cursorDot && cursorDot.parentNode) {
-        document.body.removeChild(cursorDot);
-      }
-    };
-  }, []);
   
   if (isLoading) {
     return <CyberLoader />
