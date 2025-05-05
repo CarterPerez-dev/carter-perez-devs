@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
 import styles from './HolographicNav.module.css';
 
 const HolographicNav = () => {
@@ -34,7 +33,6 @@ const HolographicNav = () => {
   // Toggle the menu
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
-    playSound('click');
   };
 
   // Handle hover on menu items
@@ -81,18 +79,20 @@ const HolographicNav = () => {
   return (
     <header className={styles.holographicNav} ref={navRef}>
       <div className={styles.navContainer}>
+        {/* --- FIX: Link should wrap the logo content --- */}
         <div className={styles.navLogo}>
-          <Link to="/" onClick={() => playSound('click')}>
+          <Link to="/" className={styles.logoLink}> {/* Added Link here */}
             <div className={styles.logoContainer}>
               <div className={styles.logoSymbol}>C</div>
               <div className={styles.logoText}>PORTFOLIO</div>
             </div>
-          </Link>
+          </Link> {/* Closed Link here */}
         </div>
-
+        {/* --- END FIX --- */}
+  
         <div className={styles.navControls}>
-          <button 
-            className={styles.themeToggle} 
+          <button
+            className={styles.themeToggle}
             onClick={() => {
               toggleTheme();
             }}
@@ -100,9 +100,9 @@ const HolographicNav = () => {
           >
             {theme === 'dark' ? '☀' : '☾'}
           </button>
-          
-          <button 
-            className={`${styles.menuToggle} ${isOpen ? styles.active : ''}`} 
+  
+          <button
+            className={`${styles.menuToggle} ${isOpen ? styles.active : ''}`}
             onClick={toggleMenu}
             aria-expanded={isOpen}
             aria-label="Toggle navigation menu"
@@ -112,11 +112,12 @@ const HolographicNav = () => {
             <div className={styles.menuToggleLine}></div>
           </button>
         </div>
-      </div>
-      
+      </div> {/* This div (navContainer) now closes correctly */}
+  
+      {/* --- Conditional rendering structure is correct --- */}
       <AnimatePresence>
         {isOpen && (
-          <motion.nav 
+          <motion.nav
             className={styles.navMenu}
             initial="closed"
             animate="open"
@@ -127,19 +128,18 @@ const HolographicNav = () => {
             <div className={styles.menuContent}>
               {navItems.map((item, index) => {
                 const isActive = location.pathname === item.path;
-                
+  
                 return (
-                  <motion.div 
+                  <motion.div
                     key={index}
                     className={`${styles.menuItem} ${isActive ? styles.active : ''}`}
                     variants={itemVariants}
                     onMouseEnter={() => handleMenuHover(index)}
                     onMouseLeave={() => handleMenuHover(null)}
                   >
-                    <Link 
-                      to={item.path} 
+                    <Link
+                      to={item.path}
                       className={`${styles.menuLink} ${menuHoveredItem === index ? styles.hovered : ''}`}
-                      onClick={() => playSound('click')}
                     >
                       <span className={styles.menuIcon}>{item.icon}</span>
                       <span className={styles.menuTitle}>{item.title}</span>
@@ -157,7 +157,7 @@ const HolographicNav = () => {
           </motion.nav>
         )}
       </AnimatePresence>
-    </header>
+    </header> /* Header closes correctly */
   );
 };
 

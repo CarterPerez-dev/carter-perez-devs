@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
 import styles from './ProjectsGrid.module.css';
 
 // Import images properly
@@ -17,7 +16,6 @@ import angela from './images/8.webp';
 
 const ProjectsGrid = ({ fullPage = false }) => {
   const { theme } = useTheme();
-  const { playSound } = useAudio();
   const [activeFilter, setActiveFilter] = useState('all');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -138,7 +136,6 @@ const ProjectsGrid = ({ fullPage = false }) => {
   // Handle filter click
   const handleFilterClick = (categoryId) => {
     setActiveFilter(categoryId);
-    playSound('click');
   };
   
   // Handle mouse movement for mild parallax effect
@@ -260,7 +257,6 @@ const ProjectsGrid = ({ fullPage = false }) => {
                 variants={itemVariants}
                 onMouseEnter={() => {
                   setHoveredProject(project.id);
-                  playSound('hover');
                 }}
                 onMouseLeave={() => setHoveredProject(null)}
                 style={{
@@ -320,7 +316,6 @@ const ProjectsGrid = ({ fullPage = false }) => {
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="cyber-button cyber-button--small"
-                      onClick={() => playSound('click')}
                     >
                       {project.isBlog ? 'READ POST' : 'VIEW PROJECT'}
                     </a>
@@ -356,7 +351,6 @@ const ProjectsGrid = ({ fullPage = false }) => {
             <Link 
               to="/projects" 
               className="cyber-button"
-              onClick={() => playSound('click')}
             >
               VIEW ALL PROJECTS
             </Link>

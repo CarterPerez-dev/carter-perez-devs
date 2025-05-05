@@ -1,11 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useAudio } from '../../contexts/AudioContext';
 import styles from './HeroSection.module.css';
 
 const HeroSection = () => {
-  const { playSound } = useAudio();
   const canvasRef = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
@@ -284,7 +282,6 @@ const HeroSection = () => {
             <Link 
               to="/projects" 
               className="cyber-button"
-              onClick={() => playSound('click')}
             >
               VIEW PROJECTS
             </Link>
@@ -292,7 +289,6 @@ const HeroSection = () => {
             <Link 
               to="/terminal" 
               className="cyber-button cyber-button--magenta"
-              onClick={() => playSound('click')}
             >
               TERMINAL
             </Link>

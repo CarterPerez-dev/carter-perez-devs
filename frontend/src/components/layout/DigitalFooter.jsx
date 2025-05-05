@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
 import styles from './DigitalFooter.module.css';
 
 const DigitalFooter = () => {
   const { theme } = useTheme();
-  const { playSound } = useAudio();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [performanceStats, setPerformanceStats] = useState({
     fps: 0,
@@ -150,7 +148,6 @@ const DigitalFooter = () => {
                 <Link 
                   to={link.path}
                   className={styles.footerLink}
-                  onClick={() => playSound('click')}
                 >
                   {link.text}
                 </Link>
@@ -178,7 +175,6 @@ const DigitalFooter = () => {
                 target="_blank" 
                 rel="noopener noreferrer"
                 className={styles.socialLink}
-                onClick={() => playSound('click')}
               >
                 <span className={styles.socialIcon}>{link.icon}</span>
               </a>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
 import styles from './ResumeHologram.module.css';
 import { FaUserSecret, FaGithub, FaPhone, FaBriefcase, FaGraduationCap, FaLinux, FaCode, FaTrophy } from 'react-icons/fa'; 
 
@@ -264,7 +263,6 @@ const GIFT_OPTIONS = [
 
 const ResumeHologram = () => {
   const { theme } = useTheme();
-  const { playSound } = useAudio();
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [activeSection, setActiveSection] = useState('profile');
@@ -437,7 +435,6 @@ const ResumeHologram = () => {
     const handleDownload = (format) => {
       setIsDownloading(true);
       setDownloadProgress(0);
-      playSound('click');
   
       // Simulate download progress
       const interval = setInterval(() => {
@@ -504,7 +501,6 @@ const ResumeHologram = () => {
   // Handle gift selection
   const handleGiftSelect = (gift) => {
     setSelectedGift(gift);
-    playSound('click');
     triggerGlitch();
     setTimeout(() => {
       setShowGiftModal(false);
@@ -595,7 +591,6 @@ const ResumeHologram = () => {
             target="_blank" 
             rel="noopener noreferrer"
             className={styles.projectLink}
-            onClick={() => playSound('click')}
           >
             View
           </a>
@@ -619,7 +614,6 @@ const ResumeHologram = () => {
           <a 
             href={`mailto:${contactData.email}`}
             className={styles.contactValue}
-            onClick={() => playSound('click')}
           >
             {contactData.email}
           </a>
@@ -629,7 +623,6 @@ const ResumeHologram = () => {
           <a 
             href={`tel:${contactData.phone}`}
             className={styles.contactValue}
-            onClick={() => playSound('click')}
           >
             {contactData.phone}
           </a>
@@ -646,7 +639,6 @@ const ResumeHologram = () => {
               target="_blank"
               rel="noopener noreferrer"
               className={styles.socialLink}
-              onClick={() => playSound('click')}
             >
               GitHub
             </a>
@@ -655,7 +647,6 @@ const ResumeHologram = () => {
               target="_blank"
               rel="noopener noreferrer"
               className={styles.socialLink}
-              onClick={() => playSound('click')}
             >
               LinkedIn
             </a>
@@ -759,7 +750,6 @@ const ResumeHologram = () => {
                   className={styles.downloadButton}
                   onClick={() => {
                     setShowDownloadOptions(!showDownloadOptions);
-                    playSound('click');
                   }}
                   disabled={isDownloading}
                 >
@@ -818,7 +808,6 @@ const ResumeHologram = () => {
                       className={`${styles.navButton} ${activeSection === section.id ? styles.activeNav : ''}`}
                       onClick={() => {
                         setActiveSection(section.id);
-                        playSound('click');
                         triggerGlitch();
                       }}
                       variants={itemVariants}
@@ -865,7 +854,6 @@ const ResumeHologram = () => {
                   className={styles.closeButton}
                   onClick={() => {
                     setShowGiftModal(false);
-                    playSound('click');
                   }}
                 >
                   ×

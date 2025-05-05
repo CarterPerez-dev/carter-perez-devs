@@ -11,8 +11,7 @@ import './styles/animations.css'
 import './styles/glitch.css'
 import './styles/responsive.css'
 
-// Audio context setup
-import { AudioProvider } from './contexts/AudioContext'
+
 // Theme context setup
 import { ThemeProvider } from './contexts/ThemeContext'
 
@@ -20,9 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AudioProvider>
           <App />
-        </AudioProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,

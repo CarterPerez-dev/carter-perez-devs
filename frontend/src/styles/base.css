@@ -378,7 +378,7 @@ a:hover::after {
   border: 2px solid var(--accent-cyan);
   position: relative; 
   transform: rotate(45deg);
-  animation: spin3d 0.3s linear infinite; 
+  animation: spin3d 1.2s linear infinite; 
   backface-visibility: hidden;
   transform-style: preserve-3d;
 }

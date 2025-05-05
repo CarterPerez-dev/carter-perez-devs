@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 
 // Contexts
 import { useTheme } from './contexts/ThemeContext'
-import { useAudio } from './contexts/AudioContext'
+
 
 // Layouts
 import HolographicNav from './components/layout/HolographicNav'
@@ -65,41 +65,31 @@ function App() {
   useTabVisibilityOptimizer();
   const location = useLocation()
   const { theme } = useTheme()
-  const { initializeAudio } = useAudio()
   const [isLoading, setIsLoading] = useState(true)
   
-  // Simulating content loading
+
   useEffect(() => {
-    // Wait for boot sequence to complete in index.html
-    const bootSequence = document.getElementById('boot-sequence')
-    
+    const bootSequence = document.getElementById('boot-sequence');
+
     const checkBoot = () => {
       if (bootSequence && bootSequence.style.display === 'none') {
-        // Boot sequence completed, now load the main app with a delay
         setTimeout(() => {
-          setIsLoading(false)
-          // Initialize audio after user interaction
-          window.addEventListener('click', initializeAudio, { once: true })
-        }, 500)
+          setIsLoading(false);
+        }, 500); 
       } else {
-        setTimeout(checkBoot, 100) // Check again in 100ms
+        setTimeout(checkBoot, 100);
       }
-    }
+    };
+
+    checkBoot();
+
+  }, []); 
     
-    checkBoot()
-    
-    // Clean up
-    return () => {
-      window.removeEventListener('click', initializeAudio)
-    }
-  }, [initializeAudio])
   
   // Custom cursor effect
   useEffect(() => {
-    // Only enable custom cursor on devices with pointer support
-    // (skip on mobile/touch devices)
     if (window.matchMedia('(pointer: coarse)').matches) {
-      return; // Exit early for touch devices
+      return; 
     }
     
     const cursor = document.createElement('div');
