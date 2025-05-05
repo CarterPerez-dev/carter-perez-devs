@@ -10,6 +10,7 @@ import './styles/cyberpunk.css'
 import './styles/animations.css'
 import './styles/glitch.css'
 import './styles/responsive.css'
+import './styles/cursor-fix.css'
 
 
 // Theme context setup

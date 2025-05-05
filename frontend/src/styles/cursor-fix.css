@@ -1,0 +1,41 @@
+/* Global cursor fix to ensure cursor is always visible */
+
+/* Override cursor: none on all elements */
+* {
+  cursor: auto !important;
+}
+
+/* Make sure all interactive elements show a pointer cursor */
+a, 
+button, 
+input[type="button"], 
+input[type="submit"], 
+input[type="reset"],
+select,
+.cyber-button,
+.neon-button,
+.holographic-button,
+.neon-link,
+.menu-toggle,
+.nav-link,
+.card-link,
+[role="button"] {
+  cursor: pointer !important;
+}
+
+/* Target specific classes known to have cursor issues */
+.cyber-button,
+.neon-button,
+.neon-link,
+.menu-toggle,
+.themeToggle,
+.audioToggle,
+.performanceToggle {
+  cursor: pointer !important;
+}
+
+/* Remove any custom cursor elements if they reappear */
+.cyber-cursor, 
+.cyber-cursor-dot {
+  display: none !important;
+}
