@@ -1,6 +1,8 @@
+# backend/routes/portfolio.py
 import logging
 from flask import Blueprint, request, jsonify, Response
 from helpers.port import PortfolioAssistant
+from helpers.rate_limiter import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +13,7 @@ portfolio_bp = Blueprint('portfolio_bp', __name__)
 assistant = PortfolioAssistant()
 
 @portfolio_bp.route('/ask_about_me', methods=['POST'])
+@limiter.limit("15 per minute")  # Portfolio routes can have slightly higher limits
 def ask_about_me():
     """
     POST /ask_about_me
@@ -41,5 +44,3 @@ def ask_about_me():
     except Exception as e:
         logger.error(f"Error generating answer: {str(e)}")
         return jsonify({"error": "Failed to generate answer."}), 500
-
-

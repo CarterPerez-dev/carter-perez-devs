@@ -111,7 +111,7 @@ class AIAssistant:
                     {"role": "system", "content": system_message},
                     {"role": "user", "content": user_question}
                 ],
-                max_tokens=1000,
+                max_tokens=750,
                 temperature=0.7
             )
             answer = res.choices[0].message.content.strip()
@@ -129,7 +129,7 @@ class AIAssistant:
                     {"role": "system", "content": system_message},
                     {"role": "user", "content": user_question}
                 ],
-                max_tokens=1000,
+                max_tokens=750,
                 temperature=0.7,
                 stream=True
             )

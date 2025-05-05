@@ -1,3 +1,4 @@
+# backend/app.py
 from flask import Flask
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
@@ -8,6 +9,7 @@ import logging
 from flask import request, jsonify
 from routes.portfolio import portfolio_bp
 from routes.ai import ai_bp
+from helpers.rate_limiter import configure_limiter
 
 
 load_dotenv()
@@ -24,6 +26,12 @@ app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+
+limiter = configure_limiter(app)
+
+
+limiter.limit("30 per minute")(ai_bp)
+limiter.limit("60 per minute")(portfolio_bp)
 
 app.register_blueprint(portfolio_bp, url_prefix='/portfolio')
 app.register_blueprint(ai_bp, url_prefix='/ai')

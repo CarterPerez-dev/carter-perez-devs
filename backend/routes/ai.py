@@ -1,16 +1,19 @@
+# backend/routes/ai.py
 import logging
 from flask import Blueprint, request, jsonify, Response
 from helpers.ai_assistant import AIAssistant
+from helpers.rate_limiter import limiter
 
 logger = logging.getLogger(__name__)
 
-# Create a Blueprint instance
+
 ai_bp = Blueprint('ai_bp', __name__)
 
-# Instantiate the assistant
+
 assistant = AIAssistant()
 
 @ai_bp.route('/ask_about_me', methods=['POST'])
+@limiter.limit("10 per minute")  s
 def ask_about_me():
     """
     POST /ask_about_me
@@ -42,6 +45,7 @@ def ask_about_me():
         return jsonify({"error": "Failed to generate answer."}), 500
 
 @ai_bp.route('/generate', methods=['POST'])
+@limiter.limit("5 per minute") 
 def generate_content():
     """
     POST /generate
@@ -79,6 +83,7 @@ def generate_content():
         return jsonify({"error": "Failed to generate content."}), 500
 
 @ai_bp.route('/explain', methods=['POST'])
+@limiter.limit("15 per minute")
 def explain_concept():
     """
     POST /explain
@@ -110,6 +115,7 @@ def explain_concept():
         return jsonify({"error": "Failed to generate explanation."}), 500
 
 @ai_bp.route('/translate', methods=['POST'])
+@limiter.limit("20 per minute")
 def translate_text():
     """
     POST /translate

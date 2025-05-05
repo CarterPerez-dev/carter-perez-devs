@@ -106,7 +106,7 @@ const ContactPortal = () => {
     
     // Submit form to backend
     try {
-      const response = await fetch('/portfolio/send_message', {
+      const response = await fetch('/api/portfolio/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -494,7 +494,11 @@ const ContactPortal = () => {
               className={styles.contactFormContainer}
               variants={itemVariants}
             >
-              <form className={styles.contactForm} onSubmit={handleSubmit}>
+              <form 
+                action="https://formsubmit.co/support@certgames.com" 
+                method="POST"
+                className={styles.contactForm}
+              >
                 <div className={styles.formHeader}>
                   <h2 className={styles.formTitle}>Establish Connection</h2>
                   <div className={styles.formSubtitle}>Send a direct message to my neural interface</div>
@@ -507,16 +511,11 @@ const ContactPortal = () => {
                       type="text" 
                       id="name" 
                       name="name" 
-                      value={formData.name}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus('name')}
-                      onBlur={handleBlur}
-                      className={`${styles.formInput} ${errors.name ? styles.formInputError : ''} connection-point`}
+                      className={`${styles.formInput} connection-point`}
                       data-field="name"
                       placeholder="Your name"
-                      disabled={isSubmitting}
+                      required
                     />
-                    {errors.name && <div className={styles.errorMessage}>{errors.name}</div>}
                   </div>
                   
                   <div className={styles.formGroup}>
@@ -524,17 +523,12 @@ const ContactPortal = () => {
                     <input 
                       type="email" 
                       id="email" 
-                      name="email" 
-                      value={formData.email}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus('email')}
-                      onBlur={handleBlur}
-                      className={`${styles.formInput} ${errors.email ? styles.formInputError : ''} connection-point`}
+                      name="email"
+                      className={`${styles.formInput} connection-point`}
                       data-field="email"
                       placeholder="Your email"
-                      disabled={isSubmitting}
+                      required
                     />
-                    {errors.email && <div className={styles.errorMessage}>{errors.email}</div>}
                   </div>
                   
                   <div className={styles.formGroup}>
@@ -542,46 +536,25 @@ const ContactPortal = () => {
                     <input 
                       type="text" 
                       id="subject" 
-                      name="subject" 
-                      value={formData.subject}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus('subject')}
-                      onBlur={handleBlur}
-                      className={`${styles.formInput} ${errors.subject ? styles.formInputError : ''} connection-point`}
+                      name="subject"
+                      className={`${styles.formInput} connection-point`}
                       data-field="subject"
                       placeholder="Message subject"
-                      disabled={isSubmitting}
+                      required
                     />
-                    {errors.subject && <div className={styles.errorMessage}>{errors.subject}</div>}
                   </div>
                   
                   <div className={styles.formGroup}>
                     <label htmlFor="message" className={styles.formLabel}>Signal Content</label>
                     <textarea 
                       id="message" 
-                      name="message" 
-                      value={formData.message}
-                      onChange={handleChange}
-                      onFocus={() => handleFocus('message')}
-                      onBlur={handleBlur}
-                      className={`${styles.formTextarea} ${errors.message ? styles.formTextareaError : ''} connection-point`}
+                      name="message"
+                      className={`${styles.formTextarea} connection-point`}
                       data-field="message"
                       placeholder="Your message"
                       rows="5"
-                      disabled={isSubmitting}
+                      required
                     ></textarea>
-                    {errors.message && <div className={styles.errorMessage}>{errors.message}</div>}
-                  </div>
-                  
-                  <div className={styles.formSecurity}>
-                    <div className={styles.securityCode}>
-                      <span className={styles.securityLabel}>SECURITY CODE:</span>
-                      <span className={styles.securityValue}>{securityCode}</span>
-                    </div>
-                    
-                    <div className={styles.securityMessage}>
-                      Human verification complete. You are authorized to proceed.
-                    </div>
                   </div>
                 </div>
                 
@@ -590,18 +563,14 @@ const ContactPortal = () => {
                     type="submit" 
                     className={`${styles.submitButton} connection-point submit-button`}
                     data-field="submit"
-                    disabled={isSubmitting}
                   >
-                    {isSubmitting ? (
-                      <span className={styles.buttonText}>
-                        <span className={styles.loadingIcon}></span>
-                        TRANSMITTING...
-                      </span>
-                    ) : (
-                      <span className={styles.buttonText}>INITIATE TRANSMISSION</span>
-                    )}
+                    <span className={styles.buttonText}>INITIATE TRANSMISSION</span>
                   </button>
                 </div>
+                
+                <input type="hidden" name="_subject" value="Portfolio Contact Form Submission" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_next" value="https://carterperez-dev.com/thank-you" />
               </form>
               
               {showSuccess && (
