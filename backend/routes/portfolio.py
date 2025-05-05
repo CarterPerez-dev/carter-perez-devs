@@ -6,14 +6,12 @@ from helpers.rate_limiter import limiter
 
 logger = logging.getLogger(__name__)
 
-# Create a Blueprint instance
 portfolio_bp = Blueprint('portfolio_bp', __name__)
 
-# Instantiate the assistant
 assistant = PortfolioAssistant()
 
 @portfolio_bp.route('/ask_about_me', methods=['POST'])
-@limiter.limit("15 per minute")  # Portfolio routes can have slightly higher limits
+@limiter.limit("15 per minute") 
 def ask_about_me():
     """
     POST /ask_about_me
@@ -31,7 +29,6 @@ def ask_about_me():
         return jsonify({"error": "Missing 'question' field."}), 400
 
     try:
-        # Handle streaming vs. non-streaming
         if stream_requested:
             def generate():
                 for chunk in assistant.ask_about_me(question, stream=True):
