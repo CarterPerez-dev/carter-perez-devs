@@ -5,7 +5,6 @@ from flask_limiter.util import get_remote_address
 
 logger = logging.getLogger(__name__)
 
-# Initialize limiter without binding to app yet
 limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["100 per day", "20 per hour"],
