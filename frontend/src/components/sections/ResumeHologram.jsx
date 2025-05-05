@@ -276,6 +276,10 @@ const ResumeHologram = () => {
   const [glitchEffect, setGlitchEffect] = useState(false);
   
   // Canvas animation for background effects
+  // Modify this portion of ResumeHologram.jsx
+  // Find the useEffect hook that handles the canvas animation and replace it
+  
+  // Canvas animation for background effects - OPTIMIZED VERSION
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
     
@@ -293,7 +297,21 @@ const ResumeHologram = () => {
     window.addEventListener('resize', updateCanvasSize);
     updateCanvasSize();
     
-    // Create grid lines
+    // Throttle function to limit execution frequency
+    const throttle = (func, limit) => {
+      let inThrottle;
+      return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+          func.apply(context, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      };
+    };
+    
+    // Reduced and optimized grid drawing
     const drawGrid = () => {
       const gridSize = 30;
       const primaryColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.15)' : 'rgba(77, 77, 255, 0.15)';
@@ -301,72 +319,100 @@ const ResumeHologram = () => {
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw vertical lines
-      for (let x = 0; x < canvas.width; x += gridSize) {
+      // Calculate visible grid lines only
+      const startX = Math.floor(0 / gridSize) * gridSize;
+      const endX = Math.ceil(canvas.width / gridSize) * gridSize;
+      const startY = Math.floor(0 / gridSize) * gridSize;
+      const endY = Math.ceil(canvas.height / gridSize) * gridSize;
+      
+      // Draw fewer vertical lines - only every other line
+      for (let x = startX; x <= endX; x += gridSize * 2) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
-        ctx.strokeStyle = x % (gridSize * 2) === 0 ? primaryColor : secondaryColor;
-        ctx.lineWidth = x % (gridSize * 3) === 0 ? 1 : 0.5;
+        ctx.strokeStyle = primaryColor;
+        ctx.lineWidth = 0.5;
         ctx.stroke();
       }
       
-      // Draw horizontal lines
-      for (let y = 0; y < canvas.height; y += gridSize) {
+      // Draw fewer horizontal lines - only every other line
+      for (let y = startY; y <= endY; y += gridSize * 2) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
-        ctx.strokeStyle = y % (gridSize * 2) === 0 ? primaryColor : secondaryColor;
-        ctx.lineWidth = y % (gridSize * 3) === 0 ? 1 : 0.5;
+        ctx.strokeStyle = primaryColor;
+        ctx.lineWidth = 0.5;
         ctx.stroke();
       }
       
-      // Draw scan line
-      const scanLineY = (Date.now() % 3000) / 3000 * canvas.height;
-      ctx.beginPath();
-      ctx.moveTo(0, scanLineY);
-      ctx.lineTo(canvas.width, scanLineY);
-      ctx.strokeStyle = theme === 'dark' 
-        ? 'rgba(0, 255, 245, 0.3)' 
-        : 'rgba(77, 77, 255, 0.3)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      
-      // Draw glow around active section
-      const activeElement = document.getElementById(`section-${activeSection}`);
-      if (activeElement) {
-        const rect = activeElement.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        
-        // Calculate position relative to canvas
-        const x = rect.left - containerRect.left;
-        const y = rect.top - containerRect.top;
-        const width = rect.width;
-        const height = rect.height;
-        
-        // Draw glow
+      // Draw scan line with reduced frequency
+      if (Date.now() % 100 < 50) { // Only draw scan line every other frame
+        const scanLineY = (Date.now() % 3000) / 3000 * canvas.height;
+        ctx.beginPath();
+        ctx.moveTo(0, scanLineY);
+        ctx.lineTo(canvas.width, scanLineY);
         ctx.strokeStyle = theme === 'dark' 
-          ? 'rgba(0, 255, 245, 0.5)' 
-          : 'rgba(77, 77, 255, 0.5)';
+          ? 'rgba(0, 255, 245, 0.3)' 
+          : 'rgba(77, 77, 255, 0.3)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(x - 5, y - 5, width + 10, height + 10);
-        
-        // Add inner glow
-        const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-        gradient.addColorStop(0, theme === 'dark' 
-          ? 'rgba(0, 255, 245, 0.1)' 
-          : 'rgba(77, 77, 255, 0.1)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(x, y, width, height);
+        ctx.stroke();
+      }
+      
+      // Simplify active element highlighting
+      if (activeSection) {
+        const activeElement = document.getElementById(`section-${activeSection}`);
+        if (activeElement) {
+          const rect = activeElement.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          
+          // Calculate position relative to canvas
+          const x = rect.left - containerRect.left;
+          const y = rect.top - containerRect.top;
+          const width = rect.width;
+          const height = rect.height;
+          
+          // Simplified glow - just draw a rectangle
+          ctx.strokeStyle = theme === 'dark' 
+            ? 'rgba(0, 255, 245, 0.5)' 
+            : 'rgba(77, 77, 255, 0.5)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x - 2, y - 2, width + 4, height + 4);
+        }
       }
     };
     
-    // Animation loop
+    // Throttled animation with reduced frame rate
+    const throttledDraw = throttle(drawGrid, 1000/30); // Target 30 FPS instead of 60
+    
+    // Detect visibility to pause animation when tab is not visible
     let animationId;
+    let isVisible = true;
+    
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+      
+      if (isVisible && !animationId) {
+        animate();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Animation loop with frame skipping for better performance
+    let frameCount = 0;
     const animate = () => {
-      drawGrid();
+      if (!isVisible) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        return;
+      }
+      
+      // Only draw every other frame
+      frameCount++;
+      if (frameCount % 2 === 0) {
+        throttledDraw();
+      }
+      
       animationId = requestAnimationFrame(animate);
     };
     
@@ -376,6 +422,7 @@ const ResumeHologram = () => {
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', updateCanvasSize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [theme, activeSection]);
   

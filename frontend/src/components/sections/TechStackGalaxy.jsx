@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 // Import react-icons
 import { FaLock, FaDesktop, FaCog, FaSyncAlt, FaDatabase, FaGlobe, FaPause, FaPlay, FaShieldAlt, FaCloudversify } from 'react-icons/fa'; 
-import { useTheme } from '../../contexts/ThemeContext'; // Assuming this context exists
+import { useTheme } from '../../contexts/ThemeContext'; 
 import styles from './TechStackGalaxy.module.css';
 
 // Skill categories with React Icons and potentially brighter colors
@@ -36,67 +36,67 @@ const SKILL_CATEGORIES = [
     id: 'cloud',
     name: 'Cloud',
     icon: FaCloudversify,
-    color: '#42a5f5' // Bright Blue
+    color: '#42a5f5' 
   },
   {
     id: 'security_governance',
     name: 'Security Governance',
     icon: FaShieldAlt,
-    color: '#ba68c8' // Brighter Purple
+    color: '#ba68c8'
   },
   {
     id: 'networking',
     name: 'Networking',
     icon: FaGlobe,
-    color: '#ffa726' // Brighter Orange
+    color: '#ffa726' 
   }
 ];
 
 // Updated Skills data with more cybersecurity focus
 const SKILLS = [
     // Cybersecurity
-    { name: 'Penetration Testing', category: 'cybersecurity', level: 90 },
-    { name: 'Vulnerability Assessment', category: 'cybersecurity', level: 88 },
-    { name: 'MITRE ATT&CK Framework', category: 'cybersecurity', level: 85 },
+    { name: 'Penetration Testing', category: 'cybersecurity', level: 92 },
+    { name: 'Vulnerability Assessment', category: 'cybersecurity', level: 94 },
+    { name: 'MITRE ATT&CK Framework', category: 'cybersecurity', level: 88 },
     { name: 'Incident Response', category: 'cybersecurity', level: 82 },
     { name: 'Threat Hunting', category: 'cybersecurity', level: 80 },
-    { name: 'Digital Forensics', category: 'cybersecurity', level: 78 },
-    { name: 'Exploit Development', category: 'cybersecurity', level: 75 },
-    { name: 'Security Monitoring (Splunk)', category: 'cybersecurity', level: 85 },
+    { name: 'Digital Forensics', category: 'cybersecurity', level: 79 },
+    { name: 'Exploit Development', category: 'cybersecurity', level: 87 },
+    { name: 'Security Monitoring', category: 'cybersecurity', level: 96 },
 
     // Frontend
-    { name: 'React/Redux', category: 'frontend', level: 92 },
+    { name: 'React/Redux', category: 'frontend', level: 99 },
     { name: 'JavaScript/ES6+', category: 'frontend', level: 90 },
     { name: 'HTML5/CSS3', category: 'frontend', level: 95 },
-    { name: 'TypeScript', category: 'frontend', level: 75 },
-    { name: 'Responsive Design', category: 'frontend', level: 88 },
-    { name: 'React Native', category: 'frontend', level: 82 },
-    { name: 'UI/UX Principles', category: 'frontend', level: 80 },
-    { name: 'Web Accessibility', category: 'frontend', level: 78 },
+    { name: 'TypeScript', category: 'frontend', level: 81 },
+    { name: 'Responsive Design', category: 'frontend', level: 96 },
+    { name: 'React Native', category: 'frontend', level: 86 },
+    { name: 'UI/UX Principles', category: 'frontend', level: 85 },
+    { name: 'Web Accessibility', category: 'frontend', level: 84 },
 
     // Backend
-    { name: 'Python', category: 'backend', level: 95 },
-    { name: 'Flask', category: 'backend', level: 90 },
-    { name: 'Node.js', category: 'backend', level: 82 },
+    { name: 'Python', category: 'backend', level: 97 },
+    { name: 'Flask', category: 'backend', level: 99 },
+    { name: 'Node.js', category: 'backend', level: 85 },
     { name: 'Express', category: 'backend', level: 80 },
-    { name: 'RESTful API Design', category: 'backend', level: 88 },
-    { name: 'API Security', category: 'backend', level: 85 },
-    { name: 'Shell Scripting', category: 'backend', level: 85 },
-    { name: 'Microservices Architecture', category: 'backend', level: 75 },
+    { name: 'RESTful API Design', category: 'backend', level: 92 },
+    { name: 'API Security', category: 'backend', level: 95 },
+    { name: 'Shell Scripting', category: 'backend', level: 89 },
+    { name: 'Microservices Architecture', category: 'backend', level: 79 },
 
     // DevOps
-    { name: 'Docker', category: 'devops', level: 90 },
+    { name: 'Docker', category: 'devops', level: 99 },
     { name: 'Kubernetes', category: 'devops', level: 70 },
-    { name: 'CI/CD Pipelines', category: 'devops', level: 80 },
-    { name: 'GitHub Actions', category: 'devops', level: 85 },
+    { name: 'CI/CD Pipelines', category: 'devops', level: 86 },
+    { name: 'GitHub Actions', category: 'devops', level: 89 },
     { name: 'Infrastructure as Code', category: 'devops', level: 75 },
-    { name: 'Linux Administration', category: 'devops', level: 88 },
-    { name: 'Nginx/Apache Configuration', category: 'devops', level: 85 },
-    { name: 'DevSecOps Practices', category: 'devops', level: 78 },
+    { name: 'Linux Administration', category: 'devops', level: 94 },
+    { name: 'Nginx/Apache Configuration', category: 'devops', level: 98 },
+    { name: 'DevSecOps Practices', category: 'devops', level: 85 },
 
     // Cloud
-    { name: 'AWS EC2/S3', category: 'cloud', level: 85 },
-    { name: 'AWS CloudFront', category: 'cloud', level: 80 },
+    { name: 'AWS EC2/S3', category: 'cloud', level: 89 },
+    { name: 'AWS CloudFront', category: 'cloud', level: 85 },
     { name: 'AWS CloudWatch', category: 'cloud', level: 78 },
     { name: 'AWS WAF & Shield', category: 'cloud', level: 85 },
     { name: 'AWS EventBridge', category: 'cloud', level: 75 },
@@ -105,24 +105,24 @@ const SKILLS = [
     { name: 'Cloud Security Best Practices', category: 'cloud', level: 85 },
 
     // Security Governance
-    { name: 'ISO 27001', category: 'security_governance', level: 80 },
-    { name: 'NIST 800-53', category: 'security_governance', level: 82 },
-    { name: 'Risk Assessment', category: 'security_governance', level: 85 },
+    { name: 'ISO 27001', category: 'security_governance', level: 88 },
+    { name: 'NIST 800-53', category: 'security_governance', level: 87 },
+    { name: 'Risk Assessment', category: 'security_governance', level: 92 },
     { name: 'Security Policy Development', category: 'security_governance', level: 78 },
     { name: 'Compliance Frameworks', category: 'security_governance', level: 80 },
     { name: 'COBIT Implementation', category: 'security_governance', level: 75 },
     { name: 'ITIL Best Practices', category: 'security_governance', level: 78 },
-    { name: 'Security Auditing', category: 'security_governance', level: 82 },
+    { name: 'Security Auditing', category: 'security_governance', level: 89 },
 
     // Networking
-    { name: 'TCP/IP Protocol Suite', category: 'networking', level: 90 },
-    { name: 'Firewalls & IDS/IPS', category: 'networking', level: 88 },
+    { name: 'TCP/IP Protocol Suite', category: 'networking', level: 93 },
+    { name: 'Firewalls & IDS/IPS', category: 'networking', level: 90 },
     { name: 'VPN Implementation', category: 'networking', level: 85 },
-    { name: 'Zero Trust Architecture', category: 'networking', level: 80 },
-    { name: 'Network Security', category: 'networking', level: 90 },
-    { name: 'DNS Management', category: 'networking', level: 82 },
-    { name: 'SSL/TLS Implementation', category: 'networking', level: 85 },
-    { name: 'Network Monitoring', category: 'networking', level: 80 }
+    { name: 'Zero Trust Architecture', category: 'networking', level: 85 },
+    { name: 'Network Security', category: 'networking', level: 93 },
+    { name: 'DNS Management', category: 'networking', level: 94 },
+    { name: 'SSL/TLS Implementation', category: 'networking', level: 91 },
+    { name: 'Network Monitoring', category: 'networking', level: 90 }
 ];
 
 

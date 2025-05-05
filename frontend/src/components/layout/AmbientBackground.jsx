@@ -1,16 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
-import { throttle, getPerformanceLevel } from '../../utils/performance';
+import { throttle } from '../../utils/performance';
 
-const AmbientBackground = () => {
+// Use memo to prevent unnecessary re-renders
+const AmbientBackground = memo(() => {
   const canvasRef = useRef(null);
   const { theme } = useTheme();
   const [performanceLevel, setPerformanceLevel] = useState(() => {
-    return getPerformanceLevel();
+    // Retrieve from localStorage or compute based on device capability
+    const savedLevel = localStorage.getItem('performanceLevel');
+    return savedLevel ? parseInt(savedLevel) : 3;
   });
   const requestRef = useRef(null);
   const previousTimeRef = useRef(0);
-  const fpsLimit = 30; // Limit to 30 FPS
+  const fpsLimit = 20; // Further reduced FPS limit for background
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -18,53 +21,37 @@ const AmbientBackground = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // Handle resize - with throttle
+    // Super throttled resize handler
     const handleResize = throttle(() => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    }, 250);
+    }, 500); // Increase throttle time for better performance
     
     window.addEventListener('resize', handleResize);
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
     // Colors based on theme
-    const gridColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.2)' : 'rgba(77, 77, 255, 0.2)';
+    const gridColor = theme === 'dark' ? 'rgba(0, 255, 245, 0.15)' : 'rgba(77, 77, 255, 0.15)';
     
-    // Create grid lines - REDUCED number of lines
-    const gridLines = [];
-    const gridSize = performanceLevel > 1 ? 80 : 120; // Larger grid cells = fewer lines
-    const cols = Math.ceil(canvas.width / gridSize) + 1; // Add one extra for smooth scrolling
-    const rows = Math.ceil(canvas.height / gridSize);
+    // Create grid lines - DRASTICALLY REDUCED number of lines
+    const gridSize = performanceLevel > 2 ? 160 : 240; // Even larger grid cells = much fewer lines
     
-    // Horizontal lines
-    for (let y = 0; y <= rows; y++) {
-      gridLines.push({
-        x1: 0,
-        y1: y * gridSize,
-        x2: canvas.width,
-        y2: y * gridSize,
-        offset: 0,
-        direction: 'horizontal'
-      });
-    }
+    // Cache grid calculation instead of recalculating each frame
+    const prepareGrid = () => {
+      const cols = Math.ceil(canvas.width / gridSize) + 1;
+      const rows = Math.ceil(canvas.height / gridSize);
+      
+      return { cols, rows };
+    };
     
-    // Vertical lines
-    for (let x = 0; x <= cols; x++) {
-      gridLines.push({
-        x1: x * gridSize,
-        y1: 0,
-        x2: x * gridSize,
-        y2: canvas.height,
-        offset: 0,
-        direction: 'vertical'
-      });
-    }
+    const { cols, rows } = prepareGrid();
     
-    // Animation parameters
-    const gridSpeed = 0.3; // Reduced from 0.5
+    // Animation parameters - reduce speed further
+    const gridSpeed = 0.15; // Reduced significantly from original 0.5
     let offset = 0;
     
+    // Modified render with significant optimizations
     const render = (timestamp) => {
       // Calculate time difference & limit FPS
       if (!previousTimeRef.current) previousTimeRef.current = timestamp;
@@ -73,12 +60,11 @@ const AmbientBackground = () => {
       if (elapsed > 1000 / fpsLimit) {
         previousTimeRef.current = timestamp;
         
-        // Clear canvas with background color
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = theme === 'dark' ? 'rgba(5, 5, 5, 0.85)' : 'rgba(15, 8, 8, 0.85)';
+        // Clear canvas with background color - only once per frame
+        ctx.fillStyle = theme === 'dark' ? 'rgba(5, 5, 5, 0.9)' : 'rgba(15, 8, 8, 0.9)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Update grid offset
+        // Update grid offset more slowly
         offset += gridSpeed;
         if (offset >= gridSize) {
           offset = 0;
@@ -86,31 +72,28 @@ const AmbientBackground = () => {
         
         // Draw grid lines
         ctx.strokeStyle = gridColor;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 0.5; // Thinner lines for better performance
         
-        // Only render grid lines in viewport plus margin
-        const margin = 100;
-        const viewportTop = -margin;
-        const viewportBottom = canvas.height + margin;
-        const viewportLeft = -margin;
-        const viewportRight = canvas.width + margin;
-        
-        for (const line of gridLines) {
-          if (line.direction === 'horizontal') {
-            if (line.y1 < viewportTop || line.y1 > viewportBottom) continue;
-            
+        // Draw reduced horizontal lines - only every 2nd line
+        for (let y = 0; y <= rows; y += 2) {
+          const yPos = y * gridSize;
+          // Only draw lines that would be visible
+          if (yPos >= 0 && yPos <= canvas.height) {
             ctx.beginPath();
-            ctx.moveTo(line.x1, line.y1);
-            ctx.lineTo(line.x2, line.y2);
+            ctx.moveTo(0, yPos);
+            ctx.lineTo(canvas.width, yPos);
             ctx.stroke();
-          } else {
-            // Move vertical lines for scrolling effect
-            const x = line.x1 - offset;
-            if (x < viewportLeft || x > viewportRight) continue;
-            
+          }
+        }
+        
+        // Draw reduced vertical lines - only every 2nd line with scrolling effect
+        for (let x = 0; x <= cols; x += 2) {
+          const xPos = x * gridSize - offset;
+          // Only draw lines that would be visible
+          if (xPos >= 0 && xPos <= canvas.width) {
             ctx.beginPath();
-            ctx.moveTo(x, line.y1);
-            ctx.lineTo(x, line.y2);
+            ctx.moveTo(xPos, 0);
+            ctx.lineTo(xPos, canvas.height);
             ctx.stroke();
           }
         }
@@ -156,7 +139,7 @@ const AmbientBackground = () => {
     height: '100%',
     zIndex: -10,
     pointerEvents: 'none',
-    willChange: 'transform'
+    willChange: 'transform' // Hint for browser optimization
   };
 
   return (
@@ -164,8 +147,31 @@ const AmbientBackground = () => {
       ref={canvasRef}
       className="ambient-background"
       style={canvasStyle}
+      aria-hidden="true" // Add for accessibility
     />
   );
-};
+});
 
-export default React.memo(AmbientBackground);
+// Helper functions moved outside component for better memory usage
+function getDensityValue(density) {
+  switch (density) {
+    case 'low': return 20;
+    case 'medium': return 50;
+    case 'high': return 80;
+    default: return parseInt(density, 10) || 50;
+  }
+}
+
+function getSpeedValue(speed) {
+  switch (speed) {
+    case 'slow': return 1;
+    case 'medium': return 5;
+    case 'fast': return 10;
+    default: return parseInt(speed, 10) || 5;
+  }
+}
+
+// Add display name for debugging
+AmbientBackground.displayName = 'AmbientBackground';
+
+export default AmbientBackground;

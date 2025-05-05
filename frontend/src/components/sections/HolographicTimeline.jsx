@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useCallback } from 'react'; 
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
+// Removed useAudio import
 import styles from './HolographicTimeline.module.css';
 
 
@@ -52,7 +52,7 @@ const TIMELINE_DATA = [
       'Developed 10+ interactive learning games and 15+ customizable themes',
       'Implemented real-time support system for enhanced user experience'
     ],
-    skills: ['React', 'Redux', 'Python', 'Flask', 'MongoDB', 'OpenAI Integration', 'Docker' 'Redis', 'Nginx'],
+    skills: ['React', 'Redux', 'Python', 'Flask', 'MongoDB', 'OpenAI Integration', 'Docker', 'Redis', 'Nginx'], // Added missing quote for Docker
     category: 'project'
   },
   {
@@ -68,7 +68,7 @@ const TIMELINE_DATA = [
       'Optimized for iOS devices with offline capabilities',
       'Designed intuitive mobile UI for certification practice'
     ],
-    skills: ['React Native', 'Typescript' 'Mobile Development', 'iOS App Store', 'Cross-Platform Integration'],
+    skills: ['React Native', 'Typescript', 'Mobile Development', 'iOS App Store', 'Cross-Platform Integration'], // Added missing quote for Typescript
     category: 'project'
   },
   {
@@ -84,7 +84,7 @@ const TIMELINE_DATA = [
       'Built interactive admin dashboard for threat intelligence visualization',
       'Published as Python package with simplified integration for existing Flask apps'
     ],
-    skills: ['Python', 'Flask', 'Cybersecurity', 'Honeypot Development', 'PyPI Package' 'React'],
+    skills: ['Python', 'Flask', 'Cybersecurity', 'Honeypot Development', 'PyPI Package', 'React'], // Added missing quote for PyPI Package
     category: 'project'
   },
   {
@@ -130,85 +130,105 @@ const CATEGORIES = [
   { id: 'certification', name: 'CERTIFICATIONS', icon: '📜' }
 ];
 
-const HolographicTimeline = ({ fullPage = false }) => {
-  const { theme } = useTheme();
-  const { playSound } = useAudio();
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [expandedItem, setExpandedItem] = useState(null);
-  const [hoveredItem, setHoveredItem] = useState(null);
-  
-  // Filter and sort timeline items based on active category
-  const filteredItems = React.useMemo(() => {
-    const filtered = activeCategory === 'all' 
-      ? [...TIMELINE_DATA] 
-      : TIMELINE_DATA.filter(item => item.category === activeCategory);
-    
+// Helper function to parse date strings (for sorting) - Moved outside component
+function parseDate(dateStr) {
+  // Handle date ranges like 'Month Year - Month Year' or 'Month Year - Present'
+  if (dateStr.includes('-')) {
+    const parts = dateStr.split('-');
+    const endPart = parts[1].trim(); // Get the end date part
+
+    if (endPart.toLowerCase() === 'present') {
+      return new Date(); // Use current date for 'Present'
+    }
+    // Try parsing the end date part (assuming 'Month Year' format)
+    const date = new Date(endPart);
+    if (!isNaN(date)) return date;
+  }
+
+  // Handle specific dates like 'Month Year' or 'Month Day, Year'
+  const date = new Date(dateStr);
+  if (!isNaN(date)) return date;
+
+  // Fallback for formats like 'Month Year' if Date() constructor fails
+  const monthYearMatch = dateStr.match(/(\w+)\s+(\d{4})/);
+  if (monthYearMatch) {
+    return new Date(`${monthYearMatch[1]} 1, ${monthYearMatch[2]}`);
+  }
+
+  // Fallback if parsing fails (e.g., return epoch or throw error)
+  console.warn(`Could not parse date: ${dateStr}`);
+  return new Date(0); // Return epoch as a fallback
+}
+
+
+// Memoize expensive calculations (Filtering and Sorting)
+const useFilteredItems = (activeCategory, timelineData) => {
+  return useMemo(() => {
+    const filtered = activeCategory === 'all'
+      ? [...timelineData]
+      : timelineData.filter(item => item.category === activeCategory);
+
     // Sort by date (most recent first)
     return filtered.sort((a, b) => {
       const dateA = parseDate(a.date);
       const dateB = parseDate(b.date);
+      // Handle potential invalid dates from parseDate
+      if (isNaN(dateA) && isNaN(dateB)) return 0;
+      if (isNaN(dateA)) return 1; // Put invalid dates last
+      if (isNaN(dateB)) return -1; // Put invalid dates last
       return dateB - dateA;
     });
-  }, [activeCategory]);
-  
-  // Handle category change
-  const handleCategoryChange = (categoryId) => {
+  }, [activeCategory, timelineData]);
+};
+
+// Optimize category styles to avoid recalculation
+const categoryStyles = {
+  work: { color: 'var(--accent-cyan)', icon: '💼' },
+  education: { color: 'var(--accent-blue)', icon: '🎓' },
+  project: { color: 'var(--accent-magenta)', icon: '🚀' },
+  certification: { color: 'var(--accent-green)', icon: '📜' },
+  default: { color: 'var(--accent-cyan)', icon: '⚡' }
+};
+
+
+const HolographicTimeline = ({ fullPage = false }) => {
+  const { theme } = useTheme();
+  // Removed playSound state/function
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [expandedItem, setExpandedItem] = useState(null);
+  const [hoveredItem, setHoveredItem] = useState(null);
+
+  // Use memoized filtered items
+  const filteredItems = useFilteredItems(activeCategory, TIMELINE_DATA);
+
+  // Prevent unnecessary re-renders by using callbacks
+  const handleCategoryChange = useCallback((categoryId) => {
     setActiveCategory(categoryId);
     setExpandedItem(null);
-    playSound('click');
-  };
-  
-  // Handle item click
-  const handleItemClick = (itemId) => {
-    setExpandedItem(expandedItem === itemId ? null : itemId);
-    playSound('click');
-  };
-  
-  // Close a card
-  const handleClose = (e, itemId) => {
+    // playSound('click'); // Removed sound
+  }, [setActiveCategory, setExpandedItem]); // Added setters to dependency array
+
+  const handleItemClick = useCallback((itemId) => {
+    setExpandedItem(currentExpandedItem => currentExpandedItem === itemId ? null : itemId); // Use functional update
+    // playSound('click'); // Removed sound
+  }, [setExpandedItem]); // Dependency is only the setter
+
+  const handleClose = useCallback((e, itemId) => {
     e.stopPropagation();
-    if (expandedItem === itemId) {
-      setExpandedItem(null);
-    }
-    playSound('click');
-  };
-  
-  // Helper function to parse date strings (for sorting)
-  function parseDate(dateStr) {
-    if (dateStr.includes('-')) {
-      const parts = dateStr.split('-');
-      const endPart = parts[1].trim();
-      
-      if (endPart === 'Present') {
-        return new Date();
-      }
-      
-      return new Date(endPart, 0);
-    }
-    
-    if (dateStr.includes(',')) {
-      return new Date(dateStr);
-    }
-    
-    return new Date(dateStr, 0);
-  }
-  
-  // Get category style
-  const getCategoryStyle = (category) => {
-    switch (category) {
-      case 'work':
-        return { color: 'var(--accent-cyan)', icon: '💼' };
-      case 'education':
-        return { color: 'var(--accent-blue)', icon: '🎓' };
-      case 'project':
-        return { color: 'var(--accent-magenta)', icon: '🚀' };
-      case 'certification':
-        return { color: 'var(--accent-green)', icon: '📜' };
-      default:
-        return { color: 'var(--accent-cyan)', icon: '⚡' };
-    }
-  };
-  
+    // Check against the current state inside the callback logic if needed,
+    // but setting to null is safe regardless. If logic depended on *reading*
+    // expandedItem state here, it would need to be a dependency.
+    // Since we only set it based on the item passed, we don't need expandedItem dependency.
+    setExpandedItem(null);
+    // playSound('click'); // Removed sound
+  }, [setExpandedItem]); // Dependency is only the setter
+
+  // Optimize getting category style
+  const getCategoryStyle = useCallback((category) => {
+    return categoryStyles[category] || categoryStyles.default;
+  }, []); // No dependencies as categoryStyles is stable
+
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -219,7 +239,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
       }
     }
   };
-  
+
   const itemVariants = {
     hidden: { opacity: 0, y: 10 },
     visible: {
@@ -234,7 +254,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
       <div className={styles.scanLines}></div>
       <div className="container">
         {fullPage ? (
-          <motion.h1 
+          <motion.h1
             className={styles.sectionTitle}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -243,7 +263,7 @@ const HolographicTimeline = ({ fullPage = false }) => {
             Chronological Matrix
           </motion.h1>
         ) : (
-          <motion.h2 
+          <motion.h2
             className={styles.sectionTitle}
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -253,8 +273,8 @@ const HolographicTimeline = ({ fullPage = false }) => {
             Experience Timeline
           </motion.h2>
         )}
-        
-        <motion.div 
+
+        <motion.div
           className={styles.categorySelector}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -265,41 +285,50 @@ const HolographicTimeline = ({ fullPage = false }) => {
             <button
               key={category.id}
               className={`${styles.categoryButton} ${activeCategory === category.id ? styles.active : ''}`}
-              onClick={() => handleCategoryChange(category.id)}
+              onClick={() => handleCategoryChange(category.id)} // Use memoized handler
             >
               <span className={styles.categoryIcon}>{category.icon}</span>
               <span className={styles.categoryName}>{category.name}</span>
             </button>
           ))}
         </motion.div>
-        
+
         <div className={styles.timelineContainer}>
-          <motion.div 
+          <motion.div
             className={styles.timelineCards}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            key={activeCategory}
+            key={activeCategory} // Re-trigger animation on category change
           >
             {filteredItems.length > 0 ? (
               filteredItems.map((item) => {
-                const categoryStyle = getCategoryStyle(item.category);
+                const categoryStyle = getCategoryStyle(item.category); // Use memoized getter
                 const isExpanded = expandedItem === item.id;
-                
+
                 return (
-                  <motion.div 
+                  <motion.div
                     key={item.id}
                     className={`${styles.timelineCard} ${isExpanded ? styles.expanded : ''} ${hoveredItem === item.id ? styles.hovered : ''}`}
                     variants={itemVariants}
-                    onClick={() => handleItemClick(item.id)}
+                    onClick={() => handleItemClick(item.id)} // Use memoized handler
                     onMouseEnter={() => setHoveredItem(item.id)}
                     onMouseLeave={() => setHoveredItem(null)}
                     style={{
                       '--card-color': categoryStyle.color
                     }}
+                    layout // Add layout prop for smoother expand/collapse animation
                   >
-                    <div className={styles.closeButton} onClick={(e) => handleClose(e, item.id)}>×</div>
-                    
+                    <motion.div // Animate close button presence
+                      className={styles.closeButton}
+                      onClick={(e) => handleClose(e, item.id)} // Use memoized handler
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: isExpanded ? 1 : 0, scale: isExpanded ? 1 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      ×
+                    </motion.div>
+
                     <div className={styles.cardHeader}>
                       <div className={styles.cardIcon}>{categoryStyle.icon}</div>
                       <div className={styles.cardTitleContainer}>
@@ -312,39 +341,51 @@ const HolographicTimeline = ({ fullPage = false }) => {
                       </div>
                       <div className={styles.cardDate}>{item.date}</div>
                     </div>
-                    
-                    <div className={styles.cardContent}>
+
+                    {/* Wrap content that changes height in motion.div for layout animation */}
+                    <motion.div layout className={styles.cardContent}>
                       <p className={styles.cardDescription}>{item.description}</p>
-                      
-                      {isExpanded && (
-                        <div className={styles.cardDetails}>
-                          <div className={styles.detailSection}>
-                            <h4 className={styles.detailTitle}>Achievements</h4>
-                            <ul className={styles.achievementsList}>
-                              {item.achievements.map((achievement, idx) => (
-                                <li key={idx} className={styles.achievementItem}>{achievement}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          
-                          <div className={styles.detailSection}>
-                            <h4 className={styles.detailTitle}>Skills</h4>
-                            <div className={styles.skillsList}>
-                              {item.skills.map((skill, idx) => (
-                                <span key={idx} className={styles.skillBadge}>{skill}</span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+
+                      {/* Animate the details section */}
+                      <motion.div
+                         className={styles.cardDetails}
+                         initial={{ opacity: 0, height: 0 }}
+                         animate={{ opacity: isExpanded ? 1 : 0, height: isExpanded ? 'auto' : 0 }}
+                         transition={{ duration: 0.3 }}
+                         style={{ overflow: 'hidden' }} // Keep content clipped during animation
+                      >
+                          {isExpanded && ( // Conditionally render content *inside* animating container
+                            <>
+                              <div className={styles.detailSection}>
+                                <h4 className={styles.detailTitle}>Achievements</h4>
+                                <ul className={styles.achievementsList}>
+                                  {item.achievements.map((achievement, idx) => (
+                                    <li key={idx} className={styles.achievementItem}>{achievement}</li>
+                                  ))}
+                                </ul>
+                              </div>
+
+                              <div className={styles.detailSection}>
+                                <h4 className={styles.detailTitle}>Skills</h4>
+                                <div className={styles.skillsList}>
+                                  {item.skills.map((skill, idx) => (
+                                    <span key={idx} className={styles.skillBadge}>{skill}</span>
+                                  ))}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                      </motion.div>
+                    </motion.div>
                   </motion.div>
                 );
               })
             ) : (
-              <motion.div 
+              <motion.div
                 className={styles.emptyState}
-                variants={itemVariants}
+                variants={itemVariants} // Use item variant for consistency
+                initial="hidden" // Add initial/animate for fade-in
+                animate="visible"
               >
                 <div className={styles.emptyIcon}>🔍</div>
                 <h3>No Records Found</h3>

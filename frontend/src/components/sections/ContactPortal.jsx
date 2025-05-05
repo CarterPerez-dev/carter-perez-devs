@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useAudio } from '../../contexts/AudioContext';
 import styles from './ContactPortal.module.css';
 
 const ContactPortal = () => {
   const { theme } = useTheme();
-  const { playSound } = useAudio();
   const canvasRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -47,7 +45,6 @@ const ContactPortal = () => {
   // Handle input focus
   const handleFocus = (field) => {
     setFocusedField(field);
-    playSound('hover');
   };
   
   // Handle input blur
@@ -98,7 +95,7 @@ const ContactPortal = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    playSound('click');
+
     
     // Validate form
     if (!validateForm()) {
@@ -110,7 +107,6 @@ const ContactPortal = () => {
     
     // Simulate form submission
     try {
-      // In a real implementation, this would be a fetch call to backend
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Show success message
@@ -146,24 +142,52 @@ const ContactPortal = () => {
     }
   };
   
-  // Digital connection animation
+
+  
+
   useEffect(() => {
     if (!canvasRef.current) return;
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // Set canvas dimensions
+    // Set canvas dimensions with performance throttling
     const setCanvasDimensions = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      // Skip if canvas is not visible
+      if (canvas.offsetWidth === 0) return;
+      
+      // Only resize if dimensions really changed to avoid unnecessary work
+      if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
     };
     
-    window.addEventListener('resize', setCanvasDimensions);
+    // Throttle resize listener
+    let resizeTimeout;
+    const handleResize = () => {
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(setCanvasDimensions, 250);
+    };
+    
+    window.addEventListener('resize', handleResize);
     setCanvasDimensions();
     
-    // Connection points (input fields + submit button)
+    // Optimize connection points detection
+    // Cache DOM elements to avoid querying on every frame
+    let connectionPoints = [];
+    let lastConnectionUpdate = 0;
+    const connectionUpdateInterval = 500; // ms
+    
     const getConnectionPoints = () => {
+      const now = Date.now();
+      
+      // Only update connection points every 500ms
+      if (now - lastConnectionUpdate < connectionUpdateInterval) {
+        return connectionPoints;
+      }
+      
+      lastConnectionUpdate = now;
       const formElement = canvas.parentElement;
       if (!formElement) return [];
       
@@ -171,10 +195,10 @@ const ContactPortal = () => {
       
       // Get positions of form elements
       const inputElements = formElement.querySelectorAll('.connection-point');
+      const canvasRect = canvas.getBoundingClientRect();
       
       inputElements.forEach(el => {
         const rect = el.getBoundingClientRect();
-        const canvasRect = canvas.getBoundingClientRect();
         
         // Calculate position relative to canvas
         const x = rect.left - canvasRect.left + rect.width / 2;
@@ -195,22 +219,27 @@ const ContactPortal = () => {
         });
       });
       
+      connectionPoints = points;
       return points;
     };
     
-    // Data flow particles
+    // Reduce particle count
+    const maxParticles = 30; // Limit max particles
     let particles = [];
     
-    // Create particle between two points
+    // Create particle between two points - with reduced frequency
     const createParticle = (startPoint, endPoint) => {
+      // Skip if we already have too many particles
+      if (particles.length >= maxParticles) return;
+      
       const angle = Math.atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x);
       const distance = Math.sqrt(
         Math.pow(endPoint.x - startPoint.x, 2) + 
         Math.pow(endPoint.y - startPoint.y, 2)
       );
       
-      // Create multiple particles along the path
-      const particleCount = Math.max(1, Math.floor(distance / 50));
+      // Create fewer particles - max 1-2 per path
+      const particleCount = Math.min(1, Math.floor(distance / 200));
       
       for (let i = 0; i < particleCount; i++) {
         const position = Math.random();
@@ -219,13 +248,13 @@ const ContactPortal = () => {
           x: startPoint.x + (endPoint.x - startPoint.x) * position,
           y: startPoint.y + (endPoint.y - startPoint.y) * position,
           angle,
-          speed: 1 + Math.random() * 3,
+          speed: 1 + Math.random(), // reduced speed variation
           distance,
           progress: position,
-          size: 2 + Math.random() * 3,
+          size: 2, // fixed size to reduce calculations
           color: theme === 'dark' ? 
-            (Math.random() > 0.3 ? 'rgba(0, 255, 245, 0.7)' : 'rgba(255, 61, 61, 0.7)') :
-            (Math.random() > 0.3 ? 'rgba(77, 77, 255, 0.7)' : 'rgba(255, 61, 61, 0.7)'),
+            'rgba(0, 255, 245, 0.7)' : 
+            'rgba(77, 77, 255, 0.7)',
           startPoint,
           endPoint
         });
@@ -234,10 +263,13 @@ const ContactPortal = () => {
     
     // Draw connections and animate particles
     const drawConnections = () => {
+      // Skip rendering if not visible
+      if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) return;
+      
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Get connection points
+      // Get connection points with caching
       const points = getConnectionPoints();
       if (points.length === 0) return;
       
@@ -249,34 +281,25 @@ const ContactPortal = () => {
         const startPoint = points[i];
         const endPoint = submitPoint;
         
-        // Draw connection line
+        // Draw connection line - simpler style
         ctx.beginPath();
         ctx.moveTo(startPoint.x, startPoint.y);
         ctx.lineTo(endPoint.x, endPoint.y);
         
-        const gradient = ctx.createLinearGradient(
-          startPoint.x, startPoint.y,
-          endPoint.x, endPoint.y
-        );
+        ctx.strokeStyle = theme === 'dark' ? 
+          'rgba(0, 255, 245, 0.2)' : 
+          'rgba(77, 77, 255, 0.2)';
         
-        const primaryColor = theme === 'dark' ? 
-          'rgba(0, 255, 245, 0.2)' : 'rgba(77, 77, 255, 0.2)';
-        const secondaryColor = 'rgba(255, 61, 61, 0.2)';
-        
-        gradient.addColorStop(0, startPoint.active ? primaryColor : secondaryColor);
-        gradient.addColorStop(1, submitPoint.active ? primaryColor : secondaryColor);
-        
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = startPoint.active || submitPoint.active ? 2 : 1;
+        ctx.lineWidth = 1;
         ctx.stroke();
         
-        // Create particles if field is active
-        if (startPoint.active && Math.random() > 0.7) {
+        // Create particles with reduced frequency
+        if (startPoint.active && Math.random() > 0.94) {
           createParticle(startPoint, endPoint);
         }
       }
       
-      // Draw connection points
+      // Draw connection points - simplified
       points.forEach(point => {
         // Draw point
         ctx.beginPath();
@@ -286,11 +309,13 @@ const ContactPortal = () => {
           'rgba(255, 255, 255, 0.5)';
         ctx.fill();
         
-        // Draw pulse if active
+        // Draw pulse if active - less frequent updates
         if (point.active) {
-          // Update pulse
-          point.pulseRadius = (point.pulseRadius + 0.5) % 20;
-          point.pulseOpacity = 1 - point.pulseRadius / 20;
+          // Update pulse only sometimes
+          if (Math.random() > 0.7) {
+            point.pulseRadius = (point.pulseRadius + 0.5) % 20;
+            point.pulseOpacity = 1 - point.pulseRadius / 20;
+          }
           
           // Draw pulse
           ctx.beginPath();
@@ -298,17 +323,17 @@ const ContactPortal = () => {
           ctx.strokeStyle = theme === 'dark' ? 
             `rgba(0, 255, 245, ${point.pulseOpacity})` : 
             `rgba(77, 77, 255, ${point.pulseOpacity})`;
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 1; // reduced line width
           ctx.stroke();
         }
       });
       
-      // Update and draw particles
+      // Update and draw particles - with optimizations
       const updatedParticles = [];
       
       for (const particle of particles) {
-        // Update progress
-        particle.progress += particle.speed / particle.distance;
+        // Update progress with smaller steps
+        particle.progress += particle.speed / (particle.distance * 2);
         
         // Calculate new position
         particle.x = particle.startPoint.x + 
@@ -320,7 +345,7 @@ const ContactPortal = () => {
         if (particle.progress < 1) {
           updatedParticles.push(particle);
           
-          // Draw particle
+          // Draw particle - simplified
           ctx.beginPath();
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
           ctx.fillStyle = particle.color;
@@ -328,23 +353,49 @@ const ContactPortal = () => {
         }
       }
       
-      // Update particles array
-      particles = updatedParticles;
+      // Update particles array - limit to max number
+      particles = updatedParticles.slice(0, maxParticles);
       
-      // Generate more particles when submitting
-      if (isSubmitting) {
+      // Generate more particles when submitting - but less frequently
+      if (isSubmitting && Math.random() > 0.9) {
         points.forEach(point => {
-          if (point !== submitPoint && Math.random() > 0.7) {
+          if (point !== submitPoint && Math.random() > 0.9) {
             createParticle(point, submitPoint);
           }
         });
       }
     };
     
-    // Animation loop
+    // Reduce animation frame rate
+    let frameSkip = 0;
     let animationId;
+    let isVisible = true;
+    
+    // Handle page visibility
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+      
+      if (isVisible && !animationId) {
+        animate();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Animation loop with frame skipping for better performance
     const animate = () => {
-      drawConnections();
+      if (!isVisible) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        return;
+      }
+      
+      // Skip frames for performance
+      frameSkip++;
+      if (frameSkip % 2 === 0) { // Only render on every other frame
+        drawConnections();
+      }
+      
       animationId = requestAnimationFrame(animate);
     };
     
@@ -352,10 +403,13 @@ const ContactPortal = () => {
     
     // Clean up
     return () => {
-      window.removeEventListener('resize', setCanvasDimensions);
-      cancelAnimationFrame(animationId);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [theme, focusedField, isSubmitting, playSound]);
+  }, [theme, focusedField, isSubmitting]);
   
   // Animation variants
   const containerVariants = {
@@ -436,7 +490,6 @@ const ContactPortal = () => {
                       target="_blank" 
                       rel="noopener noreferrer"
                       className={styles.socialLink}
-                      onClick={() => playSound('click')}
                     >
                       GitHub
                     </a>
@@ -445,7 +498,6 @@ const ContactPortal = () => {
                       target="_blank" 
                       rel="noopener noreferrer"
                       className={styles.socialLink}
-                      onClick={() => playSound('click')}
                     >
                       LinkedIn
                     </a>
