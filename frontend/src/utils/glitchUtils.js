@@ -3,7 +3,6 @@
  * Collection of functions to create and manage cyberpunk glitch effects
  */
 
-// Random characters for text glitching
 const GLITCH_CHARS = '!<>-_\\/[]{}—=+*^?#________';
 
 /**
@@ -15,16 +14,12 @@ const GLITCH_CHARS = '!<>-_\\/[]{}—=+*^?#________';
 export const glitchText = (text, intensity = 20) => {
   if (!text) return '';
   
-  // Normalize intensity to 0-100 range
   const normalizedIntensity = Math.max(0, Math.min(100, intensity));
   
-  // Calculate how many characters to glitch based on intensity
   const charsToGlitch = Math.ceil(text.length * (normalizedIntensity / 100));
   
-  // Convert text to array for manipulation
   const textArray = text.split('');
   
-  // Apply glitch to random characters
   for (let i = 0; i < charsToGlitch; i++) {
     const randomIndex = Math.floor(Math.random() * text.length);
     const randomChar = GLITCH_CHARS.charAt(Math.floor(Math.random() * GLITCH_CHARS.length));
@@ -80,13 +75,11 @@ export const createRGBSplitText = (text, offset = 2) => {
  * @returns {string} - CSS clip-path polygon function
  */
 export const createGlitchClipPath = (complexity = 6, intensity = 10) => {
-  // Generate clip-path polygon points
   const points = [];
   
-  // Always include corners for base shape
-  points.push('0% 0%'); // Top left
+
+  points.push('0% 0%'); 
   
-  // Add random points along top edge
   for (let i = 1; i < complexity - 1; i++) {
     const x = (i * (100 / (complexity - 1))).toFixed(1);
     const y = (Math.random() * intensity).toFixed(1);

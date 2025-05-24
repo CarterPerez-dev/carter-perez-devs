@@ -9,7 +9,6 @@ class AIAssistant:
     def __init__(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         
-
         portfolio_file_path = os.path.join(dir_path, "about_me.txt")
         with open(portfolio_file_path, "r", encoding="utf-8") as f:
             self.portfolio_data = f.read()

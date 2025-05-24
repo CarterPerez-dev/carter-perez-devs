@@ -43,8 +43,7 @@ class TerminalCommands {
       find: this.findCommand.bind(this),
       grep: this.grepCommand.bind(this),
       neofetch: this.neofetchCommand.bind(this),
-      
-      
+          
       // Portfolio specific
       about: this.aboutCommand.bind(this),
       skills: this.skillsCommand.bind(this),

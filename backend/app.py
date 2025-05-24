@@ -11,7 +11,6 @@ from routes.portfolio import portfolio_bp
 from routes.ai import ai_bp
 from helpers.rate_limiter import configure_limiter
 
-
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -21,14 +20,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-
 limiter = configure_limiter(app)
-
 
 limiter.limit("30 per minute")(ai_bp)
 limiter.limit("60 per minute")(portfolio_bp)
@@ -39,8 +35,7 @@ app.register_blueprint(ai_bp, url_prefix='/ai')
 @app.before_request
 def log_request_info():
     logger.info(f"Handling request to {request.path} with method {request.method}")
-    
-    
+       
 @socketio.on('connect')
 def handle_connect():
     logger.info('Client connected')

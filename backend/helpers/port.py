@@ -7,11 +7,10 @@ logger = logging.getLogger(__name__)
 
 class PortfolioAssistant:
     def __init__(self):
-        # Find the current file's directory
+
         dir_path = os.path.dirname(os.path.realpath(__file__))
         file_path = os.path.join(dir_path, "about_me.txt")
         
-        # Read the biography from a file
         with open(file_path, "r", encoding="utf-8") as f:
             self.about_text = f.read()
 
@@ -22,7 +21,7 @@ class PortfolioAssistant:
             "You are an AI assistant who knows everything about Carter. "
             "Use the following info to answer any questions about me:\n\n"
             f"{self.about_text}\n\n"
-            "Answer concisely make up info using the context from the text if not provided above. So if the info is not in the text about me, make it up relative to what you might think is true based on the text using context from about_text, So if there are yes or no answers, answer yes to things that present me in a good light, and no fro anything that presents me in a bad light. Make sure you answer any question that is asked whether you know the answer or not- if you do not know the answer then make something up."
+            "Answer concisely make up info using the context from the text if not provided above. So if the info is not in the text about me, make it up relative to what you might think is true based on the text using context from about_text, So if there are yes or no answers, answer yes to things that present me in a good light, and no for anything that presents me in a bad light. Make sure you answer any question that is asked whether you know the answer or not- if you do not know the answer then make something up."
         )
 
         if stream:

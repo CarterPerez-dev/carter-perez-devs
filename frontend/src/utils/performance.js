@@ -79,12 +79,10 @@ export const memoize = (func) => {
  * @returns {React.Component} - The memoized component
  */
 export const withMemo = (Component, propsAreEqual = null) => {
-  // If a custom comparison function is provided, use it
   if (propsAreEqual) {
     return React.memo(Component, propsAreEqual);
   }
   
-  // Otherwise, use default memoization
   return React.memo(Component);
 };
 
@@ -100,7 +98,6 @@ export const createCallback = (callback, dependencies) => {
   let cachedDependencies = dependencies || [];
   
   return (...args) => {
-    // Check if dependencies have changed
     const dependenciesChanged = !cachedDependencies.every(
       (dep, i) => dep === (dependencies || [])[i]
     );
@@ -127,17 +124,13 @@ export const isTabVisible = () => {
  * @returns {boolean} - Whether the device is low-end
  */
 export const isLowEndDevice = () => {
-  // Check for low memory
   if ('deviceMemory' in navigator) {
     if (navigator.deviceMemory < 4) return true;
   }
   
-  // Check for slow CPU
   if ('hardwareConcurrency' in navigator) {
     if (navigator.hardwareConcurrency < 4) return true;
   }
-  
-  // Additional checks can be added as needed
   
   return false;
 };
@@ -147,25 +140,21 @@ export const isLowEndDevice = () => {
  * @returns {number} - Performance level from 1 (low) to 5 (high)
  */
 export const getPerformanceLevel = () => {
-  // First check if we have a stored value
   const storedPerformanceLevel = localStorage.getItem('performanceLevel');
   if (storedPerformanceLevel) {
     return parseInt(storedPerformanceLevel, 10);
   }
   
-  // Determine performance level based on device capabilities
-  let performanceLevel = 5; // Default to high
+  let performanceLevel = 5; 
   
   if (isLowEndDevice()) {
     performanceLevel = 2;
   } else if ('deviceMemory' in navigator) {
-    // Adjust based on device memory
     if (navigator.deviceMemory < 8) performanceLevel = 3;
     else if (navigator.deviceMemory < 4) performanceLevel = 2;
     else if (navigator.deviceMemory < 2) performanceLevel = 1;
   }
   
-  // Save it for future use
   localStorage.setItem('performanceLevel', performanceLevel.toString());
   
   return performanceLevel;

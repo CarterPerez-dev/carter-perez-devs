@@ -15,7 +15,6 @@ import * as THREE from 'three';
 export const createCyberpunkCity = (buildings = 50, width = 100, depth = 100) => {
   const city = new THREE.Group();
   
-  // Ground grid
   const gridHelper = new THREE.GridHelper(
     Math.max(width, depth), 
     Math.max(width, depth) / 5,
@@ -27,9 +26,7 @@ export const createCyberpunkCity = (buildings = 50, width = 100, depth = 100) =>
   gridHelper.material.transparent = true;
   city.add(gridHelper);
   
-  // Generate buildings
   for (let i = 0; i < buildings; i++) {
-    // Random building dimensions and position
     const buildingWidth = 2 + Math.random() * 5;
     const buildingDepth = 2 + Math.random() * 5;
     const buildingHeight = 5 + Math.random() * 40;
@@ -37,13 +34,10 @@ export const createCyberpunkCity = (buildings = 50, width = 100, depth = 100) =>
     const posX = (Math.random() - 0.5) * width;
     const posZ = (Math.random() - 0.5) * depth;
     
-    // Create building mesh
     const geometry = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingDepth);
     
-    // Determine if building should have neon effect
     const hasNeon = Math.random() > 0.7;
     
-    // Create materials
     const material = new THREE.MeshPhongMaterial({
       color: 0x111111,
       emissive: hasNeon ? new THREE.Color(0x00fff5) : null,

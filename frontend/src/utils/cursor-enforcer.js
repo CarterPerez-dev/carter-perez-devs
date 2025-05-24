@@ -1,11 +1,4 @@
-/**
- * cursor-enforcer.js - Ensures cursor visibility throughout the application
- * Add this script at the end of your body tag to ensure it runs after everything else
- */
-
-// Function to fix cursor visibility
 function enforceCursorVisibility() {
-  // Set default cursor for all elements
   document.querySelectorAll('*').forEach(el => {
     const computedStyle = window.getComputedStyle(el);
     if (computedStyle.cursor === 'none') {
@@ -13,7 +6,6 @@ function enforceCursorVisibility() {
     }
   });
   
-  // Set pointer cursor for interactive elements
   const interactiveElements = document.querySelectorAll(`
     a, button, input[type="button"], input[type="submit"], input[type="reset"],
     select, [role="button"], .cyber-button, .neon-button, .holographic-button,
@@ -27,7 +19,6 @@ function enforceCursorVisibility() {
     el.style.setProperty('cursor', 'pointer', 'important');
   });
   
-  // Remove any custom cursor elements
   const customCursors = document.querySelectorAll(`
     .cyber-cursor, .cyber-cursor-dot, .custom-cursor, .cursor-follower,
     #cursor, #cursor-dot, .cursor-dot, .cursor-inner, .cursor-outer
@@ -42,16 +33,12 @@ function enforceCursorVisibility() {
   console.log("Cursor visibility enforced");
 }
 
-// Run immediately
 enforceCursorVisibility();
 
-// Run again after full page load
 window.addEventListener('load', enforceCursorVisibility);
 
-// Run periodically to catch any dynamically added elements
 setInterval(enforceCursorVisibility, 2000);
 
-// Detect and override any attempts to change cursor style
 const originalSetProperty = CSSStyleDeclaration.prototype.setProperty;
 CSSStyleDeclaration.prototype.setProperty = function(propertyName, value, priority) {
   if (propertyName === 'cursor' && value === 'none') {

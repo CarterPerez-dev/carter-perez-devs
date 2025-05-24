@@ -3,16 +3,13 @@ import logging
 from openai import OpenAI
 from dotenv import load_dotenv
 
-
 load_dotenv()
-
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-
 
 def load_api_key() -> str:
     api_key = os.environ.get("OPENAI_API_KEY")

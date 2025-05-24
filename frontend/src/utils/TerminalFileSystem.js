@@ -1,11 +1,9 @@
 /**
  * Terminal File System Utility
- * Simulates a basic Unix-like file system for the interactive terminal
  */
 
 class TerminalFileSystem {
   constructor() {
-    // Initialize root filesystem
     this.fileSystem = {
       '/': {
         type: 'directory',
