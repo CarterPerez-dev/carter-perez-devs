@@ -104,9 +104,9 @@ const DigitalFooter = () => {
 
   // Social links
   const socialLinks = [
-    { text: 'GitHub', url: 'https://github.com/username', icon: 'G' },
-    { text: 'LinkedIn', url: 'https://linkedin.com/in/username', icon: 'L' },
-    { text: 'Twitter', url: 'https://twitter.com/username', icon: 'T' }
+    { text: 'GitHub', url: 'https://github.com/CarterPerez-dev', icon: 'G' },
+    { text: 'LinkedIn', url: 'https://linkedin.com/in/carterperez-dev', icon: 'L' },
+    { text: 'Twitter', url: 'https://x.com/CertsGamified', icon: 'X' }
   ];
 
   return (
